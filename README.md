@@ -27,12 +27,12 @@
 ##GIT MASTER SCHEDULE
 ***Git Masters, if you need a PR merged ask the person who was GM before you***
 
-Week 2: Taylor Belk
-Week 3: Noah Stoeckel
-Week 4: Arpita Sinha
-Week 5: Andrey Yurlov
-Week 6: Alex Bezruchko
-Week 7: Taylor Belk
-Week 8: Noah Stoeckel
-Week 9: Arpita Sinha
-Week 10: Alex Bezruchko
+Week 2: Taylor Belk/
+Week 3: Noah Stoeckel/
+Week 4: Arpita Sinha/
+Week 5: Andrey Yurlov/
+Week 6: Alex Bezruchko/
+Week 7: Taylor Belk/
+Week 8: Noah Stoeckel/
+Week 9: Arpita Sinha/
+Week 10: Alex Bezruchko/
