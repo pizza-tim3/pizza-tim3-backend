@@ -35,4 +35,4 @@ Week 6: Alex Bezruchko\
 Week 7: Taylor Belk\
 Week 8: Noah Stoeckel\
 Week 9: Arpita Sinha\
-Week 10: Alex Bezruchko\
+Week 10: Alex Bezruchko
