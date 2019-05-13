@@ -1,0 +1,40 @@
+{
+  "name": "pizza-tim3",
+  "version": "1.0.0",
+  "description": "Backend for Pizza Tim3 project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pizza-tim3/pizza-tim3-backend.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "app",
+    "api"
+  ],
+  "author": "Alexander Bezruchko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pizza-tim3/pizza-tim3-backend/issues"
+  },
+  "homepage": "https://github.com/pizza-tim3/pizza-tim3-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "helmet": "^3.15.1",
+    "knex": "^0.16.3",
+    "morgan": "^1.9.1",
+    "pg": "^7.9.0",
+    "sqlite3": "^4.0.6"
+  },
+  "devDependencies": {
+    "knex-cleaner": "^1.1.4",
+    "nodemon": "^1.18.10"
+  }
+}
