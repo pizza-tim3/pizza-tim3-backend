@@ -6,3 +6,5 @@ const router = express.Router();
 router.get('/', (req, res) => {
     res.status(200).json('Users route');
 })
+
+module.exports = router;
