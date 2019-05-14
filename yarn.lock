@@ -1278,7 +1278,7 @@ knex-cleaner@^1.1.4:
     bluebird "^2.9.13"
     lodash "^3.5.0"
 
-knex@^0.16.3:
+knex@^0.16.5:
   version "0.16.5"
   resolved "https://registry.yarnpkg.com/knex/-/knex-0.16.5.tgz#8ba3806289a5d543dd42ed21420a31c578476993"
   dependencies:
@@ -1772,7 +1772,7 @@ pg-types@~2.0.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^7.9.0:
+pg@^7.11.0:
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/pg/-/pg-7.11.0.tgz#a8b9ae9cf19199b7952b72957573d0a9c5e67c0c"
   dependencies:
@@ -2155,7 +2155,7 @@ split@^1.0.0:
   dependencies:
     through "2"
 
-sqlite3@^4.0.6:
+sqlite3@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.0.8.tgz#81ee60d54befaa52f5421fe6337050bd43d4bb95"
   dependencies:
