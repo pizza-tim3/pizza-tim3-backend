@@ -3,7 +3,7 @@ const faker = require("faker");
 // Create Fake User Functions that returns an object (one user)
 const createFakeUser = () => ({
   email: faker.internet.email(),
-  username: faker.name.username(),
+  username: faker.internet.username(),
   first_name: faker.name.firstName(),
   last_name: faker.name.lastName(),
 });
