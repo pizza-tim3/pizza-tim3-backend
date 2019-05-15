@@ -9,9 +9,9 @@ const createFakeUser = () => ({
 });
 
 exports.seed = function(knex, Promise) {
-  // Create a new array of 50 faker generated users
+  // Create a new array of 500 faker generated users
   const users = [];
-  for (let i = 0; i <= 50; i++) {
+  for (let i = 0; i <= 500; i++) {
     users.push(createFakeUser());
   }
 
