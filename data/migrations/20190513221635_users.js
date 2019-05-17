@@ -5,7 +5,8 @@ exports.up = function(knex, Promise) {
       .text("email", 25)
       .notNullable()
       .unique();
-    users.text("username", 25).notNullable();
+    users.text("firebase_uid");
+    users.text("username", 25);
     users.text("first_name", 25).notNullable();
     users.text("last_name", 25).notNullable();
   });
