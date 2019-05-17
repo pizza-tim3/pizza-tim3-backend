@@ -6,12 +6,9 @@ exports.up = function(knex, Promise) {
       events.string("event_description");
       events.string("event_date").notNullable();
       //foreign keys
-      events.integer("organiser").notNullable();
-      
-      events.foreign("organiser").references("id").inTable("users");
+      events.integer("organiser").references("id").inTable("users");
 
-      events.integer("place").notNullable();
-      events.foreign("place").references("id").inTable("locations");
+      events.integer("place").references("id").inTable("locations");
        
   });
 };
