@@ -15,7 +15,8 @@ initializeFirebBase();
 //import the restricted
 const firebaseMiddleware = require("./auth/firebase-middleware");
 
-const userRoutes = require("./users/userRoutes");
+const userRoutes = require("./routes/users/userRoutes");
+const locationRoutes = require('./routes/locations/locationsRoutes');
 
 // Home Route
 server.get("/", (req, res) => {
@@ -29,5 +30,6 @@ server.get("/restricted", firebaseMiddleware, (req, res) => {
 
 // Users Resource Route
 server.use("/api/users/", userRoutes);
+server.use('/api/placesId/', locationRoutes);
 
 module.exports = server;

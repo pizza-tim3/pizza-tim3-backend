@@ -21,9 +21,9 @@ function getBy(id) {
 async function add(user) {
   return db("users")
     .insert(user, "id")
-    .then(ids => {
-      return getById(ids[0]);
-    });
+    // .then(ids => {
+    //   return getById(ids[0]);
+    // });
 }
 
 async function update(id, changes) {
