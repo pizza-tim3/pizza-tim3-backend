@@ -16,6 +16,7 @@ initializeFirebBase();
 const firebaseMiddleware = require("./auth/firebase-middleware");
 
 const userRoutes = require("./api/users/userRoutes");
+const commentRoutes = require("./api/comments/commentRoutes.js");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -29,5 +30,6 @@ server.get("/restricted", firebaseMiddleware, (req, res) => {
 
 // Users Resource Route
 server.use("/api/users/", userRoutes);
+server.use("/api/comments/", commentRoutes);
 
 module.exports = server;
