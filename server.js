@@ -15,8 +15,9 @@ server.use(express.json(), cors(), helmet(), logger("dev"));
 //import the restricted
 const firebaseMiddleware = require("./auth/firebase-middleware");
 
-const userRoutes = require("./users/userRoutes");
 const eventRoutes = require("./events/eventRoutes");
+const userRoutes = require("./api/users/userRoutes");
+
 
 // Home Route
 server.get("/", (req, res) => {
