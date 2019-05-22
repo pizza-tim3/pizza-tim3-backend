@@ -15,7 +15,7 @@ initializeFirebBase();
 //import the restricted
 const firebaseMiddleware = require("./auth/firebase-middleware");
 
-const userRoutes = require("./users/userRoutes");
+const userRoutes = require("./api/users/userRoutes");
 
 // Home Route
 server.get("/", (req, res) => {

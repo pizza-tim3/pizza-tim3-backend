@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Users = require("./../data/helpers/userDbHelper");
+const Users = require("../../data/helpers/userDbHelper.js");
 // All Users route
 
 router.get("/", (req, res) => {
