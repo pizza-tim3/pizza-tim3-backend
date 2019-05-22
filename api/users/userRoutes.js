@@ -22,4 +22,23 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  const user = req.body;
+  if (
+    !user.email ||
+    !user.firebase_uid ||
+    !username ||
+    !first_name ||
+    !last_name
+  ) {
+    res.status(400).json({ error: "Bad Request, please include all fields" });
+  }
+  try {
+    const user = await Users.add(user);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
