@@ -9,13 +9,14 @@ const helmet = require("helmet");
 server.use(express.json(), cors(), helmet(), logger("dev"));
 
 //import firebase initialization and invoke it
-const initializeFirebBase = require("./auth/firebaseInit");
-initializeFirebBase();
+ const initializeFirebBase = require("./auth/firebaseInit");
+ initializeFirebBase();
 
 //import the restricted
 const firebaseMiddleware = require("./auth/firebase-middleware");
 
 const userRoutes = require("./users/userRoutes");
+const eventRoutes = require("./events/eventRoutes");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -23,11 +24,12 @@ server.get("/", (req, res) => {
 });
 
 //restricted route example
-server.get("/restricted", firebaseMiddleware, (req, res) => {
+server.get("/restricted", (req, res) => {
   res.status(200).json("Veiwing a restricted page!");
 });
 
 // Users Resource Route
 server.use("/api/users/", userRoutes);
+server.use("/api/events", eventRoutes);
 
 module.exports = server;
