@@ -71,4 +71,14 @@ describe("The user Router", () => {
       expect(res.body).toEqual(updatedUser);
     });
   });
+
+  describe("DELETE /:id", () => {
+    it("should delete user and return a message", async () => {
+      await db("users").insert(users[0]);
+      const res = await req(server).delete("/api/users/1");
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({ message: "User deleted" });
+    });
+  });
 });
