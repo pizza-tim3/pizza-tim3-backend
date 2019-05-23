@@ -18,8 +18,10 @@ function getByEvent(event_id) {
     .first();
 };
 
-async function add() {
-
+async function add(comment, event_id) {
+  return db("comments")
+    .insert(comment, "event_id")
+    .where({ event_id });
 };
 
 async function update() {

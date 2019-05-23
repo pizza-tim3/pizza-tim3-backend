@@ -30,4 +30,15 @@ router.get("/event/:id", async (req, res) => {
   };
 });
 
+router.post("/event", async (req, res) => {
+  const newComment = req.body;
+
+  try {
+    const rows = await Comments.add(newComment);
+    res.status(201).json(rows);
+  } catch (err) {
+    res.status(500).json(err);
+  };
+});
+
 module.exports = router;

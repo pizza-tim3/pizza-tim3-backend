@@ -68,4 +68,19 @@ describe("The Comments Router", () => {
       });
     });
   });
+
+  describe("POST /", () => {
+    it("should add comment to event id", async () => {
+      const res = await req(server)
+        .post('/api/comments/event')
+        .send({
+          id: 1,
+          time: "123",
+          message: "message",
+          event_id: 1,
+          user_id: 1,
+        })
+      expect(res.status).toBe(201);
+    });
+  });
 });
