@@ -30,6 +30,8 @@ async function update(id, changes) {
     .update(changes);
 };
 
-async function remove() {
-
+async function remove(id) {
+  return db("comments")
+    .where({ id })
+    .del();
 };

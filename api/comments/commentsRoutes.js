@@ -53,4 +53,15 @@ router.put("/:id", async (req, res) => {
   };
 });
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const rows = await Comments.remove(id);
+    res.status(201).json(rows);
+  } catch (err) {
+    res.status(500).json(err);
+  };
+});
+
 module.exports = router;
