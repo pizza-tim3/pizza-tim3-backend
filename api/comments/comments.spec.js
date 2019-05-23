@@ -79,7 +79,31 @@ describe("The Comments Router", () => {
           message: "message",
           event_id: 1,
           user_id: 1,
-        })
+        });
+      expect(res.status).toBe(201);
+    });
+  });
+
+  describe("PUT /:id", () => {
+    it("should update comment by id", async () => {
+      const res = await req(server)
+        .post("/api/comments/event")
+        .send({
+          id: 1,
+          time: "123",
+          message: "message",
+          event_id: 1,
+          user_id: 1,
+        });
+      const update = await req(server)
+        .put('/api/comments/1')
+        .send({
+          id: 1,
+          time: "1234",
+          message: "message",
+          event_id: 1,
+          user_id: 1,
+        });
       expect(res.status).toBe(201);
     });
   });

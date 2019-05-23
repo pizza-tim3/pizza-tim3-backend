@@ -41,4 +41,16 @@ router.post("/event", async (req, res) => {
   };
 });
 
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const updatedComment = req.body;
+
+  try {
+    const rows = await Comments.update(id, updatedComment);
+    res.status(201).json(rows);
+  } catch (err) {
+    res.status(500).json(err);
+  };
+});
+
 module.exports = router;

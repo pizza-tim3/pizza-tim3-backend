@@ -24,8 +24,10 @@ async function add(comment, event_id) {
     .where({ event_id });
 };
 
-async function update() {
-
+async function update(id, changes) {
+  return db("comments")
+    .where({ id })
+    .update(changes);
 };
 
 async function remove() {
