@@ -37,4 +37,35 @@ describe("The Comments Router", () => {
       }]);
     });
   });
+
+  describe("GET /event_id", () => {
+    it("should return comments by event_id", async () => {
+      const comments = [{
+        id: 1,
+        time: "123",
+        message: "message",
+        event_id: 1,
+        user_id: 1,
+      },{
+        id: 2,
+        time: "145",
+        message: "message",
+        event_id: 3,
+        user_id: 4,
+      }];
+
+      await db("comments").insert(comments);
+      const res = await req(server).get("/api/comments/event/3");
+
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        id: 2,
+        time: "145",
+        message: "message",
+        event_id: 3,
+        user_id: 4,
+      });
+    });
+  });
 });
