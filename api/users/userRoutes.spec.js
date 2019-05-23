@@ -58,4 +58,17 @@ describe("The user Router", () => {
       expect(res.body).toEqual(users[0]);
     });
   });
+
+  describe("PUT /:id", () => {
+    it("should update and return updated user", async () => {
+      await db("users").insert(users[0]);
+      const updatedUser = { ...users[0], username: "ToddHoward" };
+      const res = await req(server)
+        .put("/api/users/1")
+        .send(updatedUser);
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual(updatedUser);
+    });
+  });
 });

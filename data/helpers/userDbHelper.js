@@ -29,7 +29,10 @@ async function add(user) {
 async function update(id, changes) {
   return db("users")
     .where({ id })
-    .update(changes);
+    .update(changes, "id")
+    .then(id => {
+      return getById(id);
+    });
 }
 
 async function remove(id) {
