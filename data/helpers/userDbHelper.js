@@ -5,8 +5,7 @@ module.exports = {
   getBy,
   add,
   update,
-  getByFirebase,
-  remove
+  remove,
 };
 
 function getAll() {
@@ -16,11 +15,6 @@ function getAll() {
 function getBy(id) {
   return db("users")
     .where({ id })
-    .first();
-}
-function getByFirebase(firebase_uid) {
-  return db("users")
-    .where({ firebase_uid })
     .first();
 }
 
