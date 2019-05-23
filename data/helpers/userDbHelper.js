@@ -2,17 +2,17 @@ const db = require("../dbConfig.js");
 
 module.exports = {
   getAll,
-  getBy,
+  getById,
   add,
   update,
-  remove,
+  remove
 };
 
 function getAll() {
   return db("users");
 }
 
-function getBy(id) {
+function getById(id) {
   return db("users")
     .where({ id })
     .first();
@@ -21,9 +21,9 @@ function getBy(id) {
 async function add(user) {
   return db("users")
     .insert(user, "id")
-    // .then(ids => {
-    //   return getById(ids[0]);
-    // });
+    .then(ids => {
+      return getById(ids[0]);
+    });
 }
 
 async function update(id, changes) {

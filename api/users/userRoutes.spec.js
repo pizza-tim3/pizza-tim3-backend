@@ -47,4 +47,15 @@ describe("The user Router", () => {
       expect(res.body).toEqual(users[0]);
     });
   });
+
+  describe("POST /", () => {
+    it("should return added user", async () => {
+      const res = await req(server)
+        .post("/api/users")
+        .send(users[0]);
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual(users[0]);
+    });
+  });
 });
