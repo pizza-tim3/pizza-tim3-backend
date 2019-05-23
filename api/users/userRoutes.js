@@ -3,6 +3,8 @@ const router = express.Router();
 const Users = require("../../data/helpers/userDbHelper");
 // All Users route
 
+//fix me add authorize/authentication for users
+//so users can only access their own stuff
 router.get("/", async (req, res) => {
   try {
     const users = await Users.getAll();
