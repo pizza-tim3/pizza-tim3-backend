@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
         organiser: event.organiser,
         place: event.place
       };
-      const eid = Events.add(newEvent);
+      const eid = await Events.add(newEvent);
       if (!eid || eid <= 0) {
         console.log("  event not  added");
         res.status(400).json({ message: "Events can't get added" });
@@ -54,4 +54,64 @@ router.get("/",(req,res)=>{
   
  }
 });
+
+router.get("/:id",async (req,res)=>{
+ try{
+   const id = req.params.id;
+   console.log(id);
+   const event = await Events.getBy(id);
+   console.log(event)
+   if(event){
+    res.status(200).json({event})
+   }else{
+     res.status(400).json({message:"Event doesn't exsist"})
+   }
+   
+
+ }catch(error){
+   res.status(500).json({message:"We can't retrieve the event",error})
+ }
+
+
+})
+
+router.put("/:id",async(req,res)=>{
+ try{
+   const id = req.params.id;
+   const event =req.body;
+   if(id && event){
+     const result =await Events.update(id,event)
+     res.status(200).json({result});
+   }if(!id){
+     res.status(400).json({message:"Event id doesn't exsist"})
+   }else{
+    res.status(400).json({message:"Event body has issues"})
+   }
+
+ }catch(error){
+  res.status(500).json({message:"We can't update the event",error})
+
+ }
+
+})
+
+router.delete("/:id",async(req,res)=>{
+  try{
+    const id = req.params.id;
+    if(id){
+      console.log(id)
+      const result = await Events.remove(id)
+      res.status(200).json({result,message:" event successfully removed"})
+    }else{
+      res.status(400).json({message:"This event id doesn't exist"})
+
+    }
+
+
+  }catch(error){
+     res.status(500).json({message:"We can't delete this event"})
+  }
+
+})
 module.exports = router;
+
