@@ -18,7 +18,7 @@ const firebaseMiddleware = require("./auth/firebase-middleware");
 const eventRoutes = require("./events/eventRoutes");
 const userRoutes = require("./api/users/userRoutes");
 const locationRoutes = require('./api/locations/locationsRoutes');
-
+const commentsRoutes = require("./api/comments/commentsRoutes");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -34,6 +34,6 @@ server.get("/restricted", (req, res) => {
 server.use("/api/users/", userRoutes);
 server.use('/api/placesId/', locationRoutes);
 server.use("/api/events", eventRoutes);
-
+server.use("/api/comments", commentsRoutes);
 
 module.exports = server;
