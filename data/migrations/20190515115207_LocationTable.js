@@ -1,7 +1,7 @@
 exports.up = function(knex, Promise) {
-  return knex.schema.createTable("locations", function(locations) {
+  return knex.schema.createTable("locations", locations => {
     locations.increments();
-    locations.integer("google_place_id").notNullable();
+    locations.varchar("google_place_id").notNullable();
   });
 };
 
