@@ -30,7 +30,7 @@ afterEach(async () => {
 });
 
 describe("The user Router", () => {
-  describe("POST /", () => {
+  describe("POST /request/:user_id/friend_id", () => {
     it("should add pending to friend request", async () => {
       const res = await req(server).post("/api/friends/request/1/2");
       expect(res.status).toBe(200);
@@ -39,6 +39,41 @@ describe("The user Router", () => {
         friend_id: 2,
         id: 1,
         status: "pending",
+        user_id: 1
+      });
+    });
+  });
+
+  describe("POST /accept/:user_id/friend_id", () => {
+    it("should accept pending friend request", async () => {
+      //make friend request
+      const [id] = await db("friends").insert(
+        { user_id: 1, friend_id: 2 },
+        "id"
+      );
+      await db("friends")
+        .update({ status: "pending" }, "id")
+        .where({ id });
+
+      //accept friend request
+      const res = await req(server).post("/api/friends/accept/2/1");
+
+      const [accepted] = await await db("friends").where({ id });
+
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      //expect both to be updated and accepted
+      expect(res.body).toEqual({
+        friend_id: 1,
+        id: 2,
+        status: "accepted",
+        user_id: 2
+      });
+
+      expect(accepted).toEqual({
+        friend_id: 2,
+        id: 1,
+        status: "accepted",
         user_id: 1
       });
     });
