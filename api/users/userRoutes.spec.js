@@ -25,6 +25,8 @@ beforeEach(() => {
   return db("users").truncate();
 });
 
+afterEach(async () => await db("comments").truncate());
+
 describe("The user Router", () => {
   describe("GET /", () => {
     it("should return an array of users", async () => {
