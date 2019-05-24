@@ -21,18 +21,26 @@ const users = [
   }
 ];
 
-beforeEach(async () => await db("friends").truncate());
-afterEach(async () => await db("friends").truncate());
+beforeEach(async () => {
+  await db("users").truncate();
+  await db("users").insert(users);
+});
+afterEach(async () => {
+  await db("friends").truncate();
+});
 
 describe("The user Router", () => {
   describe("POST /", () => {
-    it("should return a response", async () => {
-      const res = await req(server)
-        .post("/api/friends")
-        .send(users[0]);
+    it("should add pending to friend request", async () => {
+      const res = await req(server).post("/api/friends/request/1/2");
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
-      expect(res.body).toEqual(users[0]);
+      expect(res.body).toEqual({
+        friend_id: 2,
+        id: 1,
+        status: "pending",
+        user_id: 1
+      });
     });
   });
 });

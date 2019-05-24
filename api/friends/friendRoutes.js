@@ -6,12 +6,13 @@ const Friends = require("../../data/helpers/friendsDbHelper");
 //fix me add authorize/authentication for users
 //so users can only access their own stuff
 
-//add friend
-router.post("/", async (req, res) => {
-  const user = req.body;
+//request friend
+router.post("/request/:user_id/:friend_id", async (req, res) => {
+  const { user_id, friend_id } = req.params;
+  //if user dne
   try {
-    const friendData = await Friends.add(user);
-    res.status(200).json(friendData);
+    const added = await Friends.request(user_id, friend_id);
+    res.status(200).json(added);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
