@@ -7,7 +7,7 @@ const Friends = require("../../data/helpers/friendsDbHelper");
 //so users can only access their own stuff
 
 //request friend
-router.post("/request/:user_id/:friend_id", async (req, res) => {
+router.get("/request/:user_id/:friend_id", async (req, res) => {
   const { user_id, friend_id } = req.params;
   //if user dne
   try {
@@ -20,7 +20,7 @@ router.post("/request/:user_id/:friend_id", async (req, res) => {
 });
 
 //accept friend
-router.post("/accept/:user_id/:friend_id", async (req, res) => {
+router.get("/accept/:user_id/:friend_id", async (req, res) => {
   const { user_id, friend_id } = req.params;
   //if user dne
 
