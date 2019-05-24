@@ -15,7 +15,7 @@ server.use(express.json(), cors(), helmet(), logger("dev"));
 //import the restricted
 const firebaseMiddleware = require("./auth/firebase-middleware");
 
-const eventRoutes = require("./events/eventRoutes");
+const eventRoutes = require("./api/events/eventRoutes");
 const userRoutes = require("./api/users/userRoutes");
 const locationRoutes = require('./api/locations/locationsRoutes');
 const commentsRoutes = require("./api/comments/commentsRoutes");
