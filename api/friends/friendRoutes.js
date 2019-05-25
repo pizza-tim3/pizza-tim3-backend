@@ -38,8 +38,8 @@ router.get("/accept/:user_id/:friend_id", async (req, res) => {
 router.get("/reject/:user_id/:friend_id", async (req, res) => {
   const { user_id, friend_id } = req.params;
   //if user dne
+  //if pending request does not exist
 
-  //if request isn't valid
   try {
     const added = await Friends.reject(user_id, friend_id);
     res.status(200).json(added);

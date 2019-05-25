@@ -20,6 +20,7 @@ module.exports = {
 // }
 
 async function request(user_id, friend_id) {
+  // if request already exists don't request
   const [id] = await db("friends").insert({ user_id, friend_id }, "id");
   await db("friends")
     .update({ status: "pending" }, "id")
@@ -47,23 +48,23 @@ async function accept(user_id, friend_id) {
 }
 
 async function reject(user_id, friend_id) {
-  //get pending
-  //update to reject
-  const [id] = await db("friends")
-    .update({ status: "reject" }, "id")
-    .where({ user_id: friend_id, friend_id: user_id, status: "pending" });
-  //return rejected
+  try {
+    //get pending
+    //update to reject
 
-  const [rejectedRequest] = await getById(id);
-  return rejectedRequest;
+    // user 2 reject user 1's friend request
+    const id = await db("friends")
+      .update({ status: "rejected" }, "id")
+      .where({ user_id: friend_id, friend_id: user_id, status: "pending" });
+    //return rejected
+
+    const [rejectedRequest] = await getById(id);
+    return rejectedRequest;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function getById(id) {
   return db("friends").where({ id });
-}
-
-async function removeFriend(user_id, friend_id) {
-  return db("friends")
-    .where({ id })
-    .del();
 }
