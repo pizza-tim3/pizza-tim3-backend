@@ -102,15 +102,32 @@ router.get("/reject/:user_id/:friend_id", async (req, res) => {
 
 router.delete("/:user_id/:friend_id", async (req, res) => {
   const { user_id, friend_id } = req.params;
-  //if user dne
 
-  //if request isn't valid
   try {
-    const deleted = await Friends.remove(user_id, friend_id);
-    if (deleted === 2) {
-      res.status(200).json({ message: "friend deleted" });
+    const userOne = await Users.getById(user_id);
+    const userTwo = await Users.getById(friend_id);
+    //if user dne
+    if (!userOne) {
+      res.status(404).json({ error: `user with id ${user_id} does not exist` });
+      //if user two does not exist return bad request
+    } else if (!userTwo) {
+      res
+        .status(404)
+        .json({ error: `user with id ${friend_id} does not exist` });
     } else {
-      res.status(500).json({ message: "could not delete friend" });
+      //delete a friend
+      const deleted = await Friends.remove(user_id, friend_id);
+      if (deleted === 2) {
+        // if the friend is deleted
+        res
+          .status(200)
+          .json({ message: `friend with id ${friend_id} deleted` });
+      } else {
+        // friendship not successfully deleted
+        res
+          .status(404)
+          .json({ error: `friendship with ${friend_id} does not exist` });
+      }
     }
   } catch (err) {
     console.log(err);

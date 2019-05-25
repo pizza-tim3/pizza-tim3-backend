@@ -239,7 +239,7 @@ describe("The user Router", () => {
   });
 
   describe("DELETE /:user_id/friend_id", () => {
-    it("should delete a friend relationship", async () => {
+    fit("should delete a friend relationship", async () => {
       // user 1 is friends with user 2
       const [userOne] = await db("friends").insert(
         { user_id: 1, friend_id: 2, status: "accepted" },
@@ -257,7 +257,7 @@ describe("The user Router", () => {
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and rejected
-      expect(res.body).toEqual({ message: "friend deleted" });
+      expect(res.body).toEqual({ message: `friend with id ${1} deleted` });
 
       // check if user 1 is friends with user 2
       const [userOneAfterDelete] = await db("friends").where({
@@ -275,7 +275,59 @@ describe("The user Router", () => {
       expect(userOneAfterDelete).toBe(undefined);
       expect(userTwoAfterDelete).toBe(undefined);
     });
-    xit("should return bad request a friendship dne", async () => {});
-    xit("should throw error if request has been rejected", async () => {});
+    fit("should return a 404 message if user one does not exist", async () => {
+      // user one has been deleted
+      await db("users")
+        .where({ id: 1 })
+        .del();
+
+      const user = await db("users")
+        .where({ id: 1 })
+        .first();
+
+      //User 1 is friend requesting user 2
+      const res = await req(server).delete("/api/friends/1/2");
+
+      expect(res.status).toBe(404);
+      expect(res.type).toBe("application/json");
+      expect(user).toBe(undefined);
+      expect(res.body).toEqual({
+        error: `user with id 1 does not exist`
+      });
+    });
+    fit("should return a 404 message if user two does not exist", async () => {
+      // user two has been deleted
+      await db("users")
+        .where({ id: 2 })
+        .del();
+
+      const user = await db("users")
+        .where({ id: 2 })
+        .first();
+
+      //User 1 is friend requesting user 2
+      const res = await req(server).delete("/api/friends/1/2");
+
+      expect(res.status).toBe(404);
+      expect(res.type).toBe("application/json");
+      expect(user).toBe(undefined);
+      expect(res.body).toEqual({
+        error: `user with id 2 does not exist`
+      });
+    });
+    fit("should return a 404 message if friendship does not exist", async () => {
+      const [userOne] = await db("friends").insert(
+        { user_id: 1, friend_id: 2, status: "accepted" },
+        "id"
+      );
+      //User 1 is friend deleting 2's friend
+      const res = await req(server).delete("/api/friends/1/2");
+
+      expect(res.status).toBe(404);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        error: `friendship with ${2} does not exist`
+      });
+    });
   });
 });

@@ -101,13 +101,13 @@ async function remove(user_id, friend_id) {
     // table has been deleted
     const friendTableDeleted = await trx("friends")
       .del()
-      .where({ user_id: friend_id, friend_id: user_id });
+      .where({ user_id: friend_id, friend_id: user_id, status: "accepted" });
 
     // if this is one that means that the relationship on the
     // current users table has been deleted
     const userTableDeleted = await trx("friends")
       .del()
-      .where({ user_id: user_id, friend_id: friend_id });
+      .where({ user_id: user_id, friend_id: friend_id, status: "accepted" });
 
     //if both are deleted
     if (friendTableDeleted + userTableDeleted === 2) {
