@@ -9,16 +9,17 @@ const helmet = require("helmet");
 server.use(express.json(), cors(), helmet(), logger("dev"));
 
 //import firebase initialization and invoke it
- const initializeFirebBase = require("./auth/firebaseInit");
- initializeFirebBase();
+const initializeFirebBase = require("./auth/firebaseInit");
+initializeFirebBase();
 
 //import the restricted
 const firebaseMiddleware = require("./auth/firebase-middleware");
 
 const eventRoutes = require("./api/events/eventRoutes");
 const userRoutes = require("./api/users/userRoutes");
-const locationRoutes = require('./api/locations/locationsRoutes');
+const locationRoutes = require("./api/locations/locationsRoutes");
 const commentsRoutes = require("./api/comments/commentsRoutes");
+const friendsRoutes = require("./api/friends/friendRoutes");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -32,8 +33,9 @@ server.get("/restricted", (req, res) => {
 
 // Users Resource Route
 server.use("/api/users/", userRoutes);
-server.use('/api/placesId/', locationRoutes);
+server.use("/api/placesId/", locationRoutes);
 server.use("/api/events", eventRoutes);
 server.use("/api/comments", commentsRoutes);
+server.use("/api/friends", friendsRoutes);
 
 module.exports = server;

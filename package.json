@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "cross-env ENVIRONMENT=testing jest --watch --verbose",
+    "test": "cross-env ENVIRONMENT=testing jest --watch --verbose=true",
     "server": "nodemon index.js"
   },
   "repository": {

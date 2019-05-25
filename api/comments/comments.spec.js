@@ -1,26 +1,25 @@
-const req = require('supertest');
-const server = require('../../server');
+const req = require("supertest");
+const server = require("../../server");
 const db = require("../../data/dbConfig");
 
-
 describe("The Comments Router", () => {
-  beforeEach( async () => {
+  beforeEach(async () => {
     const res = await req(server)
-      .post('/api/comments/event')
+      .post("/api/comments/event")
       .send({
         id: 1,
         time: "123",
         message: "message",
         event_id: 1,
-        user_id: 1,
+        user_id: 1
       });
   });
 
-  afterEach( async () => await db('comments').delete());
+  afterEach(async () => await db("comments").delete());
 
-  it('should start testing environment', () => {
-    const res = process.env.DB_ENV;
-    expect(res).toBe('testing');
+  it("should start testing environment", () => {
+    const res = process.env.ENVIRONMENT;
+    expect(res).toBe("testing");
   });
 
   describe("GET /", () => {
@@ -44,7 +43,7 @@ describe("The Comments Router", () => {
         time: "123",
         message: "message",
         event_id: 1,
-        user_id: 1,
+        user_id: 1
       });
     });
   });
@@ -52,13 +51,13 @@ describe("The Comments Router", () => {
   describe("POST /", () => {
     it("should add comment to event id", async () => {
       const res = await req(server)
-        .post('/api/comments/event')
+        .post("/api/comments/event")
         .send({
           id: 3,
           time: "123",
           message: "message",
           event_id: 4,
-          user_id: 5,
+          user_id: 5
         });
       expect(res.status).toBe(201);
     });
@@ -67,13 +66,13 @@ describe("The Comments Router", () => {
   describe("PUT /:id", () => {
     it("should update comment by id", async () => {
       const res = await req(server)
-        .put('/api/comments/1')
+        .put("/api/comments/1")
         .send({
           id: 1,
           time: "1234",
           message: "message",
           event_id: 1,
-          user_id: 1,
+          user_id: 1
         });
       expect(res.status).toBe(201);
     });
@@ -81,8 +80,7 @@ describe("The Comments Router", () => {
 
   describe("DELETE /:id", () => {
     it("should delete comment by id", async () => {
-      const res = await req(server)
-        .del('/api/comments/1');
+      const res = await req(server).del("/api/comments/1");
       expect(res.status).toBe(201);
     });
   });

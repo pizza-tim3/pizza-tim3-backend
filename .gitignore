@@ -2,6 +2,6 @@ node_modules
 .env
 data/pizza-time*
 user-crud-ns
-data/test
+data/test*
 data/test.db3
 
