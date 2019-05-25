@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Friends = require("../../data/helpers/friendsDbHelper");
 const Users = require("../../data/helpers/userDbHelper");
-// All Users route
 
 //fix me add authorize/authentication for users
 //so users can only access their own stuff

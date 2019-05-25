@@ -5,7 +5,8 @@ module.exports = {
   getById,
   add,
   update,
-  remove
+  remove,
+  getAllFriends
 };
 
 function getAll() {
@@ -39,4 +40,19 @@ async function remove(id) {
   return db("users")
     .where({ id })
     .del();
+}
+
+async function getAllFriends(id) {
+  return await db
+    .select(
+      "users.id",
+      "users.firebase_uid",
+      "users.email",
+      "users.username",
+      "users.first_name",
+      "users.last_name"
+    )
+    .from("friends")
+    .whereNot("friends.user_id", "=", id)
+    .leftJoin("users", "users.id", "friends.user_id");
 }

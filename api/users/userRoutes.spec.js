@@ -18,11 +18,28 @@ const users = [
     username: "Trogdor",
     first_name: "reed",
     last_name: "Breet"
+  },
+  {
+    id: 3,
+    email: "test3@test.com",
+    firebase_uid: "25897325235",
+    username: "RickRoll",
+    first_name: "Pickle",
+    last_name: "Rick"
+  },
+  {
+    id: 4,
+    email: "test4@test.com",
+    firebase_uid: "2525235",
+    username: "Godsbe",
+    first_name: "Yo",
+    last_name: "Feet"
   }
 ];
 
-beforeEach(() => {
-  return db("users").truncate();
+beforeEach(async () => {
+  await db("users").truncate();
+  await db("friends").truncate();
 });
 
 afterEach(async () => await db("comments").truncate());
@@ -81,6 +98,55 @@ describe("The user Router", () => {
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({ message: "User deleted" });
+    });
+  });
+
+  describe("GET /:id/friends", () => {
+    fit("should return a list of friends", async () => {
+      try {
+        // add the users to the database
+        await db("users").insert(users);
+
+        // user 1 is friends with user 2
+        const [userOne] = await db("friends").insert(
+          { user_id: 1, friend_id: 2, status: "accepted" },
+          "id"
+        );
+        // user 2 is friends with user 1
+        const [userTwo] = await db("friends").insert(
+          { user_id: 2, friend_id: 1, status: "accepted" },
+          "id"
+        );
+
+        // user 1 is friends with user 3
+        await db("friends").insert(
+          { user_id: 1, friend_id: 3, status: "accepted" },
+          "id"
+        );
+        // user 3 is friends with user 1
+        await db("friends").insert(
+          { user_id: 3, friend_id: 1, status: "accepted" },
+          "id"
+        );
+
+        // user 1 is friends with user 4
+        await db("friends").insert(
+          { user_id: 1, friend_id: 4, status: "accepted" },
+          "id"
+        );
+        // user 4 is friends with user 1
+        await db("friends").insert(
+          { user_id: 4, friend_id: 1, status: "accepted" },
+          "id"
+        );
+
+        const res = await req(server).get("/api/users/1/friends");
+        expect(res.status).toBe(200);
+        expect(res.type).toBe("application/json");
+        expect(res.body).toEqual([users[1], users[2], users[3]]);
+      } catch (error) {
+        console.log(error);
+      }
     });
   });
 });

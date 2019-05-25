@@ -75,4 +75,14 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.get("/:id/friends", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const users = await Users.getAllFriends(id);
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
