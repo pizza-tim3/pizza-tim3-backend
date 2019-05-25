@@ -239,7 +239,7 @@ describe("The user Router", () => {
   });
 
   describe("DELETE /:user_id/friend_id", () => {
-    fit("should delete a friend relationship", async () => {
+    it("should delete a friend relationship", async () => {
       // user 1 is friends with user 2
       const [userOne] = await db("friends").insert(
         { user_id: 1, friend_id: 2, status: "accepted" },
@@ -275,7 +275,7 @@ describe("The user Router", () => {
       expect(userOneAfterDelete).toBe(undefined);
       expect(userTwoAfterDelete).toBe(undefined);
     });
-    fit("should return a 404 message if user one does not exist", async () => {
+    it("should return a 404 message if user one does not exist", async () => {
       // user one has been deleted
       await db("users")
         .where({ id: 1 })
@@ -295,7 +295,7 @@ describe("The user Router", () => {
         error: `user with id 1 does not exist`
       });
     });
-    fit("should return a 404 message if user two does not exist", async () => {
+    it("should return a 404 message if user two does not exist", async () => {
       // user two has been deleted
       await db("users")
         .where({ id: 2 })
@@ -315,7 +315,7 @@ describe("The user Router", () => {
         error: `user with id 2 does not exist`
       });
     });
-    fit("should return a 404 message if friendship does not exist", async () => {
+    it("should return a 404 message if friendship does not exist", async () => {
       const [userOne] = await db("friends").insert(
         { user_id: 1, friend_id: 2, status: "accepted" },
         "id"
