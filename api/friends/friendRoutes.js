@@ -51,7 +51,7 @@ router.get("/accept/:user_id/:friend_id", async (req, res) => {
       res
         .status(404)
         .json({ error: `user with id ${friend_id} does not exist` });
-    } else if (!pendingRequest) {
+    } else if (pendingRequest === undefined) {
       //if a pending friend requests from user two dne
       res.status(404).json({
         error: `pending friend request with ${friend_id} does not exist`
@@ -70,12 +70,30 @@ router.get("/accept/:user_id/:friend_id", async (req, res) => {
 //reject friend
 router.get("/reject/:user_id/:friend_id", async (req, res) => {
   const { user_id, friend_id } = req.params;
-  //if user dne
-  //if pending request does not exist
 
+  //if pending request does not exist
   try {
-    const added = await Friends.reject(user_id, friend_id);
-    res.status(200).json(added);
+    const userOne = await Users.getById(user_id);
+    const userTwo = await Users.getById(friend_id);
+    const pendingRequest = await Friends.checkPending(user_id, friend_id);
+
+    //if user one does not exist return bad request
+    if (!userOne) {
+      res.status(404).json({ error: `user with id ${user_id} does not exist` });
+      //if user two does not exist return bad request
+    } else if (!userTwo) {
+      res
+        .status(404)
+        .json({ error: `user with id ${friend_id} does not exist` });
+    } else if (!pendingRequest) {
+      //if a pending friend requests from user two dne
+      res.status(404).json({
+        error: `pending friend request with ${friend_id} does not exist`
+      });
+    } else {
+      const rejected = await Friends.reject(user_id, friend_id);
+      res.status(200).json(rejected);
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

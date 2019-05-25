@@ -22,7 +22,7 @@ module.exports = {
 // }
 async function checkPending(user_id, friend_id) {
   //check if user one has a pending friend requests from user two
-  const request = await db("friends").where({
+  const [request] = await db("friends").where({
     user_id: friend_id,
     friend_id: user_id,
     status: "pending"
