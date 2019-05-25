@@ -65,6 +65,13 @@ describe("The user Router", () => {
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual(users[0]);
     });
+    fit("should return an error for user if they do not exist", async () => {
+      await db("users").insert(users[0]);
+      const res = await req(server).get("/api/users/5");
+      expect(res.status).toBe(404);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({ error: `user with id ${5} does not exist` });
+    });
   });
 
   describe("POST /", () => {
