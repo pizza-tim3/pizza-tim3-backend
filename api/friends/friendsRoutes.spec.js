@@ -104,4 +104,45 @@ describe("The user Router", () => {
     xit("should throw error if request dne", async () => {});
     xit("should throw error if request has been rejected", async () => {});
   });
+
+  describe("DELETE /:user_id/friend_id", () => {
+    it("should delete a friend relationship", async () => {
+      // user 1 is friends with user 2
+      const [userOne] = await db("friends").insert(
+        { user_id: 1, friend_id: 2, status: "accepted" },
+        "id"
+      );
+      // user 2 is friends with user 1
+      const [userTwo] = await db("friends").insert(
+        { user_id: 2, friend_id: 1, status: "accepted" },
+        "id"
+      );
+
+      // user 2 is deleting user 1 friend relationship
+      const res = await req(server).delete("/api/friends/2/1");
+
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      //expect both to be updated and rejected
+      expect(res.body).toEqual({ message: "friend deleted" });
+
+      // check if user 1 is friends with user 2
+      const [userOneAfterDelete] = await db("friends").where({
+        user_id: 1,
+        friend_id: 2,
+        status: "accepted"
+      });
+      // check if user 2 is friends with user 1
+      const [userTwoAfterDelete] = await db("friends").where({
+        user_id: 1,
+        friend_id: 2,
+        status: "accepted"
+      });
+
+      expect(userOneAfterDelete).toBe(undefined);
+      expect(userTwoAfterDelete).toBe(undefined);
+    });
+    xit("should return bad request a friendship dne", async () => {});
+    xit("should throw error if request has been rejected", async () => {});
+  });
 });

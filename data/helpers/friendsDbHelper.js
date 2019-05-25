@@ -3,7 +3,8 @@ const db = require("../dbConfig.js");
 module.exports = {
   request,
   accept,
-  reject
+  reject,
+  remove
 };
 
 // async function getAllFriendsFromUserId(id) {
@@ -67,4 +68,41 @@ async function reject(user_id, friend_id) {
 
 async function getById(id) {
   return db("friends").where({ id });
+}
+
+//this function wraps another function in a promise
+const promisify = fn => new Promise((resolve, reject) => fn(resolve));
+
+// Returns 2 if successful, else returns 0
+async function remove(user_id, friend_id) {
+  //wrap knex's transaction function in a promise
+  const trx = await promisify(db.transaction.bind(db));
+  //remove the relationships on both sides
+  try {
+    // if this is one that means that the relationship on the other
+    // table has been deleted
+    const friendTableDeleted = await trx("friends")
+      .del()
+      .where({ user_id: friend_id, friend_id: user_id });
+
+    // if this is one that means that the relationship on the
+    // current users table has been deleted
+    const userTableDeleted = await trx("friends")
+      .del()
+      .where({ user_id: user_id, friend_id: friend_id });
+
+    //if both are deleted
+    if (friendTableDeleted + userTableDeleted === 2) {
+      // return the number two
+      await trx.commit();
+      return friendTableDeleted + userTableDeleted;
+    } else {
+      // rollback changes and return zero
+      await trx.rollback();
+      return 0;
+    }
+  } catch (error) {
+    console.log(error);
+    await trx.rollback();
+  }
 }

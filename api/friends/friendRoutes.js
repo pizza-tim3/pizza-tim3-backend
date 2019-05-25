@@ -49,4 +49,22 @@ router.get("/reject/:user_id/:friend_id", async (req, res) => {
   }
 });
 
+router.delete("/:user_id/:friend_id", async (req, res) => {
+  const { user_id, friend_id } = req.params;
+  //if user dne
+
+  //if request isn't valid
+  try {
+    const deleted = await Friends.remove(user_id, friend_id);
+    if (deleted === 2) {
+      res.status(200).json({ message: "friend deleted" });
+    } else {
+      res.status(500).json({ message: "could not delete friend" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 module.exports = router;
