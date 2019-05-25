@@ -41,6 +41,27 @@ describe("The user Router", () => {
         user_id: 1
       });
     });
+    it("should return a 404 message if user one does not exist", async () => {
+      // user one has been deleted
+      await db("users")
+        .where({ id: 1 })
+        .del();
+
+      const user = await db("users")
+        .where({ id: 1 })
+        .first();
+
+      console.log(user);
+
+      //User 1 is friend requesting user 2
+      const res = await req(server).get("/api/friends/request/1/2");
+
+      expect(res.status).toBe(404);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        error: `user with id 1 does not exist`
+      });
+    });
   });
 
   describe("GET /accept/:user_id/friend_id", () => {
