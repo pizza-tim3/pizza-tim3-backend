@@ -2,7 +2,8 @@ const db = require("../dbConfig.js");
 
 module.exports = {
   request,
-  accept
+  accept,
+  reject
 };
 
 // async function getAllFriendsFromUserId(id) {
@@ -43,6 +44,18 @@ async function accept(user_id, friend_id) {
   //return accepted
   const [acceptedRequest] = await getById(id);
   return acceptedRequest;
+}
+
+async function reject(user_id, friend_id) {
+  //get pending
+  //update to reject
+  const [id] = await db("friends")
+    .update({ status: "reject" }, "id")
+    .where({ user_id: friend_id, friend_id: user_id, status: "pending" });
+  //return rejected
+
+  const [rejectedRequest] = await getById(id);
+  return rejectedRequest;
 }
 
 async function getById(id) {

@@ -80,4 +80,41 @@ describe("The user Router", () => {
     xit("should throw error if request dne", async () => {});
     xit("should throw error if request has been rejected", async () => {});
   });
+
+  describe("GET /reject/:user_id/friend_id", () => {
+    it("should reject pending friend request", async () => {
+      //make friend request
+      const [id] = await db("friends").insert(
+        { user_id: 1, friend_id: 2 },
+        "id"
+      );
+      await db("friends")
+        .update({ status: "pending" }, "id")
+        .where({ id });
+
+      //reject friend request
+      const res = await req(server).get("/api/friends/reject/2/1");
+
+      const [rejected] = await await db("friends").where({ id });
+
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      //expect both to be updated and rejected
+      expect(res.body).toEqual({
+        friend_id: 1,
+        id: 2,
+        status: "rejected",
+        user_id: 2
+      });
+
+      expect(rejected).toEqual({
+        friend_id: 2,
+        id: 1,
+        status: "rejected",
+        user_id: 1
+      });
+    });
+    xit("should throw error if request dne", async () => {});
+    xit("should throw error if request has been rejected", async () => {});
+  });
 });
