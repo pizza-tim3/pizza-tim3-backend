@@ -26,21 +26,17 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const user = req.body;
-  if (
-    !user.email ||
-    !user.firebase_uid ||
-    !user.username ||
-    !user.first_name ||
-    !user.last_name
-  ) {
+  const { email, firebase_uid, username, first_name, last_name } = user;
+  if (!email || !firebase_uid || !username || !first_name || !last_name) {
     res.status(400).json({ error: "Bad Request, please include all fields" });
-  }
-  try {
-    const newUser = await Users.add(user);
-    res.status(200).json(newUser);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
+  } else {
+    try {
+      const newUser = await Users.add(user);
+      res.status(200).json(newUser);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
   }
 });
 

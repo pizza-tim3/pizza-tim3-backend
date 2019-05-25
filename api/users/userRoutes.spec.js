@@ -76,6 +76,26 @@ describe("The user Router", () => {
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual(users[0]);
     });
+    it("should return bad request if user info is empty", async () => {
+      const res = await req(server)
+        .post("/api/users")
+        .send({});
+      expect(res.status).toBe(400);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        error: "Bad Request, please include all fields"
+      });
+    });
+    it("should return bad request if user info is incomplete", async () => {
+      const res = await req(server)
+        .post("/api/users")
+        .send({ email: "test2@test.com", firebase_uid: "258975vnfh325235" });
+      expect(res.status).toBe(400);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        error: "Bad Request, please include all fields"
+      });
+    });
   });
 
   describe("PUT /:id", () => {
@@ -102,7 +122,7 @@ describe("The user Router", () => {
   });
 
   describe("GET /:id/friends", () => {
-    fit("should return a list of friends", async () => {
+    it("should return a list of friends", async () => {
       try {
         // add the users to the database
         await db("users").insert(users);
