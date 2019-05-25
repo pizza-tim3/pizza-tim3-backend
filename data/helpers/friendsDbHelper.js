@@ -73,6 +73,14 @@ async function getById(id) {
 //this function wraps another function in a promise
 const promisify = fn => new Promise((resolve, reject) => fn(resolve));
 
+/**
+ * https://stackoverflow.com/a/56130889
+ * this.stack overflow details how I managed to get
+ * knex transactions to work with async await.
+ * TL;DR you use the function promisify to wrap the transaction
+ * and binding this to the database instance.
+ */
+
 // Returns 2 if successful, else returns 0
 async function remove(user_id, friend_id) {
   //wrap knex's transaction function in a promise
