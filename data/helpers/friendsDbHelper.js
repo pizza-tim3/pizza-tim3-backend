@@ -4,7 +4,8 @@ module.exports = {
   request,
   accept,
   reject,
-  remove
+  remove,
+  checkPending
 };
 
 // async function getAllFriendsFromUserId(id) {
@@ -19,6 +20,15 @@ module.exports = {
 //     .where({ user_id: id })
 //     .leftJoin("users", "users.id", "friends");
 // }
+async function checkPending(user_id, friend_id) {
+  //check if user one has a pending friend requests from user two
+  const request = await db("friends").where({
+    user_id: friend_id,
+    friend_id: user_id,
+    status: "pending"
+  });
+  return request;
+}
 
 async function request(user_id, friend_id) {
   // if request already exists don't request
