@@ -88,3 +88,62 @@ returns user of `:id`
 ### DELETE `/api/users/:id`
 
 deletes user with `:id`
+
+## Friends
+
+### GET `/request/:user_id/:friend_id`
+
+Will send a friend requests from `user_id` to `friend_id`
+
+returns
+
+```javascript
+{
+    friend_id: friend_id,
+    id: 1,
+    status: "pending",
+    user_id: user_id
+}
+```
+
+### GET `/accept/:user_id/:friend_id`
+
+Will send a friend requests from `user_id` to `friend_id`
+
+returns
+
+```javascript
+{
+    friend_id: friend_id,
+    id: 2,
+    status: "accepted",
+    user_id: user_id
+}
+```
+
+### GET `/reject/:user_id/:friend_id`
+
+Will send a friend requests from `user_id` to `friend_id`
+
+returns
+
+```javascript
+{
+    friend_id: friend_id,
+    id: 1,
+    status: "rejected",
+    user_id: user_id
+}
+```
+
+### DELETE `/reject/:user_id/:friend_id`
+
+Will send a friend requests from `user_id` to `friend_id`
+
+returns
+
+```javascript
+{
+  message: `friend with id ${friend_id} deleted`;
+}
+```
