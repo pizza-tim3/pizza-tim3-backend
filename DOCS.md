@@ -85,13 +85,29 @@ returns user of `:id`
 }
 ```
 
-### DELETE `/api/users/:id`
+### GET `/api/users/:id/friends`
+
+returns array of friends for user with `:id`
+
+```javascript
+[{
+    id: id,
+    email: "test@test.com",
+    firebase_uid: "258975325235",
+    username: "Ralphiu",
+    first_name: "Ralph",
+    last_name: "Pill"
+},{...}
+]
+```
+
+### DELETE `/api/users/:id/friends`
 
 deletes user with `:id`
 
 ## Friends
 
-### GET `/request/:user_id/:friend_id`
+### GET `api/request/:user_id/:friend_id`
 
 Will send a friend requests from `user_id` to `friend_id`
 
@@ -106,7 +122,7 @@ returns
 }
 ```
 
-### GET `/accept/:user_id/:friend_id`
+### GET `api/accept/:user_id/:friend_id`
 
 Will send a friend requests from `user_id` to `friend_id`
 
@@ -121,7 +137,7 @@ returns
 }
 ```
 
-### GET `/reject/:user_id/:friend_id`
+### GET `api/reject/:user_id/:friend_id`
 
 Will send a friend requests from `user_id` to `friend_id`
 
@@ -136,7 +152,7 @@ returns
 }
 ```
 
-### DELETE `/reject/:user_id/:friend_id`
+### DELETE `api/reject/:user_id/:friend_id`
 
 Will send a friend requests from `user_id` to `friend_id`
 
