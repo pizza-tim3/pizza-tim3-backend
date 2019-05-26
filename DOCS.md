@@ -101,7 +101,7 @@ returns array of friends for user with `:id`
 ]
 ```
 
-### DELETE `/api/users/:id/friends`
+### DELETE `/api/users/:id/`
 
 deletes user with `:id`
 
