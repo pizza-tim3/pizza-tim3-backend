@@ -28,17 +28,19 @@ beforeEach(async () => {
 });
 
 describe("The user Router", () => {
-  describe("GET /request/:user_id/friend_id", () => {
+  describe("GET /request/:user_uid/friend_uid", () => {
     it("should add pending to friend request", async () => {
-      //User 1 is friend requesting user 2
-      const res = await req(server).get("/api/friends/request/1/2");
+      //User 258975325235 is friend requesting user 258975vnfh325235
+      const res = await req(server).get(
+        "/api/friends/request/258975325235/258975vnfh325235"
+      );
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
-        friend_id: 2,
+        friend_uid: "258975vnfh325235",
         id: 1,
         status: "pending",
-        user_id: 1
+        user_uid: "258975325235"
       });
     });
     it("should return a 404 message if user one does not exist", async () => {
@@ -52,13 +54,15 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend requesting user 2
-      const res = await req(server).get("/api/friends/request/1/2");
+      const res = await req(server).get(
+        "/api/friends/request/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 1 does not exist`
+        error: `user with id 258975325235 does not exist`
       });
     });
     it("should return a 404 message if user two does not exist", async () => {
@@ -72,27 +76,35 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend requesting user 2
-      const res = await req(server).get("/api/friends/request/1/2");
+      const res = await req(server).get(
+        "/api/friends/request/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 2 does not exist`
+        error: `user with id 258975vnfh325235 does not exist`
       });
     });
   });
 
-  describe("GET /accept/:user_id/friend_id", () => {
+  describe("GET /accept/:user_uid/friend_uid", () => {
     it("should accept pending friend request", async () => {
       // user 1 has made a friend request to user 2
       const [id] = await db("friends").insert(
-        { user_id: 1, friend_id: 2, status: "pending" },
+        {
+          user_uid: "258975325235",
+          friend_uid: "258975vnfh325235",
+          status: "pending"
+        },
         "id"
       );
 
       // user 2 accepts user 1's friend request
-      const res = await req(server).get("/api/friends/accept/2/1");
+      const res = await req(server).get(
+        "/api/friends/accept/258975vnfh325235/258975325235"
+      );
 
       const [accepted] = await await db("friends").where({ id });
 
@@ -100,17 +112,17 @@ describe("The user Router", () => {
       expect(res.type).toBe("application/json");
       //expect both to be updated and accepted
       expect(res.body).toEqual({
-        friend_id: 1,
+        friend_uid: "258975325235",
         id: 2,
         status: "accepted",
-        user_id: 2
+        user_uid: "258975vnfh325235"
       });
 
       expect(accepted).toEqual({
-        friend_id: 2,
+        friend_uid: "258975vnfh325235",
         id: 1,
         status: "accepted",
-        user_id: 1
+        user_uid: "258975325235"
       });
     });
     it("should return a 404 message if user one does not exist", async () => {
@@ -124,13 +136,15 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend raccepting user 2
-      const res = await req(server).get("/api/friends/accept/1/2");
+      const res = await req(server).get(
+        "/api/friends/accept/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 1 does not exist`
+        error: `user with id 258975325235 does not exist`
       });
     });
     it("should return a 404 message if user two does not exist", async () => {
@@ -144,46 +158,56 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend accepting user 2
-      const res = await req(server).get("/api/friends/accept/1/2");
+      const res = await req(server).get(
+        "/api/friends/accept/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 2 does not exist`
+        error: `user with id 258975vnfh325235 does not exist`
       });
     });
     it("should return a 404 message if pending request does not exist", async () => {
       //User 1 is friend accepting user 2's friend request
-      const res = await req(server).get("/api/friends/accept/1/2");
+      const res = await req(server).get(
+        "/api/friends/accept/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
-        error: `pending friend request with ${2} does not exist`
+        error: `pending friend request with ${"258975vnfh325235"} does not exist`
       });
     });
   });
 
-  describe("GET /reject/:user_id/friend_id", () => {
+  describe("GET /reject/:user_uid/friend_uid", () => {
     it("should reject pending friend request", async () => {
       // user 1 is friend requesting user 2
       const [id] = await db("friends").insert(
-        { user_id: 1, friend_id: 2, status: "pending" },
+        {
+          user_uid: "258975325235",
+          friend_uid: "258975vnfh325235",
+          status: "pending"
+        },
         "id"
       );
 
       // user 2 is rejecting user 1's friend request
-      const res = await req(server).get("/api/friends/reject/2/1");
+      const res = await req(server).get(
+        "/api/friends/reject/258975vnfh325235/258975325235"
+      );
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and rejected
       expect(res.body).toEqual({
-        friend_id: 2,
+        friend_uid: "258975vnfh325235",
         id: 1,
         status: "rejected",
-        user_id: 1
+        user_uid: "258975325235"
       });
     });
     it("should return a 404 message if user one does not exist", async () => {
@@ -197,13 +221,15 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend requesting user 2
-      const res = await req(server).get("/api/friends/reject/1/2");
+      const res = await req(server).get(
+        "/api/friends/reject/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 1 does not exist`
+        error: `user with id 258975325235 does not exist`
       });
     });
     it("should return a 404 message if user two does not exist", async () => {
@@ -217,58 +243,74 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend requesting user 2
-      const res = await req(server).get("/api/friends/reject/1/2");
+      const res = await req(server).get(
+        "/api/friends/reject/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 2 does not exist`
+        error: `user with id 258975vnfh325235 does not exist`
       });
     });
     it("should return a 404 message if pending request does not exist", async () => {
       //User 1 is friend rejecting user 2's friend request
-      const res = await req(server).get("/api/friends/reject/1/2");
+      const res = await req(server).get(
+        "/api/friends/reject/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
-        error: `pending friend request with ${2} does not exist`
+        error: `pending friend request with ${"258975vnfh325235"} does not exist`
       });
     });
   });
 
-  describe("DELETE /:user_id/friend_id", () => {
+  describe("DELETE /:user_uid/friend_uid", () => {
     it("should delete a friend relationship", async () => {
       // user 1 is friends with user 2
       const [userOne] = await db("friends").insert(
-        { user_id: 1, friend_id: 2, status: "accepted" },
+        {
+          user_uid: "258975325235",
+          friend_uid: "258975vnfh325235",
+          status: "accepted"
+        },
         "id"
       );
       // user 2 is friends with user 1
       const [userTwo] = await db("friends").insert(
-        { user_id: 2, friend_id: 1, status: "accepted" },
+        {
+          user_uid: "258975vnfh325235",
+          friend_uid: "258975325235",
+          status: "accepted"
+        },
         "id"
       );
 
       // user 2 is deleting user 1 friend relationship
-      const res = await req(server).delete("/api/friends/2/1");
+      const res = await req(server).delete(
+        "/api/friends/258975vnfh325235/258975325235"
+      );
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and rejected
-      expect(res.body).toEqual({ message: `friend with id ${1} deleted` });
+      expect(res.body).toEqual({
+        message: `friend with id ${"258975325235"} deleted`
+      });
 
       // check if user 1 is friends with user 2
       const [userOneAfterDelete] = await db("friends").where({
-        user_id: 1,
-        friend_id: 2,
+        user_uid: "258975325235",
+        friend_uid: "258975vnfh325235",
         status: "accepted"
       });
       // check if user 2 is friends with user 1
       const [userTwoAfterDelete] = await db("friends").where({
-        user_id: 1,
-        friend_id: 2,
+        user_uid: "258975vnfh325235",
+        friend_uid: "258975325235",
         status: "accepted"
       });
 
@@ -286,13 +328,15 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend requesting user 2
-      const res = await req(server).delete("/api/friends/1/2");
+      const res = await req(server).delete(
+        "/api/friends/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 1 does not exist`
+        error: `user with id 258975325235 does not exist`
       });
     });
     it("should return a 404 message if user two does not exist", async () => {
@@ -306,27 +350,31 @@ describe("The user Router", () => {
         .first();
 
       //User 1 is friend requesting user 2
-      const res = await req(server).delete("/api/friends/1/2");
+      const res = await req(server).delete(
+        "/api/friends/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(user).toBe(undefined);
       expect(res.body).toEqual({
-        error: `user with id 2 does not exist`
+        error: `user with id 258975vnfh325235 does not exist`
       });
     });
-    it("should return a 404 message if friendship does not exist", async () => {
+    fit("should return a 404 message if friendship does not exist", async () => {
       const [userOne] = await db("friends").insert(
-        { user_id: 1, friend_id: 2, status: "accepted" },
+        { user_uid: 1, friend_uid: 2, status: "accepted" },
         "id"
       );
       //User 1 is friend deleting 2's friend
-      const res = await req(server).delete("/api/friends/1/2");
+      const res = await req(server).delete(
+        "/api/friends/258975325235/258975vnfh325235"
+      );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
-        error: `friendship with ${2} does not exist`
+        error: `friendship with ${"258975vnfh325235"} does not exist`
       });
     });
   });
