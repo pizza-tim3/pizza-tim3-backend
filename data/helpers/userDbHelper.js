@@ -2,44 +2,57 @@ const db = require("../dbConfig.js");
 
 module.exports = {
   getAll,
-  getBy,
+  getById,
   add,
   update,
-  getByFirebase,
-  remove
+  remove,
+  getAllFriends
 };
 
 function getAll() {
   return db("users");
 }
 
-function getBy(id) {
+function getById(id) {
   return db("users")
     .where({ id })
-    .first();
-}
-function getByFirebase(firebase_uid) {
-  return db("users")
-    .where({ firebase_uid })
     .first();
 }
 
 async function add(user) {
   return db("users")
     .insert(user, "id")
-    // .then(ids => {
-    //   return getById(ids[0]);
-    // });
+    .then(ids => {
+      return getById(ids[0]);
+    });
 }
 
 async function update(id, changes) {
   return db("users")
     .where({ id })
-    .update(changes);
+    .update(changes, "id")
+    .then(id => {
+      return getById(id);
+    });
 }
 
 async function remove(id) {
   return db("users")
     .where({ id })
     .del();
+}
+
+async function getAllFriends(id) {
+  return await db
+    .select(
+      "users.id",
+      "users.firebase_uid",
+      "users.email",
+      "users.username",
+      "users.first_name",
+      "users.last_name"
+    )
+    .from("friends")
+    .whereNot("friends.user_id", "=", id)
+    .leftJoin("users", "users.id", "friends.user_id");
 }
