@@ -13,7 +13,7 @@ const initializeFirebBase = require("./auth/firebaseInit");
 initializeFirebBase();
 
 //import the restricted
-const firebaseMiddleware = require("./auth/firebase-middleware");
+const { verifyToken, verifyUser } = require("./auth/firebase-middleware");
 
 const eventRoutes = require("./api/events/eventRoutes");
 const userRoutes = require("./api/users/userRoutes");
@@ -27,8 +27,13 @@ server.get("/", (req, res) => {
 });
 
 //restricted route example
-server.get("/restricted", (req, res) => {
+server.get("/restricted", verifyToken, (req, res) => {
   res.status(200).json("Veiwing a restricted page!");
+});
+
+//restricted route example
+server.get("/restricted/:uid", verifyToken, verifyUser, (req, res) => {
+  res.status(200).json("Veiwing a user specific restricted page!");
 });
 
 // Users Resource Route
