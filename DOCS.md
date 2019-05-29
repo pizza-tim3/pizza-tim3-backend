@@ -70,9 +70,9 @@ returns array of users
 {...}]
 ```
 
-### GET `/api/users/:id`
+### GET `/api/users/:firebase_uid`
 
-returns user of `:id`
+returns user of `:firebase_uid`
 
 ```javascript
 {
@@ -85,9 +85,9 @@ returns user of `:id`
 }
 ```
 
-### GET `/api/users/:id/friends`
+### GET `/api/users/:firebase_uid/friends`
 
-returns array of friends for user with `:id`
+returns array of friends for user with `:firebase_uid`
 
 ```javascript
 [{
@@ -101,9 +101,25 @@ returns array of friends for user with `:id`
 ]
 ```
 
-### DELETE `/api/users/:id/`
+### GET `/api/users/:firebase_uid/friends/pending`
 
-deletes user with `:id`
+returns array of pending friends for user with `:firebase_uid`
+
+```javascript
+[{
+    id: id,
+    email: "test@test.com",
+    firebase_uid: "258975325235",
+    username: "Ralphiu",
+    first_name: "Ralph",
+    last_name: "Pill"
+},{...}
+]
+```
+
+### DELETE `/api/users/:firebase_uid/`
+
+deletes user with `:firebase_uid`
 
 ## Friends
 
