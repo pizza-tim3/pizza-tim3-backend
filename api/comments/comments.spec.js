@@ -11,7 +11,7 @@ describe("The Comments Router", () => {
         time: "123",
         message: "message",
         event_id: 1,
-        user_id: 1
+        firebase_uid: "258975325235"
       });
   });
 
@@ -43,7 +43,7 @@ describe("The Comments Router", () => {
         time: "123",
         message: "message",
         event_id: 1,
-        user_id: 1
+        firebase_uid: "258975325235"
       });
     });
   });
@@ -57,7 +57,7 @@ describe("The Comments Router", () => {
           time: "123",
           message: "message",
           event_id: 4,
-          user_id: 5
+          firebase_uid: "258975325235235252352"
         });
       expect(res.status).toBe(201);
     });
@@ -72,7 +72,7 @@ describe("The Comments Router", () => {
           time: "1234",
           message: "message",
           event_id: 1,
-          user_id: 1
+          firebase_uid: "258975325235"
         });
       expect(res.status).toBe(201);
     });
