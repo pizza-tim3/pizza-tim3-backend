@@ -12,7 +12,9 @@ exports.up = function(knex, Promise) {
       .references("id")
       .inTable("users");
 
+    invited.bool("pending");
     invited.bool("accepted");
+    invited.bool("declined");
   });
 };
 
