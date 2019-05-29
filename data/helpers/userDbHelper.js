@@ -3,6 +3,7 @@ const db = require("../dbConfig.js");
 module.exports = {
   getAll,
   getById,
+  getByUid,
   add,
   update,
   remove,
@@ -19,30 +20,37 @@ function getById(id) {
     .first();
 }
 
-async function add(user) {
+function getByUid(uid) {
   return db("users")
+    .where({ firebase_uid: uid })
+    .first();
+}
+
+async function add(user) {
+  console.log(user);
+  return await db("users")
     .insert(user, "id")
     .then(ids => {
       return getById(ids[0]);
     });
 }
 
-async function update(id, changes) {
-  return db("users")
-    .where({ id })
+async function update(uid, changes) {
+  return await db("users")
+    .where({ firebase_uid: uid })
     .update(changes, "id")
     .then(id => {
       return getById(id);
     });
 }
 
-async function remove(id) {
+async function remove(uid) {
   return db("users")
-    .where({ id })
+    .where({ firebase_uid: uid })
     .del();
 }
 
-async function getAllFriends(id) {
+async function getAllFriends(uid) {
   return await db
     .select(
       "users.id",
@@ -53,6 +61,6 @@ async function getAllFriends(id) {
       "users.last_name"
     )
     .from("friends")
-    .whereNot("friends.user_id", "=", id)
-    .leftJoin("users", "users.id", "friends.user_id");
+    .whereNot("friends.user_uid", "=", uid)
+    .leftJoin("users", "users.firebase_uid", "friends.user_uid");
 }
