@@ -36,7 +36,7 @@ async function add(user) {
 }
 
 async function update(uid, changes) {
-  return db("users")
+  return await db("users")
     .where({ firebase_uid: uid })
     .update(changes, "id")
     .then(id => {
@@ -62,5 +62,5 @@ async function getAllFriends(uid) {
     )
     .from("friends")
     .whereNot("friends.user_uid", "=", uid)
-    .leftJoin("users", "users.id", "friends.user_uid");
+    .leftJoin("users", "users.firebase_uid", "friends.user_uid");
 }

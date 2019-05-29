@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 router.get("/:uid", async (req, res) => {
   const { uid } = req.params;
   try {
-    const user = await Users.getById(uid);
+    const user = await Users.getByUid(uid);
     if (!user) {
       res.status(404).json({ error: `user with id ${uid} does not exist` });
     } else {
