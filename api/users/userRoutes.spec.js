@@ -52,25 +52,27 @@ describe("The user Router", () => {
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
-      expect(res.body.length).toBe(2);
+      expect(res.body.length).toBe(4);
       expect(res.body).toEqual(users);
     });
   });
 
-  describe("GET /:id", () => {
+  describe("GET /:uid", () => {
     it("should return a single user with specified id", async () => {
       await db("users").insert(users[0]);
-      const res = await req(server).get("/api/users/1");
+      const res = await req(server).get("/api/users/258975325235");
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual(users[0]);
     });
-    fit("should return an error for user if they do not exist", async () => {
+    it("should return an error for user if they do not exist", async () => {
       await db("users").insert(users[0]);
-      const res = await req(server).get("/api/users/5");
+      const res = await req(server).get("/api/users/523235235");
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
-      expect(res.body).toEqual({ error: `user with id ${5} does not exist` });
+      expect(res.body).toEqual({
+        error: `user with id ${"523235235"} does not exist`
+      });
     });
   });
 
@@ -105,12 +107,12 @@ describe("The user Router", () => {
     });
   });
 
-  describe("PUT /:id", () => {
+  describe("PUT /:uid", () => {
     it("should update and return updated user", async () => {
       await db("users").insert(users[0]);
       const updatedUser = { ...users[0], username: "ToddHoward" };
       const res = await req(server)
-        .put("/api/users/1")
+        .put("/api/users/258975325235")
         .send(updatedUser);
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
@@ -118,56 +120,76 @@ describe("The user Router", () => {
     });
   });
 
-  describe("DELETE /:id", () => {
+  describe("DELETE /:uid", () => {
     it("should delete user and return a message", async () => {
       await db("users").insert(users[0]);
-      const res = await req(server).delete("/api/users/1");
+      const res = await req(server).delete("/api/users/258975325235");
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({ message: "User deleted" });
     });
   });
 
-  describe("GET /:id/friends", () => {
-    it("should return a list of friends", async () => {
+  describe("GET /:uid/friends", () => {
+    fit("should return a list of friends", async () => {
       try {
         // add the users to the database
         await db("users").insert(users);
 
         // user 1 is friends with user 2
         const [userOne] = await db("friends").insert(
-          { user_id: 1, friend_id: 2, status: "accepted" },
+          {
+            user_uid: "258975325235",
+            friend_uid: "258975vnfh325235",
+            status: "accepted"
+          },
           "id"
         );
         // user 2 is friends with user 1
         const [userTwo] = await db("friends").insert(
-          { user_id: 2, friend_id: 1, status: "accepted" },
+          {
+            user_uid: "258975vnfh325235",
+            friend_uid: "258975325235",
+            status: "accepted"
+          },
           "id"
         );
 
         // user 1 is friends with user 3
         await db("friends").insert(
-          { user_id: 1, friend_id: 3, status: "accepted" },
+          {
+            user_uid: "258975325235",
+            friend_uid: 25897325235,
+            status: "accepted"
+          },
           "id"
         );
         // user 3 is friends with user 1
         await db("friends").insert(
-          { user_id: 3, friend_id: 1, status: "accepted" },
+          {
+            user_uid: "25897325235",
+            friend_uid: "258975325235",
+            status: "accepted"
+          },
           "id"
         );
 
         // user 1 is friends with user 4
         await db("friends").insert(
-          { user_id: 1, friend_id: 4, status: "accepted" },
+          {
+            user_uid: "258975325235",
+            friend_uid: "2525235",
+            status: "accepted"
+          },
           "id"
         );
         // user 4 is friends with user 1
         await db("friends").insert(
-          { user_id: 4, friend_id: 1, status: "accepted" },
+          { user_uid: 2525235, friend_uid: "258975325235", status: "accepted" },
           "id"
         );
 
-        const res = await req(server).get("/api/users/1/friends");
+        const res = await req(server).get("/api/users/258975325235/friends");
         expect(res.status).toBe(200);
         expect(res.type).toBe("application/json");
         expect(res.body).toEqual([users[1], users[2], users[3]]);
