@@ -101,6 +101,7 @@ returns array of friends for user with `:firebase_uid`
 ]
 ```
 
+
 ### GET `/api/users/:firebase_uid/friends/pending`
 
 returns array of pending friends for user with `:firebase_uid`
@@ -123,59 +124,59 @@ deletes user with `:firebase_uid`
 
 ## Friends
 
-### GET `api/request/:user_id/:friend_id`
+### GET `api/request/:user_uid/:friend_uid`
 
-Will send a friend requests from `user_id` to `friend_id`
+Will send a friend requests from `user_uid` to `friend_uid`
 
 returns
 
 ```javascript
 {
-    friend_id: friend_id,
+    friend_uid: friend_uid,
     id: 1,
     status: "pending",
-    user_id: user_id
+    user_uid: user_uid
 }
 ```
 
-### GET `api/accept/:user_id/:friend_id`
+### GET `api/accept/:user_uid/:friend_uid`
 
-Will send a friend requests from `user_id` to `friend_id`
+Will send a friend requests from `user_uid` to `friend_uid`
 
 returns
 
 ```javascript
 {
-    friend_id: friend_id,
+    friend_uid: friend_uid,
     id: 2,
     status: "accepted",
-    user_id: user_id
+    user_uid: user_uid
 }
 ```
 
-### GET `api/reject/:user_id/:friend_id`
+### GET `api/reject/:user_uid/:friend_uid`
 
-Will send a friend requests from `user_id` to `friend_id`
+Will send a friend requests from `user_uid` to `friend_uid`
 
 returns
 
 ```javascript
 {
-    friend_id: friend_id,
+    friend_uid: friend_uid,
     id: 1,
     status: "rejected",
-    user_id: user_id
+    user_uid: user_uid
 }
 ```
 
-### DELETE `api/reject/:user_id/:friend_id`
+### DELETE `api/reject/:user_uid/:friend_uid`
 
-Will send a friend requests from `user_id` to `friend_id`
+Will send a friend requests from `user_uid` to `friend_uid`
 
 returns
 
 ```javascript
 {
-  message: `friend with id ${friend_id} deleted`;
+  message: `friend with id ${friend_uid} deleted`;
 }
 ```
