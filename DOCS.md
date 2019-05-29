@@ -101,6 +101,23 @@ returns array of friends for user with `:firebase_uid`
 ]
 ```
 
+
+### GET `/api/users/:firebase_uid/friends/pending`
+
+returns array of pending friends for user with `:firebase_uid`
+
+```javascript
+[{
+    id: id,
+    email: "test@test.com",
+    firebase_uid: "258975325235",
+    username: "Ralphiu",
+    first_name: "Ralph",
+    last_name: "Pill"
+},{...}
+]
+```
+
 ### DELETE `/api/users/:firebase_uid/`
 
 deletes user with `:firebase_uid`
