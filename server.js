@@ -20,6 +20,7 @@ const userRoutes = require("./api/users/userRoutes");
 const locationRoutes = require("./api/locations/locationsRoutes");
 const commentsRoutes = require("./api/comments/commentsRoutes");
 const friendsRoutes = require("./api/friends/friendRoutes");
+const invitedRoutes = require("./api/event_invitees/event_inviteesRoute");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -37,5 +38,6 @@ server.use("/api/placesId/", locationRoutes);
 server.use("/api/events", eventRoutes);
 server.use("/api/comments", commentsRoutes);
 server.use("/api/friends", friendsRoutes);
+server.use("/api/invited", invitedRoutes);
 
 module.exports = server;

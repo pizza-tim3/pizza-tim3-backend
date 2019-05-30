@@ -9,7 +9,7 @@ exports.up = function(knex, Promise) {
 
     invited
       .integer("user_id") //declaring the other foreign key
-      .references("id")
+      .references("firebase_uid")
       .inTable("users");
 
     invited.bool("pending");

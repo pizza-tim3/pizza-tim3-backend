@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
       events.string("event_description");
       events.string("event_date").notNullable();
       //foreign keys
-      events.integer("organizer").references("id").inTable("users");
+      events.string("organizer").references("firebase_uid").inTable("users");
 
       events.integer("place").references("id").inTable("locations");
        

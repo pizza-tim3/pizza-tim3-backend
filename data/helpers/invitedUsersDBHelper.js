@@ -8,16 +8,26 @@ const db = require("../dbConfig.js");
 //delete invited users from an existing event
 
 module.exports = {
-    getAllInvited,
-    getInvitedAccepted,
-    getInvitedPending,
-    getInvitedDeclined,
-    addInvitedUser,
-    deleteInvitedUser,
-    updateStatus
+    getAllInvited
+    // getInvitedAccepted,
+    // getInvitedPending,
+    // getInvitedDeclined,
+    // addInvitedUser,
+    // deleteInvitedUser,
+    // updateStatus
   };
 
-  function getAllInvited() {
-      return db("invited")
-        .where()
+  async function getAllInvited(eventId) {
+      return await db
+        .select(
+          "users.id",
+          "users.firebase_uid",
+          "users.email",
+          "users.username",
+          "users.first_name",
+          "users.last_name"
+        )
+        .from("invited")
+        .where("event_id", eventId)
+        .leftJoin("users", "users.firebase_uid", "user_id");
   }

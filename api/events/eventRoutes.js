@@ -5,14 +5,14 @@ const Events = require("../../data/helpers/eventDbHelper");
 
 router.post("/", async (req, res) => {
   try {
-    const { event_name, event_date, organiser, place, event_description } = req.body;
+    const { event_name, event_date, organizer, place, event_description } = req.body;
 
-    if (event_name && event_description && event_date && organiser && place) {
+    if (event_name && event_description && event_date && organizer && place) {
       const newEvent = {
         event_name: event_name,
         event_description: event_description,
         event_date: event_date,
-        organiser: organiser,
+        organizer: organizer,
         place: place
       };
 
