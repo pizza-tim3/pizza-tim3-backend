@@ -8,12 +8,12 @@ const db = require("../dbConfig.js");
 //delete invited users from an existing event
 
 module.exports = {
-    getAllInvited
+    getAllInvited,
     // getInvitedAccepted,
     // getInvitedPending,
     // getInvitedDeclined,
-    // addInvitedUser,
-    // deleteInvitedUser,
+    addUserToEvent,
+    deleteInvitedUser,
     // updateStatus
   };
 
@@ -30,4 +30,21 @@ module.exports = {
         .from("invited")
         .where("event_id", eventId)
         .leftJoin("users", "users.firebase_uid", "user_id");
+  }
+
+  async function addUserToEvent (user, eventId) {
+    console.log(user);
+    return await db('invited')
+      .insert(user)
+      .where('event_id', eventId);
+  }
+
+  async function deleteInvitedUser (userId, eventId) {
+    return await db('invited')
+      .where({
+        event_id: eventId,
+        user_id: userId
+      })
+      .select('id')
+      .del();
   }

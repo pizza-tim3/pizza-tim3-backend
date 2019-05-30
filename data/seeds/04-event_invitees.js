@@ -9,14 +9,7 @@ exports.seed = function(knex, Promise) {
                    'pending' : 'true',
                    'accepted' : 'false',
                    'declined' : 'false'
-               },
-               {
-                    'event_id' : '1',
-                    'user_id' : 'jNpViqXD4DXmf9H2FbkQnAyoLyu3',
-                    'pending' : 'true',
-                    'accepted' : 'false',
-                    'declined' : 'false'
-                }
+               }
             ]);
         });
 };
