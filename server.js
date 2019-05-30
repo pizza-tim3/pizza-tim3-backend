@@ -12,28 +12,16 @@ server.use(express.json(), cors(), helmet(), logger("dev"));
 const initializeFirebBase = require("./auth/firebaseInit");
 initializeFirebBase();
 
-//import the restricted
-const { verifyToken, verifyUser } = require("./auth/firebase-middleware");
-
 const eventRoutes = require("./api/events/eventRoutes");
 const userRoutes = require("./api/users/userRoutes");
 const locationRoutes = require("./api/locations/locationsRoutes");
 const commentsRoutes = require("./api/comments/commentsRoutes");
 const friendsRoutes = require("./api/friends/friendRoutes");
+const restrictedRoutes = require("./api/restricted/restrictedRoutes");
 
 // Home Route
 server.get("/", (req, res) => {
   res.status(200).json("Home Page up and running");
-});
-
-//restricted route example
-server.get("/restricted", verifyToken, (req, res) => {
-  res.status(200).json("Veiwing a restricted page!");
-});
-
-//restricted route example
-server.get("/restricted/:uid", verifyToken, verifyUser, (req, res) => {
-  res.status(200).json("Veiwing a user specific restricted page!");
 });
 
 // Users Resource Route
@@ -42,5 +30,6 @@ server.use("/api/placesId/", locationRoutes);
 server.use("/api/events", eventRoutes);
 server.use("/api/comments", commentsRoutes);
 server.use("/api/friends", friendsRoutes);
+server.use("/api/restricted", restrictedRoutes);
 
 module.exports = server;
