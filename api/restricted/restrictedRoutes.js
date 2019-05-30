@@ -13,7 +13,7 @@ router.get("/", verifyToken, (req, res) => {
   res.status(200).json({ message: "Veiwing a restricted page!" });
 });
 
-//restricted route example
+// make sure the user trying to modify anything is the same user that's making the request
 router.get("/:uid", verifyToken, verifyUser, (req, res) => {
   res.status(200).json({ message: "Veiwing a user specific restricted page!" });
 });
