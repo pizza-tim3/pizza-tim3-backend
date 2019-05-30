@@ -163,3 +163,29 @@ returns
   message: `friend with id ${friend_id} deleted`;
 }
 ```
+
+##Admin
+
+### GET `api/promote/:uid/`
+
+Promotes a user to administrator
+
+returns
+
+```javascript
+{
+  message: "user has been promoted to admin";
+}
+```
+
+### PUT `api/demote/:uid/`
+
+Demotes a user to administrator
+
+returns
+
+```javascript
+{
+  message: "admin privileges revoked";
+}
+```
