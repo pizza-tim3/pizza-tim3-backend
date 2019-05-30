@@ -18,6 +18,7 @@ const locationRoutes = require("./api/locations/locationsRoutes");
 const commentsRoutes = require("./api/comments/commentsRoutes");
 const friendsRoutes = require("./api/friends/friendRoutes");
 const restrictedRoutes = require("./api/restricted/restrictedRoutes");
+const adminRoutes = require("./api/admin/adminRoutes");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -31,5 +32,6 @@ server.use("/api/events", eventRoutes);
 server.use("/api/comments", commentsRoutes);
 server.use("/api/friends", friendsRoutes);
 server.use("/api/restricted", restrictedRoutes);
+server.use("/api/admin", adminRoutes);
 
 module.exports = server;

@@ -37,16 +37,7 @@ router.post("/", async (req, res) => {
   } else {
     try {
       const newUser = await Users.add(user);
-      //add custom claims
-      // Set admin privilege on the user corresponding to uid.
 
-      // admin
-      //   .auth()
-      //   .setCustomUserClaims(firebase_uid, { admin: true })
-      //   .then(() => {
-      //     // The new custom claims will propagate to the user's ID token the
-      //     // next time a new one is issued.
-      //   });
       res.status(200).json(newUser);
     } catch (err) {
       console.log(err);
