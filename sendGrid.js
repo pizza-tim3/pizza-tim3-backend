@@ -4,7 +4,7 @@
 function sendEmail(toEmail, fromEmail, subjectEmail, textEmail) {
   const sgMail = require("@sendgrid/mail");
   sgMail.setApiKey(
-    sgMail.setApiKey(process.env.sendgrid)
+    (process.env.sendgrid)
   );
   const msg = {
     to: toEmail,
