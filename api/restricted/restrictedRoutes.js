@@ -17,7 +17,9 @@ router.get("/", verifyToken, (req, res) => {
 router.get("/:uid", verifyToken, verifyUser, (req, res) => {
   res.status(200).json({ message: "Veiwing a user specific restricted page!" });
 });
-router.get("/:uid/admin", verifyToken, verifyUser, checkAdmin, (req, res) => {
+
+//make sure the user is an admin
+router.get("/:uid/admin", verifyToken, checkAdmin, (req, res) => {
   res.status(200).json({
     message: "Veiwing a user specific restricted page with admin status!"
   });
