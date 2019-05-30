@@ -16,6 +16,9 @@ const verifyToken = async (req, res, next) => {
       const uid = decodedToken.uid;
       //put the user id on the req object
       req.uid = uid;
+      //get custom claims if any
+      const { customClaims } = await admin.auth().getUser(uid);
+      req.customClaims = customClaims;
       //go to next middleware/routing logic
       next();
     } else {
@@ -42,4 +45,16 @@ const verifyUser = async (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken, verifyUser };
+//This function *must* come after verifyToken!
+//Otherwise req.customClaims will be undefined
+//Checks to make sure that the user has the custom claim of admin set to true
+const checkAdmin = async (req, res, next) => {
+  //compare if decoded uid !== the incoming uid on the request
+  if (!req.customClaims.admin) {
+    res.status(403).json({ message: "unauthorized" });
+  } else {
+    next();
+  }
+};
+
+module.exports = { verifyToken, verifyUser, checkAdmin };
