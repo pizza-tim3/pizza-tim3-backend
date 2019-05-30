@@ -1,22 +1,23 @@
 exports.up = function(knex, Promise) {
-  return knex.schema.createTable("event_participants", function(
-    event_participants
-  ) {
-    event_participants.increments();
-    event_participants
-      .integer("event_participantsid") //declaring a foreign key
+  return knex.schema.createTable("invited", function(invited) {
+
+    invited.increments();
+    invited
+      .integer("event_id") //declaring a foreign key
       .references("id")
       .inTable("events");
 
-    event_participants
-      .integer("user_id") //declaring the other foreign key
-      .references("id")
+    invited
+      .string("user_id") //declaring the other foreign key
+      .references("firebase_uid")
       .inTable("users");
 
-    event_participants.bool("accepted");
+    invited.bool("pending");
+    invited.bool("accepted");
+    invited.bool("declined");
   });
 };
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTableIfExists("event_participants");
+  return knex.schema.dropTableIfExists("invited");
 };
