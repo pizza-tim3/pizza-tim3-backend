@@ -86,4 +86,14 @@ router.get("/:uid/friends", async (req, res) => {
   }
 });
 
+router.get("/:uid/friends/pending", async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const users = await Users.getAllPendingFriends(uid);
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;
