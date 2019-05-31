@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const admin = require("firebase-admin");
 const Users = require("../../data/helpers/userDbHelper");
 // All Users route
 
@@ -36,6 +37,7 @@ router.post("/", async (req, res) => {
   } else {
     try {
       const newUser = await Users.add(user);
+
       res.status(200).json(newUser);
     } catch (err) {
       console.log(err);
