@@ -378,4 +378,118 @@ describe("The user Router", () => {
       });
     });
   });
+
+  describe("GET /:uid/", () => {
+    it("should return a list of friends", async () => {
+      try {
+        // add the users to the database
+        await db("users").insert(users);
+
+        // user 1 is friends with user 2
+        const [userOne] = await db("friends").insert(
+          {
+            user_uid: "258975325235",
+            friend_uid: "258975vnfh325235",
+            status: "accepted"
+          },
+          "id"
+        );
+        // user 2 is friends with user 1
+        const [userTwo] = await db("friends").insert(
+          {
+            user_uid: "258975vnfh325235",
+            friend_uid: "258975325235",
+            status: "accepted"
+          },
+          "id"
+        );
+
+        // user 1 is friends with user 3
+        await db("friends").insert(
+          {
+            user_uid: "258975325235",
+            friend_uid: 25897325235,
+            status: "accepted"
+          },
+          "id"
+        );
+        // user 3 is friends with user 1
+        await db("friends").insert(
+          {
+            user_uid: "25897325235",
+            friend_uid: "258975325235",
+            status: "accepted"
+          },
+          "id"
+        );
+
+        // user 1 is friends with user 4
+        await db("friends").insert(
+          {
+            user_uid: "258975325235",
+            friend_uid: "2525235",
+            status: "accepted"
+          },
+          "id"
+        );
+        // user 4 is friends with user 1
+        await db("friends").insert(
+          { user_uid: 2525235, friend_uid: "258975325235", status: "accepted" },
+          "id"
+        );
+
+        const res = await req(server).get("/api/friends/258975325235");
+        expect(res.status).toBe(200);
+        expect(res.type).toBe("application/json");
+        expect(res.body).toEqual([users[1], users[2], users[3]]);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  });
+
+  describe("GET /:uid/pending", () => {
+    fit("should return a list of pending friends", async () => {
+      try {
+        // add the users to the database
+        await db("users").insert(users);
+
+        // user 1 sends a friend request to 2
+        const [userOne] = await db("friends").insert(
+          {
+            user_uid: "258975325235",
+            friend_uid: "258975vnfh325235",
+            status: "pending"
+          },
+          "id"
+        );
+
+        // user 1  sends a friend request to 3
+        await db("friends").insert(
+          {
+            user_uid: "258975325235",
+            friend_uid: "25897325235",
+            status: "pending"
+          },
+          "id"
+        );
+        // user 1 sends a friend request to 4
+        await db("friends").insert(
+          {
+            user_uid: "258975325235",
+            friend_uid: "2525235",
+            status: "pending"
+          },
+          "id"
+        );
+
+        const res = await req(server).get("/api/friends/258975325235/pending");
+        expect(res.status).toBe(200);
+        expect(res.type).toBe("application/json");
+        expect(res.body).toEqual([users[1], users[2], users[3]]);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  });
 });
