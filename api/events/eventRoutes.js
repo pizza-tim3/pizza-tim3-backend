@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
       event_date,
       organizer,
       place,
-      event_description,
+      event_description
     } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
         event_description: event_description,
         event_date: event_date,
         organizer: organizer,
-        place: place,
+        place: place
       };
 
       const eid = await Events.add(newEvent);
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "we can't add the new record in event table",
-      error: err,
+      error: err
     });
   }
 });
@@ -77,9 +77,13 @@ router.get("/:id/details", async (req, res) => {
     const id = req.params.id;
     // Get Events, Locations, Invited Users and Comments associated with an event and create one event response object.
     let event = await Events.getBy(id);
+    console.log("After Events.getBy(id);");
     const eventLocation = await Locations.getPlaceById(event.place);
+    console.log("after await Locations.getPlaceById(event.place);");
     const invitedUsers = await InvitedUsers.getAllInvited(id);
+    console.log("after await InvitedUsers.getAllInvited(id);");
     const comments = await Comments.getByEvent(id);
+    console.log("after await Comments.getByEvent(id);");
     event.invitedUsers = invitedUsers;
     event.comments = comments;
     event.location = eventLocation;
