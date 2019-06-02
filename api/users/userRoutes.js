@@ -3,9 +3,32 @@ const router = express.Router();
 const admin = require("firebase-admin");
 const Users = require("../../data/helpers/userDbHelper");
 // All Users route
+const multer = require("multer");
+const cloudinary = require("cloudinary");
+const dataUri = require("datauri");
+const path = require("path");
+const newUri = new dataUri();
 
 //fix me add authorize/authentication for users
 //so users can only access their own stuff
+
+// Multer Image Package Storage object instance
+
+const storage = multer.memoryStorage();
+
+// Multer Image File Filter
+const imageFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only jpeg, jpg, png files are allowed."), false);
+  }
+};
+
 router.get("/", async (req, res) => {
   try {
     const users = await Users.getAll();
