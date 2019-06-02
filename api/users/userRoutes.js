@@ -29,6 +29,23 @@ const imageFilter = (req, file, cb) => {
   }
 };
 
+// Multer Upload Config
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+    fileFilter: imageFilter,
+  },
+});
+
+// Cloudinary Config
+
+cloudinary.config({
+  cloud_name: "htg1iqq1p",
+  api_key: "915419188456665",
+  api_secret: "M7938KD1Akyo8XBTmf7jF68jiHA",
+});
+
 router.get("/", async (req, res) => {
   try {
     const users = await Users.getAll();
