@@ -6,10 +6,9 @@ exports.up = function(knex, Promise) {
       .references("id")
       .inTable("events");
 
-    invited
-      .string("user_id") //declaring the other foreign key
-      .references("firebase_uid")
-      .inTable("users");
+    invited.string("user_id"); //declaring the other foreign key
+    //   .references("firebase_uid")
+    //   .inTable("users");
 
     invited.bool("pending");
     invited.bool("accepted");
