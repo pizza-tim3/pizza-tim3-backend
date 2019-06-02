@@ -22,11 +22,6 @@ async function add(event) {
   return id;
 }
 
-function getBy(id) {
-  return db("events")
-    .where({ id })
-    .first();
-}
 
 async function update(id, changes) {
   return db("events")

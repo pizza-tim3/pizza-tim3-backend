@@ -3,9 +3,13 @@
 
 function sendEmail(toEmail, fromEmail, subjectEmail, textEmail) {
   const sgMail = require("@sendgrid/mail");
+<<<<<<< HEAD
   sgMail.setApiKey(
     (process.env.sendgrid)
   );
+=======
+  sgMail.setApiKey(process.env.sendgrid);
+>>>>>>> origin/development
   const msg = {
     to: toEmail,
     from: fromEmail,
@@ -21,4 +25,3 @@ sendEmail(
   " Party Invitation",
   "You are invited"
 );
-
