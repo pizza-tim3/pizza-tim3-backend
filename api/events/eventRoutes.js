@@ -77,11 +77,13 @@ router.get("/:id/details", async (req, res) => {
     const id = req.params.id;
     // Get Events, Locations, Invited Users and Comments associated with an event and create one event response object.
     let event = await Events.getBy(id);
+
     const eventLocation = await Locations.getPlaceById(event.place);
-    const invitedUsers = await InvitedUsers.getAllInvited(id);
-    const comments = await Comments.getByEvent(id);
-    event.invitedUsers = invitedUsers;
-    event.comments = comments;
+    const eventUsers = await InvitedUsers.getAllInvited(id);
+    const eventComments = await Comments.getByEvent(id);
+
+    event.invitedUsers = eventUsers;
+    event.comments = eventComments;
     event.location = eventLocation;
 
     if (event) {
