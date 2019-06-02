@@ -106,9 +106,44 @@ router.get("/pending/:id",async(req,res)=>{
        }catch(error){
          res.status(500).json({message:"we can't find such events",error:error})
        }
-
-
 })
+
+router.get("/upcoming/:id",async(req,res)=>{
+
+  console.log("Get status")
+  try{
+    const id =req.params.id;
+   if(id){
+     const result = await Events.getUpcomingEventsforUser(id)
+     res.status(200).json({result: result})
+   }else {
+     res.status(400).json({message:"This event id doesn't exist"});
+   }
+
+
+  }catch(error){
+    res.status(500).json({message:"we can't find such events",error:error})
+  }
+})
+
+router.get("/past/:id",async(req,res)=>{
+
+  console.log("Get status")
+  try{
+    const id =req.params.id;
+   if(id){
+     const result = await Events.getPastEventsforUser(id)
+     res.status(200).json({result: result})
+   }else {
+     res.status(400).json({message:"This event id doesn't exist"});
+   }
+
+
+  }catch(error){
+    res.status(500).json({message:"we can't find such events",error:error})
+  }
+})
+
 router.put("/status/:id",async(req,res)=>{
    try{
     

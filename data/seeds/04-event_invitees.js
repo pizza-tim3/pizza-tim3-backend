@@ -4,12 +4,20 @@ exports.seed = function(knex, Promise) {
         .then(() => {
             return knex('invited').insert([
                {
-                   'event_id' : '1',
+                   'event_id' : '5',
                    'user_id' : 'jNpViqXD4DXmf9H2FbkQnAyoLyu2',
                    'pending' : 'true',
                    'accepted' : 'false',
                    'declined' : 'false'
-               }
+               },
+               {
+                'event_id' : '6',
+                'user_id' : 'jNpViqXD4DXmf9H2FbkQnAyoLyu2',
+                'pending' : 'true',
+                'accepted' : 'false',
+                'declined' : 'false'
+            }
+
             ]);
         });
 };

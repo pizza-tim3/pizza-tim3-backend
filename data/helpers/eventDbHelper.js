@@ -80,23 +80,24 @@ async function updateToDeclinedStatus (userId, eventId) {
 
 
  async function getUpcomingEventsforUser(id){
-   const currentEpoch = new Date().toString();
+   const currentEpoch = new Date().getTime();
  
-   return  db.select("event_id","user_id","status","event_name","event_date","place","users.id","events.id")
-    .from("eventPartcipants")
-    .where({user_id:id}).where(currentEpoch,">", "event_date")
-    .innerJoin("events","eventPartcipants.event_id","=","events.id")
-    .innerJoin("locations","google_place_id", "=","events.place")
+   console.log("Get upcoming ", id, currentEpoch);
+  return  db.select("event_id","user_id","event_name","event_date","google_place_id", "pending")
+    .from("invited")
+    .where({"user_id":id,  }).where(currentEpoch,"<", "event_date")
+    .innerJoin("events","invited.event_id","=","events.id")
+    .innerJoin("locations","locations.id", "=","events.place")
   }
   
   async function getPastEventsforUser(id){
-   const currentEpoch = new Date().toString();
+    const currentEpoch = new Date().getTime();
  
-   return  db.select("event_id","user_id","status","event_name","event_date","place","users.id","events.id")
-    .from("eventPartcipants")
-    .where({user_id:id})
-    .where(currentEpoch,"<", "event_date")
-    .innerJoin("events","eventPartcipants.event_id","=","events.id")
-    .innerJoin("locations","google_place_id", "=","events.place")
+    console.log("Get past ", id, currentEpoch);
+   return  db.select("event_id","user_id","event_name","event_date","google_place_id", "pending")
+     .from("invited")
+     .where({"user_id":id,  }).where(currentEpoch,">", "event_date")
+     .innerJoin("events","invited.event_id","=","events.id")
+     .innerJoin("locations","locations.id", "=","events.place")
   }
    
