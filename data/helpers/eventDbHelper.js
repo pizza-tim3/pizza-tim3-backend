@@ -5,7 +5,12 @@ module.exports = {
   getBy,
   add,
   update,
-  remove
+  remove,
+  getPendingEventsforUser,
+  updateToAcceptedStatus,
+  updateToDeclinedStatus,
+  getUpcomingEventsforUser,
+  getPastEventsforUser
 };
  function getAll() {
   return db("events");
@@ -22,6 +27,11 @@ async function add(event) {
   return id;
 }
 
+function getBy(id) {
+  return db("events")
+    .where({ id })
+    .first();
+}
 
 async function update(id, changes) {
   return db("events")
@@ -34,3 +44,59 @@ async function remove(id) {
     .where({ id })
     .del();
 }
+
+async function getPendingEventsforUser(id){
+
+  console.log("Get ", id);
+  return  db.select("event_id","user_id","event_name","event_date","google_place_id", "pending")
+    .from("invited")
+    .where({"user_id":id, "pending" : "true"  })
+    .innerJoin("events","invited.event_id","=","events.id")
+    .innerJoin("locations","locations.id", "=","events.place")
+ }
+ async function updateToAcceptedStatus (userId, eventId) {
+   console.log("Accepted ", userId, eventId)
+  return await db('invited')
+    .where({
+      event_id: eventId,
+      user_id: userId
+    })
+    .update({
+      'accepted': true,
+      'pending': false
+    })
+}
+async function updateToDeclinedStatus (userId, eventId) {
+  return await db('invited')
+    .where({
+      event_id: eventId,
+      user_id: userId
+    })
+    .update({
+      'declined': true,
+      'pending': false
+    })
+}
+
+
+ async function getUpcomingEventsforUser(id){
+   const currentEpoch = new Date().toString();
+ 
+   return  db.select("event_id","user_id","status","event_name","event_date","place","users.id","events.id")
+    .from("eventPartcipants")
+    .where({user_id:id}).where(currentEpoch,">", "event_date")
+    .innerJoin("events","eventPartcipants.event_id","=","events.id")
+    .innerJoin("locations","google_place_id", "=","events.place")
+  }
+  
+  async function getPastEventsforUser(id){
+   const currentEpoch = new Date().toString();
+ 
+   return  db.select("event_id","user_id","status","event_name","event_date","place","users.id","events.id")
+    .from("eventPartcipants")
+    .where({user_id:id})
+    .where(currentEpoch,"<", "event_date")
+    .innerJoin("events","eventPartcipants.event_id","=","events.id")
+    .innerJoin("locations","google_place_id", "=","events.place")
+  }
+   

@@ -90,5 +90,51 @@ router.delete("/:id", async (req, res) => {
   };
 });
 
+router.get("/status/:id",async(req,res)=>{
+
+       console.log("Get status")
+       try{
+         const id =req.params.id;
+        if(id){
+          const result = await Events.getPendingEventsforUser(id)
+          res.status(200).json({result: result})
+        }else {
+          res.status(400).json({message:"This event id doesn't exist"});
+        }
+
+
+       }catch(error){
+         res.status(500).json({message:"we can't find such events",error:error})
+       }
+
+
+})
+router.put("/status/:id",async(req,res)=>{
+   try{
+    
+    const id = req.params.id;
+    
+    
+    const  event_id= req.body.event_id;
+    const is_accepted = req.body.is_accepted;
+
+    console.log(event_id, is_accepted, id);
+
+    if(is_accepted===true){
+      const result = await Events.updateToAcceptedStatus(id,event_id)
+      res.status(200).json({result})
+    }else{
+      const result =await Events.updateToDeclinedStatus(id,event_id)
+      res.status(200).json({result})
+    }
+
+   }
+   catch(error){
+    res.status(500).json({message:"we can't  status update such events",error:error})
+
+   }
+
+})
+
 module.exports = router;
 
