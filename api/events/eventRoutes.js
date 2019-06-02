@@ -90,7 +90,7 @@ router.delete("/:id", async (req, res) => {
   };
 });
 
-router.get("/status/:id",async(req,res)=>{
+router.get("/pending/:id",async(req,res)=>{
 
        console.log("Get status")
        try{
