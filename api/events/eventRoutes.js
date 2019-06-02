@@ -90,6 +90,21 @@ router.get("/:id/details", async (req, res) => {
       res.status(404).json({ message: "Event doesn't exsist" });
     }
   } catch (err) {
+    function dumpError(err) {
+      if (typeof err === "object") {
+        if (err.message) {
+          console.log("\nMessage: " + err.message);
+        }
+        if (err.stack) {
+          console.log("\nStacktrace:");
+          console.log("====================");
+          console.log(err.stack);
+        }
+      } else {
+        console.log("dumpError :: argument is not an object");
+      }
+    }
+    dumpError(err);
     res
       .status(500)
       .json({ message: "We can't retrieve the event", error: err });
