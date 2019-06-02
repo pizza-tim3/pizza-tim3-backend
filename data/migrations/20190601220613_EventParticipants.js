@@ -1,6 +1,5 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable("invited", function(invited) {
-
     invited.increments();
     invited
       .integer("event_id") //declaring a foreign key
