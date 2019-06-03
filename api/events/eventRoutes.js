@@ -114,8 +114,13 @@ router.get("/upcoming/:id",async(req,res)=>{
   try{
     const id =req.params.id;
    if(id){
-     const result = await Events.getUpcomingEventsforUser(id)
-     res.status(200).json({result: result})
+     const result = await Events.getEventsforUser(id);
+     const currentEpoch = new Date().getTime();
+     console.log(result)
+     const upEvents = result.filter(event => {
+       return event.event_date > currentEpoch;
+     })
+     res.status(200).json({result: upEvents})
    }else {
      res.status(400).json({message:"This event id doesn't exist"});
    }
@@ -132,8 +137,12 @@ router.get("/past/:id",async(req,res)=>{
   try{
     const id =req.params.id;
    if(id){
-     const result = await Events.getPastEventsforUser(id)
-     res.status(200).json({result: result})
+     const result = await Events.getEventsforUser(id)
+     const currentEpoch = new Date().getTime();
+     const pastEvents = result.filter(event => {
+      return event.event_date < currentEpoch;
+    })
+     res.status(200).json({result: pastEvents})
    }else {
      res.status(400).json({message:"This event id doesn't exist"});
    }
