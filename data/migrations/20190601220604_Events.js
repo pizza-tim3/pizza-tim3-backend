@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
     events.increments();
     events.string("event_name");
     events.string("event_description");
-    events.string("event_date").notNullable();
+    events.bigInteger("event_date").notNullable();
     //foreign keys
     events.string("organizer");
     //   .references("firebase_uid")
