@@ -3,25 +3,6 @@ exports.seed = function(knex, Promise) {
     return knex('invited').del()
         .then(() => {
             return knex('invited').insert([
-<<<<<<< HEAD
-               {
-                   'event_id' : '5',
-                   'user_id' : 'jNpViqXD4DXmf9H2FbkQnAyoLyu2',
-                   'pending' : 'true',
-                   'accepted' : 'false',
-                   'declined' : 'false'
-               },
-               {
-                'event_id' : '6',
-                'user_id' : 'jNpViqXD4DXmf9H2FbkQnAyoLyu2',
-                'pending' : 'true',
-                'accepted' : 'false',
-                'declined' : 'false'
-            }
-
-            ]);
-        });
-=======
             {
                'event_id' : '1', //1
                'user_id' : 'jNpViqXD4DXmf9H2FbkQnAy10000',
@@ -192,5 +173,4 @@ exports.seed = function(knex, Promise) {
             }
         ]);
     });
->>>>>>> origin/development
 };
