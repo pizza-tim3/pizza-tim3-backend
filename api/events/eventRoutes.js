@@ -1,11 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const Users = require("../../data/helpers/userDbHelper");
+const InvitedUsers = require("../../data/helpers/invitedUsersDBHelper");
 const Events = require("../../data/helpers/eventDbHelper");
+const Locations = require("../../data/helpers/locationHelper");
+const Comments = require("../../data/helpers/commentsDbHelper");
 
 router.post("/", async (req, res) => {
   try {
-    const { event_name, event_date, organizer, place, event_description } = req.body;
+    const {
+      event_name,
+      event_date,
+      organizer,
+      place,
+      event_description,
+    } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
       const newEvent = {
@@ -13,7 +21,7 @@ router.post("/", async (req, res) => {
         event_description: event_description,
         event_date: event_date,
         organizer: organizer,
-        place: place
+        place: place,
       };
 
       const eid = await Events.add(newEvent);
@@ -24,22 +32,27 @@ router.post("/", async (req, res) => {
       }
     }
   } catch (err) {
-    res.status(500).json({message: "we can't add the new record in event table", error: err });
+    res.status(500).json({
+      message: "we can't add the new record in event table",
+      error: err,
+    });
   }
 });
 
 router.get("/", (req, res) => {
- try{
+  try {
     const events = Events.getAll().then(events => {
-      if(events){
+      if (events) {
         res.status(200).json(events);
-      } else{
-        res.status(400).json({message:"Events not found"});
-      };
+      } else {
+        res.status(400).json({ message: "Events not found" });
+      }
     });
   } catch (err) {
-    res.status(500).json({message: "we can't retrieve the events ", error: err});    
-  };
+    res
+      .status(500)
+      .json({ message: "we can't retrieve the events ", error: err });
+  }
 });
 
 router.get("/:id", async (req, res) => {
@@ -48,46 +61,88 @@ router.get("/:id", async (req, res) => {
     const event = await Events.getBy(id);
 
     if (event) {
-      res.status(200).json({event});
+      res.status(200).json({ event });
     } else {
-      res.status(400).json({message:"Event doesn't exsist"});
-    };
+      res.status(400).json({ message: "Event doesn't exsist" });
+    }
   } catch (err) {
-    res.status(500).json({message:"We can't retrieve the event", error: err});
-  };
+    res
+      .status(500)
+      .json({ message: "We can't retrieve the event", error: err });
+  }
+});
+
+router.get("/:id/details", async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Get Events, Locations, Invited Users and Comments associated with an event and create one event response object.
+    let event = await Events.getBy(id);
+    const eventLocation = await Locations.getPlaceById(event.place);
+    const invitedUsers = await InvitedUsers.getAllInvited(id);
+    const comments = await Comments.getEventAllComments(id);
+    event.invitedUsers = invitedUsers;
+    event.comments = comments;
+    event.location = eventLocation;
+
+    if (event) {
+      res.status(200).json({ event });
+    } else {
+      res.status(404).json({ message: "Event doesn't exist" });
+    }
+  } catch (err) {
+    function dumpError(err) {
+      if (typeof err === "object") {
+        if (err.message) {
+          console.log("\nMessage: " + err.message);
+        }
+        if (err.stack) {
+          console.log("\nStacktrace:");
+          console.log("====================");
+          console.log(err.stack);
+        }
+      } else {
+        console.log("dumpError :: argument is not an object");
+      }
+    }
+    dumpError(err);
+    res
+      .status(500)
+      .json({ message: "We can't retrieve the event", error: err });
+  }
 });
 
 router.put("/:id", async (req, res) => {
-  try{
+  try {
     const id = req.params.id;
-    const event =req.body;
-    
+    const event = req.body;
+
     if (id && event) {
-      const result = await Events.update(id,event);
-      res.status(200).json({result});
-    } if (!id) {
-      res.status(400).json({message:"Event id doesn't exsist"});
+      const result = await Events.update(id, event);
+      res.status(200).json({ result });
+    }
+    if (!id) {
+      res.status(400).json({ message: "Event id doesn't exsist" });
     } else {
-      res.status(400).json({message:"Event body has issues"});
-    };
+      res.status(400).json({ message: "Event body has issues" });
+    }
   } catch (err) {
-    res.status(500).json({message:"We can't update the event", error: err});
-  };
+    res.status(500).json({ message: "We can't update the event", error: err });
+  }
 });
 
 router.delete("/:id", async (req, res) => {
-  try{
+  try {
     const id = req.params.id;
 
-    if(id){
+    if (id) {
       const result = await Events.remove(id);
-      res.status(200).json({result,message: "event successfully removed"});
-    }else{
-      res.status(400).json({message:"This event id doesn't exist"});
-    };
+      res.status(200).json({ result, message: "event successfully removed" });
+    } else {
+      res.status(400).json({ message: "This event id doesn't exist" });
+    }
   } catch (err) {
-     res.status(500).json({message:"We can't delete this event", error: err});
-  };
+    res.status(500).json({ message: "We can't delete this event", error: err });
+  }
 });
 
 router.get("/pending/:id",async(req,res)=>{
@@ -181,4 +236,3 @@ router.put("/status/:id",async(req,res)=>{
 })
 
 module.exports = router;
-
