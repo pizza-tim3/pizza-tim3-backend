@@ -145,106 +145,97 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.get("/pending/:id",async(req,res)=>{
-
-       console.log("Get status")
-       try{
-         const id =req.params.id;
-        if(id){
-          const result = await Events.getPendingEventsforUser(id)
-          res.status(200).json({result: result})
-        }else {
-          res.status(400).json({message:"This event id doesn't exist"});
-        }
-
-
-       }catch(error){
-         res.status(500).json({message:"we can't find such events",error:error})
-       }
-})
-
-router.get("/upcoming/:id",async(req,res)=>{
-
-  console.log("Get status")
-  try{
-    const id =req.params.id;
-   if(id){
-     const result = await Events.getEventsforUser(id);
-     const currentEpoch = new Date().getTime();
-     console.log(result)
-     const upEvents = result.filter(event => {
-       return event.event_date > currentEpoch;
-     })
-     res.status(200).json({result: upEvents})
-   }else {
-     res.status(400).json({message:"This event id doesn't exist"});
-   }
-
-
-  }catch(error){
-    res.status(500).json({message:"we can't find such events",error:error})
-  }
-})
-
-router.get("/past/:id",async(req,res)=>{
-
-  console.log("Get status")
-  try{
-    const id =req.params.id;
-   if(id){
-     const result = await Events.getEventsforUser(id)
-     const currentEpoch = new Date().getTime();
-     const pastEvents = result.filter(event => {
-      return event.event_date < currentEpoch;
-    })
-     res.status(200).json({result: pastEvents})
-   }else {
-     res.status(400).json({message:"This event id doesn't exist"});
-   }
-
-
-  }catch(error){
-    res.status(500).json({message:"we can't find such events",error:error})
-  }
-})
-
-router.put("/status/:id",async(req,res)=>{
-   try{
-    
+router.get("/pending/:id", async (req, res) => {
+  console.log("Get status");
+  try {
     const id = req.params.id;
-    
-    
-    const  event_id= req.body.event_id;
+    if (id) {
+      const result = await Events.getPendingEventsforUser(id);
+      res.status(200).json({ result: result });
+    } else {
+      res.status(400).json({ message: "This event id doesn't exist" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "we can't find such events", error: error });
+  }
+});
+
+router.get("/upcoming/:id", async (req, res) => {
+  console.log("Get status");
+  try {
+    const id = req.params.id;
+    if (id) {
+      const result = await Events.getEventsforUser(id);
+      const currentEpoch = new Date().getTime();
+      console.log(result);
+      const upEvents = result.filter(event => {
+        return event.event_date > currentEpoch;
+      });
+      res.status(200).json({ result: upEvents });
+    } else {
+      res.status(400).json({ message: "This event id doesn't exist" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "we can't find such events", error: error });
+  }
+});
+
+router.get("/past/:id", async (req, res) => {
+  console.log("Get status");
+  try {
+    const id = req.params.id;
+    if (id) {
+      const result = await Events.getEventsforUser(id);
+      const currentEpoch = new Date().getTime();
+      const pastEvents = result.filter(event => {
+        return event.event_date < currentEpoch;
+      });
+      res.status(200).json({ result: pastEvents });
+    } else {
+      res.status(400).json({ message: "This event id doesn't exist" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "we can't find such events", error: error });
+  }
+});
+
+router.put("/status/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const event_id = req.body.event_id;
     const is_accepted = req.body.is_accepted;
 
     console.log(event_id, is_accepted, id);
 
-    if(is_accepted===true){
-      const result = await Events.updateToAcceptedStatus(id,event_id)
-      res.status(200).json({result})
-    }else{
-      const result =await Events.updateToDeclinedStatus(id,event_id)
-      res.status(200).json({result})
+    if (is_accepted === true) {
+      const result = await Events.updateToAcceptedStatus(id, event_id);
+      res.status(200).json({ result });
+    } else {
+      const result = await Events.updateToDeclinedStatus(id, event_id);
+      res.status(200).json({ result });
     }
-
-   }
-   catch(error){
-    res.status(500).json({message:"we can't  status update such events",error:error})
-
-   }
-
-})
-
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "we can't  status update such events", error: error });
+  }
+});
 
 router.post("/:id/comments", async (req, res) => {
- const newComment = req.body;
- const id = req.params.id;
- try {
-   const rows = await Comments.add(newComment, id );
-   res.status(201).json(rows);
- } catch (err) {
-   res.status(500).json(err);
- };
+  const newComment = req.body;
+  try {
+    const rows = await Comments.add(newComment);
+    res.status(201).json(rows);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
