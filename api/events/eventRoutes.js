@@ -235,4 +235,16 @@ router.put("/status/:id",async(req,res)=>{
 
 })
 
+
+router.post("/:id/comments", async (req, res) => {
+ const newComment = req.body;
+ const id = req.params.id;
+ try {
+   const rows = await Comments.add(newComment, id );
+   res.status(201).json(rows);
+ } catch (err) {
+   res.status(500).json(err);
+ };
+});
+
 module.exports = router;
