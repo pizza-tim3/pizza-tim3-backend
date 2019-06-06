@@ -20,10 +20,40 @@ const favorites = [
   }
 ];
 
+const locations = [
+  { google_place_id: "ChIJTQY9pYicQIYRBwevxbKgBJU" },
+  { google_place_id: "ChIJ4zdtwYWcQIYRS9hvr_1t_ig" },
+  { google_place_id: "ChIJTY1v-SidQIYRWe-hzXZT5jk" },
+  { google_place_id: "ChIJu1epLWecQIYRjPufvtEjxhQ" }
+];
+
+const expected = [
+  {
+    id: 1,
+    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+    google_place_id: "ChIJTQY9pYicQIYRBwevxbKgBJU"
+  },
+  {
+    id: 2,
+    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+    google_place_id: "ChIJ4zdtwYWcQIYRS9hvr_1t_ig"
+  },
+  {
+    id: 3,
+    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+    google_place_id: "ChIJTY1v-SidQIYRWe-hzXZT5jk"
+  }
+];
+
 beforeEach(async () => {
-  await db("users").truncate();
+  await db("locations")
+    .truncate()
+    .insert(locations);
+
   await db("favorites").truncate();
   await db("favorites").insert(favorites);
+
+  await db("users").truncate();
   await db("users").insert({
     id: 1,
     email: "test@test.com",
@@ -36,12 +66,12 @@ beforeEach(async () => {
 
 describe("The Favorites Router", () => {
   describe("GET /favorites/:uid/", () => {
-    it("should get all favorites", async () => {
-      //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
+    fit("should get all favorites from all users", async () => {
+      //all favorites
       const res = await req(server).get("/api/favorites/");
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
-      expect(res.body).toEqual(favorites);
+      expect(res.body).toEqual(expected);
     });
   });
   describe("GET /favorites/:uid/", () => {

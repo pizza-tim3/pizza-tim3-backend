@@ -9,8 +9,15 @@ module.exports = {
   remove
 };
 
-function getAll() {
-  return db("favorites");
+async function getAll() {
+  return await db
+    .select(
+      "favorites.id",
+      "favorites.firebase_uid",
+      "locations.google_place_id"
+    )
+    .from("favorites")
+    .innerJoin("locations", "favorites.location_id", "locations.id");
 }
 
 function getById(id) {
