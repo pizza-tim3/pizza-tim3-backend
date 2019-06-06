@@ -3,22 +3,22 @@ exports.seed = function(knex, Promise) {
     .del()
     .then(() => {
       return knex("favorites").insert([
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy00000", location_id: 1 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy00000", location_id: 2 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy00000", location_id: 3 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy00000", location_id: 4 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy10000", location_id: 1 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy10000", location_id: 2 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy10000", location_id: 3 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy10000", location_id: 4 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy30000", location_id: 1 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy30000", location_id: 2 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy30000", location_id: 3 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy30000", location_id: 4 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy40000", location_id: 1 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy40000", location_id: 2 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy40000", location_id: 3 },
-        { firebase_uid: "jNpViqXD4DXmf9H2FbkQnAy40000", location_id: 4 }
+        { firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", location_id: 1 },
+        { firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", location_id: 2 },
+        { firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", location_id: 3 },
+        { firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", location_id: 4 },
+        { firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", location_id: 1 },
+        { firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", location_id: 2 },
+        { firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", location_id: 3 },
+        { firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", location_id: 4 },
+        { firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2", location_id: 1 },
+        { firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2", location_id: 2 },
+        { firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2", location_id: 3 },
+        { firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2", location_id: 4 },
+        { firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2", location_id: 1 },
+        { firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2", location_id: 2 },
+        { firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2", location_id: 3 },
+        { firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2", location_id: 4 }
       ]);
     });
 };
