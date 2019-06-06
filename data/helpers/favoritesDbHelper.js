@@ -27,8 +27,16 @@ function getById(id) {
 }
 
 //returns all favorites by a uid
-function getByUid(uid) {
-  return db("favorites").where({ firebase_uid: uid });
+async function getByUid(uid) {
+  return await db
+    .select(
+      "favorites.id",
+      "favorites.firebase_uid",
+      "locations.google_place_id"
+    )
+    .from("favorites")
+    .where({ firebase_uid: uid })
+    .innerJoin("locations", "favorites.location_id", "locations.id");
 }
 
 async function add(favorite) {

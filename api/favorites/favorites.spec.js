@@ -66,7 +66,7 @@ beforeEach(async () => {
 
 describe("The Favorites Router", () => {
   describe("GET /favorites/:uid/", () => {
-    fit("should get all favorites from all users", async () => {
+    it("should get all favorites from all users", async () => {
       //all favorites
       const res = await req(server).get("/api/favorites/");
       expect(res.status).toBe(200);
@@ -75,14 +75,14 @@ describe("The Favorites Router", () => {
     });
   });
   describe("GET /favorites/:uid/", () => {
-    it("should get all favorites from user", async () => {
+    it("should get all favorites from a user", async () => {
       //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
       const res = await req(server).get(
         "/api/favorites/XVf2XhkNSJWNDGEW4Wh6SHpKYUt2"
       );
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
-      expect(res.body).toEqual(favorites);
+      expect(res.body).toEqual(expected);
     });
     it("should return 404 if no user with uid exists", async () => {
       //User favorites
