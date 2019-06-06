@@ -44,8 +44,8 @@ async function update(uid, changes) {
     });
 }
 
-async function remove(uid) {
+async function remove(uid, favorite_id) {
   return db("favorites")
-    .where({ firebase_uid: uid })
+    .where({ firebase_uid: uid, id: favorite_id })
     .del();
 }

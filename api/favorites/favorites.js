@@ -62,30 +62,32 @@ router.post(
   }
 );
 
-router.put("/:uid", async (req, res) => {
-  const { uid } = req.params;
-  const user = req.body;
+// router.put("/:uid", async (req, res) => {
+//   const { uid } = req.params;
+//   const user = req.body;
 
-  try {
-    const updatedUser = await Favorites.update(uid, user);
-    if (!updatedUser) {
-      res.status(404).json({ error: `user with id ${uid} does not exist` });
-    }
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
-});
+//   try {
+//     const updatedUser = await Favorites.update(uid, user);
+//     if (!updatedUser) {
+//       res.status(404).json({ error: `user with id ${uid} does not exist` });
+//     }
+//     res.status(200).json(updatedUser);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json(err);
+//   }
+// });
 
-router.delete("/:uid", async (req, res) => {
-  const { uid } = req.params;
+router.delete("/:uid/:favorite_id", async (req, res) => {
+  const { uid, favorite_id } = req.params;
   try {
-    const user = await Favorites.remove(uid);
-    if (!user) {
-      res.status(404).json({ error: `user with id ${uid} does not exist` });
+    const removed = await Favorites.remove(uid, favorite_id);
+    if (!removed) {
+      res
+        .status(404)
+        .json({ error: `favorite with id ${favorite_id} does not exist` });
     }
-    res.status(200).json({ message: "User deleted" });
+    res.status(200).json({ message: "Favorite deleted" });
   } catch (error) {
     res.status(500).json(error);
   }
