@@ -29,7 +29,8 @@ router.get(
   /* verifyToken,verifyUser*/ async (req, res) => {
     const { uid } = req.params;
     try {
-      const user = Users.getByUid(uid);
+      const user = await Users.getByUid(uid);
+      console.log(user);
       if (!user) {
         res.status(404).json({ error: `user with id ${uid} does not exist` });
       } else {

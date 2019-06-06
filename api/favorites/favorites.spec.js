@@ -41,7 +41,7 @@ beforeEach(async () => {
 
 describe("The Favorites Router", () => {
   describe("GET /favorites/:firebase_uid/", () => {
-    fit("should get all favorites from user", async () => {
+    it("should get all favorites from user", async () => {
       //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
       const res = await req(server).get(
         "/api/favorites/XVf2XhkNSJWNDGEW4Wh6SHpKYUt2"
@@ -49,6 +49,15 @@ describe("The Favorites Router", () => {
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual(favorites);
+    });
+    it("should return 404 if no user with uid exists", async () => {
+      //User favorites
+      const res = await req(server).get("/api/favorites/XVf2XhkNSJWN");
+      expect(res.status).toBe(404);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        error: `user with id XVf2XhkNSJWN does not exist`
+      });
     });
   });
 });
