@@ -35,7 +35,16 @@ beforeEach(async () => {
 });
 
 describe("The Favorites Router", () => {
-  describe("GET /favorites/:firebase_uid/", () => {
+  describe("GET /favorites/:uid/", () => {
+    fit("should get all favorites", async () => {
+      //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
+      const res = await req(server).get("/api/favorites/");
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual(favorites);
+    });
+  });
+  describe("GET /favorites/:uid/", () => {
     it("should get all favorites from user", async () => {
       //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
       const res = await req(server).get(
@@ -90,7 +99,7 @@ describe("The Favorites Router", () => {
     });
   });
   describe("DELETE /favorites", () => {
-    fit("should add a favorite for a user", async () => {
+    it("should add a favorite for a user", async () => {
       //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
       const res = await req(server).delete("/api/favorites/3");
       expect(res.status).toBe(200);
