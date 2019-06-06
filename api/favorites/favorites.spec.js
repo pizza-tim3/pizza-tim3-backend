@@ -17,11 +17,6 @@ const favorites = [
     id: 3,
     firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
     location_id: 3
-  },
-  {
-    id: 4,
-    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
-    location_id: 4
   }
 ];
 
@@ -57,6 +52,40 @@ describe("The Favorites Router", () => {
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
         error: `user with id XVf2XhkNSJWN does not exist`
+      });
+    });
+  });
+  describe("POST /favorites", () => {
+    it("should add a favorite for a user", async () => {
+      const newFavorite = {
+        id: 4,
+        firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+        location_id: 4
+      };
+      //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
+      const res = await req(server)
+        .post("/api/favorites/")
+        .send(newFavorite);
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual(newFavorite);
+    });
+    it("should return error if not all fields present", async () => {
+      const newFavorite = {
+        id: 4,
+        firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2"
+      };
+      //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
+      const res = await req(server)
+        .post("/api/favorites/")
+        .send(newFavorite);
+      expect(res.status).toBe(401);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        error: `please send and object structured like :{
+        firebase_uid: "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        location_id: 1
+      }`
       });
     });
   });

@@ -30,7 +30,6 @@ router.get(
     const { uid } = req.params;
     try {
       const user = await Users.getByUid(uid);
-      console.log(user);
       if (!user) {
         res.status(404).json({ error: `user with id ${uid} does not exist` });
       } else {
@@ -43,22 +42,33 @@ router.get(
   }
 );
 
+//TODO MAKE IT SO YOU CAN"T ADD FAVORITE TWICE
 router.post(
-  "/:uid",
-  /* verifyToken,verifyUser*/ async (req, res) => {
-    const { uid } = reg.params;
+  "/",
+  /* verifyToken,*/ async (req, res) => {
+    const { uid } = req.params;
     const favorite = req.body;
-    try {
-      const user = Users.getByUid(uid);
-      if (!user) {
-        res.status(404).json({ error: `user with id ${uid} does not exist` });
-      } else {
-        const newFavorite = await Favorites.add(favorite);
-        res.status(200).json(newFavorite);
+    const { firebase_uid, location_id } = favorite;
+    if (!firebase_uid || !location_id) {
+      res.status(401).json({
+        error: `please send and object structured like :{
+        firebase_uid: "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        location_id: 1
+      }`
+      });
+    } else {
+      try {
+        const user = Users.getByUid(uid);
+        if (!user) {
+          res.status(404).json({ error: `user with id ${uid} does not exist` });
+        } else {
+          const newFavorite = await Favorites.add(favorite);
+          res.status(200).json(newFavorite);
+        }
+      } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
       }
-    } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
     }
   }
 );
