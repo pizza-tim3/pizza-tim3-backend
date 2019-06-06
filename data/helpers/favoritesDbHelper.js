@@ -19,6 +19,7 @@ function getById(id) {
     .first();
 }
 
+//returns all favorites by a uid
 function getByUid(uid) {
   return db("favorites")
     .where({ firebase_uid: uid })

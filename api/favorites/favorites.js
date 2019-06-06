@@ -1,0 +1,94 @@
+const express = require("express");
+const router = express.Router();
+const Users = require("../../data/helpers/userDbHelper");
+const Favorites = require("../../data/helpers/favoritesDbHelper");
+import {
+  verifyToken,
+  verifyUser,
+  checkAdmin
+} from "../../auth/firebase-middleware";
+// All Favorites route
+
+//fix me add authorize/authentication for users
+//so users can only access their own stuff
+//I've commented out the middleware that should go in each route
+router.get(
+  "/",
+  /* verifyToken,checkAdmin*/ async (req, res) => {
+    try {
+      const favorites = await Favorites.getAll();
+      res.status(200).json(favorites);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+);
+
+router.get(
+  "/:uid",
+  /* verifyToken,verifyUser*/ async (req, res) => {
+    const { uid } = req.params;
+    try {
+      const user = Users.getByUid(uid);
+      if (!user) {
+        res.status(404).json({ error: `user with id ${uid} does not exist` });
+      } else {
+        const favorites = await Favorites.getByUid(uid);
+        res.status(200).json(favorites);
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+);
+
+router.post(
+  "/:uid",
+  /* verifyToken,verifyUser*/ async (req, res) => {
+    const { uid } = reg.params;
+    const favorite = req.body;
+    try {
+      const user = Users.getByUid(uid);
+      if (!user) {
+        res.status(404).json({ error: `user with id ${uid} does not exist` });
+      } else {
+        const newFavorite = await Favorites.add(favorite);
+        res.status(200).json(newFavorite);
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  }
+);
+
+router.put("/:uid", async (req, res) => {
+  const { uid } = req.params;
+  const user = req.body;
+
+  try {
+    const updatedUser = await Favorites.update(uid, user);
+    if (!updatedUser) {
+      res.status(404).json({ error: `user with id ${uid} does not exist` });
+    }
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/:uid", async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = await Favorites.remove(uid);
+    if (!user) {
+      res.status(404).json({ error: `user with id ${uid} does not exist` });
+    }
+    res.status(200).json({ message: "User deleted" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+module.exports = router;
