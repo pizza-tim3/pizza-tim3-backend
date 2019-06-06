@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const Users = require("../../data/helpers/userDbHelper");
 const Favorites = require("../../data/helpers/favoritesDbHelper");
-import {
+const {
   verifyToken,
   verifyUser,
   checkAdmin
-} from "../../auth/firebase-middleware";
+} = require("../../auth/firebase-middleware");
 // All Favorites route
 
 //fix me add authorize/authentication for users

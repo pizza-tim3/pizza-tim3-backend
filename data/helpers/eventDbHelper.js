@@ -12,7 +12,7 @@ module.exports = {
   getEventsforUser,
   getPastEventsforUser
 };
- function getAll() {
+function getAll() {
   return db("events");
 }
 
@@ -27,11 +27,11 @@ async function add(event) {
   return id;
 }
 
-function getBy(id) {
-  return db("events")
-    .where({ id })
-    .first();
-}
+// function getBy(id) {
+//   return db("events")
+//     .where({ id })
+//     .first();
+// }
 
 async function update(id, changes) {
   return db("events")
@@ -45,59 +45,80 @@ async function remove(id) {
     .del();
 }
 
-async function getPendingEventsforUser(id){
-
+async function getPendingEventsforUser(id) {
   console.log("Get ", id);
-  return  db.select("event_id","user_id","event_name","event_date","google_place_id", "pending")
+  return db
+    .select(
+      "event_id",
+      "user_id",
+      "event_name",
+      "event_date",
+      "google_place_id",
+      "pending"
+    )
     .from("invited")
-    .where({"user_id":id, "pending" : "true"  })
-    .innerJoin("events","invited.event_id","=","events.id")
-    .innerJoin("locations","locations.id", "=","events.place")
- }
- async function updateToAcceptedStatus (userId, eventId) {
-   console.log("Accepted ", userId, eventId)
-  return await db('invited')
+    .where({ user_id: id, pending: "true" })
+    .innerJoin("events", "invited.event_id", "=", "events.id")
+    .innerJoin("locations", "locations.id", "=", "events.place");
+}
+async function updateToAcceptedStatus(userId, eventId) {
+  console.log("Accepted ", userId, eventId);
+  return await db("invited")
     .where({
       event_id: eventId,
       user_id: userId
     })
     .update({
-      'accepted': true,
-      'pending': false
-    })
+      accepted: true,
+      pending: false
+    });
 }
-async function updateToDeclinedStatus (userId, eventId) {
-  return await db('invited')
+async function updateToDeclinedStatus(userId, eventId) {
+  return await db("invited")
     .where({
       event_id: eventId,
       user_id: userId
     })
     .update({
-      'declined': true,
-      'pending': false
-    })
+      declined: true,
+      pending: false
+    });
 }
 
+async function getEventsforUser(id) {
+  const currentEpoch = new Date().getTime();
 
- async function getEventsforUser(id){
-   const currentEpoch = new Date().getTime();
- 
-   console.log("Get upcoming ", id, currentEpoch);
-  return  db.select("event_id","user_id","event_name","event_date","google_place_id", "pending")
+  console.log("Get upcoming ", id, currentEpoch);
+  return db
+    .select(
+      "event_id",
+      "user_id",
+      "event_name",
+      "event_date",
+      "google_place_id",
+      "pending"
+    )
     .from("invited")
-    .where({"user_id":id})//.where(currentEpoch,"<", "events.event_date")
-    .innerJoin("events","invited.event_id","=","events.id")
-    .innerJoin("locations","locations.id", "=","events.place")
-  }
-  
-  async function getPastEventsforUser(id){
-    const currentEpoch = new Date().getTime();
- 
-    console.log("Get past ", id, currentEpoch);
-   return  db.select("event_id","user_id","event_name","event_date","google_place_id", "pending")
-     .from("invited")
-     .where({"user_id":id  })//.where(currentEpoch,">", "event_date")
-     .innerJoin("events","invited.event_id","=","events.id")
-     .innerJoin("locations","locations.id", "=","events.place")
-  }
-   
+    .where({ user_id: id }) //.where(currentEpoch,"<", "events.event_date")
+    .innerJoin("events", "invited.event_id", "=", "events.id")
+    .innerJoin("locations", "locations.id", "=", "events.place");
+}
+
+async function getPastEventsforUser(id) {
+  const currentEpoch = new Date().getTime();
+
+  console.log("Get past ", id, currentEpoch);
+  return db
+    .select(
+      "event_id",
+      "user_id",
+      "event_name",
+      "event_date",
+      "google_place_id",
+      "pending"
+    )
+    .from("invited")
+    .where({ user_id: id }) //.where(currentEpoch,">", "event_date")
+    .innerJoin("events", "invited.event_id", "=", "events.id")
+    .innerJoin("locations", "locations.id", "=", "events.place");
+}
