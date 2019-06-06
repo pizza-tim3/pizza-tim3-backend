@@ -36,7 +36,7 @@ beforeEach(async () => {
 
 describe("The Favorites Router", () => {
   describe("GET /favorites/:uid/", () => {
-    fit("should get all favorites", async () => {
+    it("should get all favorites", async () => {
       //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
       const res = await req(server).get("/api/favorites/");
       expect(res.status).toBe(200);
