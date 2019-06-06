@@ -23,10 +23,8 @@ function getEventAllComments(event_id) {
   return db("comments").where({ event_id });
 }
 
-async function add(comment, event_id) {
-  return db("comments")
-    .insert(comment, "event_id")
-    .where({ event_id });
+async function add(comment) {
+  return db("comments").insert(comment, "id");
 }
 
 async function update(id, changes) {

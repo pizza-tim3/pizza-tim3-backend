@@ -21,6 +21,8 @@ module.exports = {
   async function getAllInvited(eventId) {
       return await db
         .select(
+          "event_id",
+          "user_id",
           "users.id",
           "users.firebase_uid",
           "users.email",
@@ -30,7 +32,8 @@ module.exports = {
         )
         .from("invited")
         .where("event_id", eventId)
-        .leftJoin("users", "users.firebase_uid", "user_id");
+        .innerJoin("users","users.firebase_uid", "=","user_id")
+        // .leftJoin("users", "users.firebase_uid", "user_id");
   }
 
   async function getAcceptedUsers(eventId) {
@@ -46,7 +49,7 @@ module.exports = {
       .from('invited')
       .where({
         event_id: eventId,
-        accepted: true
+        accepted: "true"
       })
       .leftJoin("users", "users.firebase_uid", "user_id");
       return users;
@@ -67,7 +70,7 @@ module.exports = {
       .from('invited')
       .where({
         event_id: eventId,
-        pending: true
+        pending: "true"
       })
       .leftJoin("users", "users.firebase_uid", "user_id");
       //select all user info, then from invited table where event_id = the id passed in and pending is true
@@ -87,7 +90,7 @@ module.exports = {
       .from('invited')
       .where({
         event_id: eventId,
-        declined: true
+        declined: "true"
       })
       .leftJoin("users", "users.firebase_uid", "user_id");
     //select all user info, then from invited table where event_id = the id passed in and declined is true
