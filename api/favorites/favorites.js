@@ -73,14 +73,13 @@ router.post(
   }
 );
 
-router.delete("/:uid/:favorite_id", async (req, res) => {
-  const { uid, favorite_id } = req.params;
+//TODO MAKE IT SO ONLY USER CAN DELETE THEIR IDs
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    const removed = await Favorites.remove(uid, favorite_id);
+    const removed = await Favorites.remove(id);
     if (!removed) {
-      res
-        .status(404)
-        .json({ error: `favorite with id ${favorite_id} does not exist` });
+      res.status(404).json({ error: `favorite with id ${id} does not exist` });
     }
     res.status(200).json({ message: "Favorite deleted" });
   } catch (error) {

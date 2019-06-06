@@ -89,4 +89,16 @@ describe("The Favorites Router", () => {
       });
     });
   });
+  describe("DELETE /favorites", () => {
+    fit("should add a favorite for a user", async () => {
+      //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
+      const res = await req(server).delete("/api/favorites/3");
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({ message: "Favorite deleted" });
+
+      const alteredFavorites = await db("favorites");
+      expect(alteredFavorites).toEqual(favorites.slice(0, 2));
+    });
+  });
 });
