@@ -7,6 +7,8 @@ module.exports = {
   update,
   remove,
   getEventAllComments,
+  getEventCommentsCount,
+  getEventAllUserComments
 };
 
 function getAll() {
@@ -20,14 +22,13 @@ function getByEvent(event_id) {
 }
 
 function getEventAllComments(event_id) {
-  return db("comments").where({ event_id });
+  return db("comments").where({ event_id })
 }
 
-async function add(comment, event_id) {
-  return db("comments")
-    .insert(comment, "event_id")
-    .where({ event_id });
-}
+async function add(comment) {
+  return db("comments").insert(comment, "id");
+ }
+
 
 async function update(id, changes) {
   return db("comments")
@@ -40,3 +41,31 @@ async function remove(id) {
     .where({ id })
     .del();
 }
+
+
+async function getEventCommentsCount(event_id) {
+  console.log("event id is",event_id)
+  return db("comments").count(event_id);
+ // console.log(db("comments").count({ event_id }))
+}
+
+async function getEventAllUserComments(event_id){
+  return db.select
+  ("comments.event_id","user_id","message","time")
+  .from("comments").where({event_id})
+         //.innerjoin("users","firebase_uid","=","user_id").first()
+}
+async function getPastEventsforUser(id){
+  const currentEpoch = new Date().getTime();
+
+  console.log("Get past ", id, currentEpoch);
+ return
+   db.select
+   ("event_id","user_id","event_name","event_date","google_place_id", "pending")
+   .from("invited")
+   .where({"user_id":id  })//.where(currentEpoch,">", "event_date")
+   .innerJoin("events","invited.event_id","=","events.id")
+   .innerJoin("locations","locations.id", "=","events.place")
+}
+
+

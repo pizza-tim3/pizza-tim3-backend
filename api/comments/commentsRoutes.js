@@ -30,6 +30,39 @@ router.get("/event/:id", async (req, res) => {
   };
 });
 
+router.get("/event/count/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log("Get comments foe event ", id)
+  try {
+    const rows = await Comments.getEventAllComments(id);
+    console.log("Got count as ", rows)
+    if (rows.length < 1) {
+      res.status(401).json({ err: 'No comments to display.' });
+    } else {
+      res.status(200).json(rows.length,rows);
+      console.log(rows)
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  };
+});
+router.get("/event/messages/:id", async(req,res) =>{
+  const id = req.params.id;
+  console.log("HERE IS THE ID",id)
+   try{ 
+     if(id){
+     
+       const comments= await Comments.getEventAllComments(id)
+       res.status(200).json({comments})
+     }else {
+       res.status(400).json({message:"id not found"})
+     }
+
+
+    } catch (err) {
+      res.status(500).json(err);
+    };
+  });
 router.post("/event", async (req, res) => {
   const newComment = req.body;
 
@@ -64,4 +97,26 @@ router.delete("/:id", async (req, res) => {
   };
 });
 
+
+router.get("/event/messages/user/:id", async(req,res) =>{
+  const id = req.params.id;
+  console.log("HERE IS THE ID",id)
+   try{ 
+     if(id){
+     
+     const comments= await Comments.getEventAllUserComments(id)
+      res.status(200).json({comments})
+      console.log(comments)
+     }else {
+       res.status(400).json({message:"id not found"})
+     }
+
+
+    } catch (err) {
+      res.status(500).json(err);
+    };
+  });
+
+
+//knex('comments').count({ event_id: id })
 module.exports = router;

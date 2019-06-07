@@ -147,7 +147,7 @@ router.delete("/:id", async (req, res) => {
 
 router.get("/pending/:id",async(req,res)=>{
 
-       console.log("Get status")
+       console.log("Get status:")
        try{
          const id =req.params.id;
         if(id){

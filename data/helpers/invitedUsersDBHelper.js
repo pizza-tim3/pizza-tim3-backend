@@ -92,7 +92,7 @@ module.exports = {
         event_id: eventId,
         declined: "true"
       })
-      .leftJoin("users", "users.firebase_uid", "user_id");
+      .leftJoin("users", );"users.firebase_uid", "user_id"
     //select all user info, then from invited table where event_id = the id passed in and declined is true
       //left join the users returned
   }
