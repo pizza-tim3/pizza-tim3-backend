@@ -135,7 +135,7 @@ describe("The Favorites Router", () => {
       }`
       });
     });
-    fit("returns location if it already exists in db", async () => {
+    it("returns location if it already exists in db", async () => {
       //this SHOULD be a test in the db but I need to continue working
       const newFavorite = {
         id: 4,
@@ -162,9 +162,27 @@ describe("The Favorites Router", () => {
       expect(secondRes.type).toBe("application/json");
       expect(secondRes.body).toEqual(anotherNewFavorite);
     });
+    it("should return 404 for a non-existant user", async () => {
+      //this SHOULD be a test in the db but I need to continue working
+      const newFavorite = {
+        id: 4,
+        firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt33",
+        google_place_id: "ChIJu1epLWecQIYRjPufvdfdfdfd"
+      };
+
+      const res = await req(server)
+        .post("/api/favorites/")
+        .send(newFavorite);
+
+      expect(res.status).toBe(404);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual({
+        error: `user with id XVf2XhkNSJWNDGEW4Wh6SHpKYUt33 does not exist`
+      });
+    });
   });
   describe("DELETE /favorites", () => {
-    it("should add a favorite for a user", async () => {
+    it("should delete a user's favorite", async () => {
       //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
       const res = await req(server).delete("/api/favorites/3");
       expect(res.status).toBe(200);
