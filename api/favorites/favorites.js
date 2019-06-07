@@ -46,19 +46,18 @@ router.get(
 router.post(
   "/",
   /* verifyToken,*/ async (req, res) => {
-    const { uid } = req.params;
     const favorite = req.body;
-    const { firebase_uid, location_id } = favorite;
-    if (!firebase_uid || !location_id) {
+    const { firebase_uid, google_place_id } = favorite;
+    if (!firebase_uid || !google_place_id) {
       res.status(401).json({
         error: `please send and object structured like :{
         firebase_uid: "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        location_id: 1
+        location_id: "xxxxxxxx-xxxxxxxxx-xxxxxxxx"
       }`
       });
     } else {
       try {
-        const user = Users.getByUid(uid);
+        const user = await Users.getByUid(firebase_uid);
         if (!user) {
           res.status(404).json({ error: `user with id ${uid} does not exist` });
         } else {
@@ -66,7 +65,7 @@ router.post(
           res.status(200).json(newFavorite);
         }
       } catch (err) {
-        console.log(err);
+        console.log(err.stack);
         res.status(500).json(err);
       }
     }

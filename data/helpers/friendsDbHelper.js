@@ -1,4 +1,5 @@
 const db = require("../dbConfig.js");
+const promisify = require("../../utils/promisify");
 
 module.exports = {
   request,
@@ -67,9 +68,6 @@ async function reject(user_uid, friend_uid) {
 async function getById(id) {
   return db("friends").where({ id });
 }
-
-//this function wraps another function in a promise
-const promisify = fn => new Promise((resolve, reject) => fn(resolve));
 
 /**
  * https://stackoverflow.com/a/56130889

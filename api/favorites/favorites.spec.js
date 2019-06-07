@@ -23,8 +23,7 @@ const favorites = [
 const locations = [
   { google_place_id: "ChIJTQY9pYicQIYRBwevxbKgBJU" },
   { google_place_id: "ChIJ4zdtwYWcQIYRS9hvr_1t_ig" },
-  { google_place_id: "ChIJTY1v-SidQIYRWe-hzXZT5jk" },
-  { google_place_id: "ChIJu1epLWecQIYRjPufvtEjxhQ" }
+  { google_place_id: "ChIJTY1v-SidQIYRWe-hzXZT5jk" }
 ];
 
 const expected = [
@@ -46,9 +45,8 @@ const expected = [
 ];
 
 beforeEach(async () => {
-  await db("locations")
-    .truncate()
-    .insert(locations);
+  await db("locations").truncate();
+  await db("locations").insert(locations);
 
   await db("favorites").truncate();
   await db("favorites").insert(favorites);
@@ -95,11 +93,11 @@ describe("The Favorites Router", () => {
     });
   });
   describe("POST /favorites", () => {
-    it("should add a favorite for a user", async () => {
+    fit("should add a favorite for a user", async () => {
       const newFavorite = {
         id: 4,
         firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
-        location_id: 4
+        google_place_id: "ChIJu1epLWecQIYRjPufvtEjxhQ"
       };
       //User XVf2XhkNSJWNDGEW4Wh6SHpKYUt2 favorites
       const res = await req(server)
