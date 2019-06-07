@@ -59,7 +59,9 @@ router.post(
       try {
         const user = await Users.getByUid(firebase_uid);
         if (!user) {
-          res.status(404).json({ error: `user with id ${uid} does not exist` });
+          res
+            .status(404)
+            .json({ error: `user with id ${firebase_uid} does not exist` });
         } else {
           const newFavorite = await Favorites.add(favorite);
           res.status(200).json(newFavorite);

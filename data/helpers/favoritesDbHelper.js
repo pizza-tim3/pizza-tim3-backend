@@ -50,11 +50,12 @@ async function add(favorite) {
   try {
     //get the id from the associated place, if doesn't exist make it?
     let id;
+
     id = await trx
       .select("id")
       .from("locations")
       .where({ google_place_id })
-      .first();
+      .first().id;
 
     //location doesn't exist
     if (!id) {

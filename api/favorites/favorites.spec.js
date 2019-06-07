@@ -52,14 +52,24 @@ beforeEach(async () => {
   await db("favorites").insert(favorites);
 
   await db("users").truncate();
-  await db("users").insert({
-    id: 1,
-    email: "test@test.com",
-    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
-    username: "Ralphiu",
-    first_name: "Ralph",
-    last_name: "Pill"
-  });
+  await db("users").insert([
+    {
+      id: 1,
+      email: "test@test.com",
+      firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+      username: "Ralphiu",
+      first_name: "Ralph",
+      last_name: "Pill"
+    },
+    {
+      id: 2,
+      email: "tes2@test.com",
+      firebase_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2",
+      username: "Roger",
+      first_name: "Roger",
+      last_name: "PillowPetzAreCool"
+    }
+  ]);
 });
 
 describe("The Favorites Router", () => {
@@ -93,7 +103,7 @@ describe("The Favorites Router", () => {
     });
   });
   describe("POST /favorites", () => {
-    fit("should add a favorite for a user", async () => {
+    it("should add a favorite for a user", async () => {
       const newFavorite = {
         id: 4,
         firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
@@ -121,9 +131,36 @@ describe("The Favorites Router", () => {
       expect(res.body).toEqual({
         error: `please send and object structured like :{
         firebase_uid: "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        location_id: 1
+        location_id: "xxxxxxxx-xxxxxxxxx-xxxxxxxx"
       }`
       });
+    });
+    fit("returns location if it already exists in db", async () => {
+      //this SHOULD be a test in the db but I need to continue working
+      const newFavorite = {
+        id: 4,
+        firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+        google_place_id: "ChIJu1epLWecQIYRjPufvdfdfdfd"
+      };
+      const anotherNewFavorite = {
+        id: 5,
+        firebase_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2",
+        google_place_id: "ChIJu1epLWecQIYRjPufvdfdfdfd"
+      };
+      const res = await req(server)
+        .post("/api/favorites/")
+        .send(newFavorite);
+
+      expect(res.status).toBe(200);
+      expect(res.type).toBe("application/json");
+      expect(res.body).toEqual(newFavorite);
+
+      const secondRes = await req(server)
+        .post("/api/favorites/")
+        .send(anotherNewFavorite);
+      expect(secondRes.status).toBe(200);
+      expect(secondRes.type).toBe("application/json");
+      expect(secondRes.body).toEqual(anotherNewFavorite);
     });
   });
   describe("DELETE /favorites", () => {
