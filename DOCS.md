@@ -211,7 +211,7 @@ returns array of all favorites:
 ]
 ```
 
-### GET `/api/favorites/:uid`
+### GET `/api/favorites/:firebase_uid`
 
 returns array of `uid`'s favorites:
 
