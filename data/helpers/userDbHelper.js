@@ -28,7 +28,6 @@ function getByUid(uid) {
 }
 
 async function add(user) {
-  console.log(user);
   return await db("users")
     .insert(user, "id")
     .then(ids => {

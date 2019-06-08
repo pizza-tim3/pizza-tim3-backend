@@ -7,6 +7,7 @@ const verifyToken = async (req, res, next) => {
   //const token = await app.auth().currentUser.getIdToken();
   const idToken = req.headers.authorization;
 
+  //TODO: SEPERATE THESE CONCERNS INTO THEIR OWN FUNCTION
   try {
     //if idToken exists
     if (idToken) {

@@ -180,6 +180,86 @@ returns array of friends for user with `:firebase_uid`
 
 ### GET `/api/friends/:firebase_uid/pending`
 
+returns array of pending friends for user with `:firebase_uid`
+
+```javascript
+[{
+    id: id,
+    email: "test@test.com",
+    firebase_uid: "258975325235",
+    username: "Ralphiu",
+    first_name: "Ralph",
+    last_name: "Pill"
+},{...}
+]
+```
+
+## Favorites
+
+### GET `/api/favorites/`
+
+returns array of all favorites:
+
+```javascript
+[
+    {
+        id: 1,
+        firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+        location_id: 1
+    },
+    {...}
+]
+```
+
+### GET `/api/favorites/:firebase_uid`
+
+returns array of `uid`'s favorites:
+
+```javascript
+[
+    {
+        id: 1,
+        firebase_uid: uid,
+        location_id: 1
+    },
+    {...}
+  ]
+```
+
+### POST `/api/favorites/`
+
+accepts:
+
+```javascript
+{
+    id: 1,
+    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+    location_id: 1
+}
+```
+
+returns newly created favorite:
+
+```javascript
+{
+    id: 1,
+    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+    location_id: 1
+}
+```
+
+### DELETE `/api/favorites/:id`
+
+uid: must me the id of the favorite you want to delete
+
+returns
+
+```javascript
+{
+  message: "Favorite deleted";
+}
+```
+
 ## Admin
 
 ### GET `api/promote/:uid/`
