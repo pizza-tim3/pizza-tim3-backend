@@ -6,6 +6,7 @@ const Invited = require("../../data/helpers/invitedUsersDBHelper");
 //gets all invited users for an event, regardless of status
 router.get("/:eventId", async (req, res) => {
     const { eventId } = req.params;
+    console.log("event id is", eventId)
     try {
         const invitedUsers = await Invited.getAllInvited(eventId);
         res.status(200).json(invitedUsers)
