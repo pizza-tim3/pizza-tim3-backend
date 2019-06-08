@@ -114,7 +114,9 @@ async function getEventsforUser(id) {
      .innerJoin("events","invited.event_id","=","events.id")
      .innerJoin("locations","locations.id", "=","events.place")
   }
+
   async function getCommentsForEvents(id){
 
     return db.select("event_id",)
   }
+
