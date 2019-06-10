@@ -361,7 +361,7 @@ describe("The user Router", () => {
         error: `user with id 258975vnfh325235 does not exist`
       });
     });
-    fit("should return a 404 message if friendship does not exist", async () => {
+    it("should return a 404 message if friendship does not exist", async () => {
       const [userOne] = await db("friends").insert(
         { user_uid: 1, friend_uid: 2, status: "accepted" },
         "id"
@@ -380,7 +380,7 @@ describe("The user Router", () => {
   });
 
   describe("GET /:uid/", () => {
-    it("should return a list of friends", async () => {
+    fit("should return a list of friends", async () => {
       try {
         // add the users to the database
         await db("users").insert(users);
@@ -449,7 +449,7 @@ describe("The user Router", () => {
   });
 
   describe("GET /:uid/pending", () => {
-    fit("should return a list of pending friends", async () => {
+    it("should return a list of pending friends", async () => {
       try {
         // add the users to the database
         await db("users").insert(users);
