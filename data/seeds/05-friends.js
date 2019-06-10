@@ -3,63 +3,33 @@ exports.seed = function(knex, Promise) {
         .then(() => {
             return knex('friends').insert([
                 {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy10000',
+                    'user_uid' : 'XVf2XhkNSJWNDGEW4Wh6SHpKYUt2',
+                    'friend_uid' : 'T90z5fuhXcWpE231iBvk0WntdKA2',
                     'status' : 'pending'
                 },
                 {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy30000',
+                    'user_uid' : 'XVf2XhkNSJWNDGEW4Wh6SHpKYUt2',
+                    'friend_uid' : 'KmXqNOKhQSWm3RXt20YjD3WkVif2',
                     'status' : 'pending'
                 },
                 {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy40000',
-                    'status' : 'pending'
-                },
-                {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy50000',
-                    'status' : 'pending'
-                },
-                {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy60000',
+                    'user_uid' : 'XVf2XhkNSJWNDGEW4Wh6SHpKYUt2',
+                    'friend_uid' : 'XkSZcV7B2tZrMG0kUTWVdiQ4yDo2',
                     'status' : 'accepted'
                 },
                 {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy70000',
+                    'user_uid' : 'XVf2XhkNSJWNDGEW4Wh6SHpKYUt2',
+                    'friend_uid' : 'RaJMLmDUTWTP870aXFUQ6mLVb1M2',
                     'status' : 'accepted'
                 },
                 {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy80000',
-                    'status' : 'accepted'
-                },
-                {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy90000',
-                    'status' : 'accepted'
-                },
-                {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy34000',
+                    'user_uid' : 'XVf2XhkNSJWNDGEW4Wh6SHpKYUt2',
+                    'friend_uid' : 'IyJoCaT4A7cObBoZDEUEKjhwADE2',
                     'status' : 'rejected'
                 },
                 {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy35000',
-                    'status' : 'rejected'
-                },
-                {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy36000',
-                    'status' : 'rejected'
-                },
-                {
-                    'user_uid' : 'jNpViqXD4DXmf9H2FbkQnAy00000',
-                    'friend_uid' : 'jNpViqXD4DXmf9H2FbkQnAy37000',
+                    'user_uid' : 'XVf2XhkNSJWNDGEW4Wh6SHpKYUt2',
+                    'friend_uid' : 'i2i3UqCe3TbaeXbM1ifzQpsGLRi1',
                     'status' : 'rejected'
                 }
             ]);
