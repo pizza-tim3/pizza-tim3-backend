@@ -26,11 +26,21 @@ exports.seed = function(knex, Promise) {
         {
           user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
           friend_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2", //test3@gmail.com
-          status: "pending"
+          status: "accepted"
+        },
+        {
+          user_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2", //test3@gmail.com
+          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+          status: "accepted"
         },
         {
           user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
           friend_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2", //test2@gmail.com
+          status: "pending"
+        },
+        {
+          user_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2", //test2@gmail.com
+          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
           status: "pending"
         },
         {
