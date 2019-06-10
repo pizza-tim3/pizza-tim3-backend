@@ -89,14 +89,6 @@ async function add(favorite) {
   }
 }
 
-// async function add(favorite) {
-//   return await db("favorites")
-//     .insert(favorite, "id")
-//     .then(ids => {
-//       return getById(ids[0]);
-//     });
-// }
-
 async function update(uid, changes) {
   return await db("favorites")
     .where({ firebase_uid: uid })

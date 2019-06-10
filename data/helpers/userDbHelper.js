@@ -58,13 +58,18 @@ async function getAllFriends(uid) {
       "users.email",
       "users.username",
       "users.first_name",
-      "users.last_name"
+      "users.last_name",
+      "users.avatar",
+      "users.crust",
+      "users.topping",
+      "users.slices"
     )
     .from("friends")
     .whereNot("friends.user_uid", "=", uid)
     .leftJoin("users", "users.firebase_uid", "friends.user_uid");
 }
 
+//fix this                          this
 async function getAllPendingFriends(uid) {
   return await db
     .select(
@@ -73,7 +78,11 @@ async function getAllPendingFriends(uid) {
       "users.email",
       "users.username",
       "users.first_name",
-      "users.last_name"
+      "users.last_name",
+      "users.avatar",
+      "users.crust",
+      "users.topping",
+      "users.slices"
     )
     .from("friends")
     .where("friends.status", "=", "pending")
