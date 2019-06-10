@@ -77,14 +77,21 @@ router.get("/:id/details", async (req, res) => {
     const id = req.params.id;
     // Get Events, Locations, Invited Users and Comments associated with an event and create one event response object.
     let event = await Events.getBy(id);
-    const eventLocation = await Locations.getPlaceById(event.place);
-    const invitedUsers = await InvitedUsers.getAllInvited(id);
-    const comments = await Comments.getEventAllComments(id);
-    event.invitedUsers = invitedUsers;
-    event.comments = comments;
-    event.location = eventLocation;
-
     if (event) {
+      const eventLocation = await Locations.getPlaceById(event.place);
+      const invitedUsers = await InvitedUsers.getAllInvited(id);
+      const acceptedUsers = await InvitedUsers.getAcceptedUsers(id);
+      const pendingUsers = await InvitedUsers.getPendingUsers(id);
+      const declinedUsers = await InvitedUsers.getDeclinedUsers(id);
+      const comments = await Comments.getEventAllComments(id);
+
+      event.acceptedUsers = acceptedUsers;
+      event.pendingUsers = pendingUsers;
+      event.declinedUsers = declinedUsers;
+      event.invitedUsers = invitedUsers;
+      event.comments = comments;
+      event.location = eventLocation;
+
       res.status(200).json({ event });
     } else {
       res.status(404).json({ message: "Event doesn't exist" });
