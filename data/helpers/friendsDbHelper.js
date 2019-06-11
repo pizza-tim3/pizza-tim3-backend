@@ -63,6 +63,9 @@ async function reject(user_uid, friend_uid) {
   try {
     //get pending
     //update to reject
+    await db("friends")
+      .update({ status: "rejected" }, "id")
+      .where({ user_uid, friend_uid, status: "pending" });
 
     // user 2 reject user 1's friend request
     const id = await db("friends")
@@ -70,7 +73,12 @@ async function reject(user_uid, friend_uid) {
       .where({ user_uid: friend_uid, friend_uid: user_uid, status: "pending" });
     //return rejected
 
-    const [rejectedRequest] = await getById(id);
+    //return accepted
+    const [rejectedRequest] = await db("friends").where({
+      user_uid,
+      friend_uid,
+      status: "rejected"
+    });
     return rejectedRequest;
   } catch (error) {
     console.log(error);
