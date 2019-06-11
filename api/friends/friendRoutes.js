@@ -37,7 +37,7 @@ router.get("/request/:user_uid/:friend_uid", async (req, res) => {
 //accept friend
 router.get("/accept/:user_uid/:friend_uid", async (req, res) => {
   const { user_uid, friend_uid } = req.params;
-
+  console.log(user_uid, friend_uid);
   //if request isn't valid
   try {
     const userOne = await Users.getByUid(user_uid);

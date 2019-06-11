@@ -90,39 +90,74 @@ describe("The user Router", () => {
   });
 
   describe("GET /accept/:user_uid/friend_uid", () => {
-    it("should accept pending friend request", async () => {
-      // user 1 has made a friend request to user 2
-      const [id] = await db("friends").insert(
+    fit("should accept pending friend request", async () => {
+      const userList = [
         {
-          user_uid: "258975325235",
-          friend_uid: "258975vnfh325235",
-          status: "pending"
+          id: 3,
+          email: "Jerrold_Ratke18@yahoo.com",
+          firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+          username: "Jolie_Corkery52",
+          first_name: "Hulda",
+          last_name: "Ortiz",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/murrayswift/128.jpg",
+          crust: "modi",
+          topping: "et",
+          slices: "84830"
         },
+        {
+          id: 4,
+          email: "Johan1@gmail.com",
+          firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
+          username: "Alexandro.Hartmann53",
+          first_name: "Augustine",
+          last_name: "Farrell",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/amayvs/128.jpg",
+          crust: "voluptas",
+          topping: "explicabo",
+          slices: "35378"
+        }
+      ];
+      await db("users").insert(userList);
+      // user 1 has made a friend request to user 2
+      const ids = await db("friends").insert(
+        [
+          {
+            user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+            friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+            status: "pending"
+          },
+          {
+            user_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+            friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+            status: "pending"
+          }
+        ],
         "id"
       );
-
       // user 2 accepts user 1's friend request
       const res = await req(server).get(
-        "/api/friends/accept/258975vnfh325235/258975325235"
+        "/api/friends/accept/XVf2XhkNSJWNDGEW4Wh6SHpKYUt2/T90z5fuhXcWpE231iBvk0WntdKA2"
       );
 
-      const [accepted] = await await db("friends").where({ id });
+      const [accepted] = await db("friends").where({ id: 2 });
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and accepted
       expect(res.body).toEqual({
-        friend_uid: "258975325235",
-        id: 2,
-        status: "accepted",
-        user_uid: "258975vnfh325235"
+        id: 1,
+        user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+        friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+        status: "accepted"
       });
 
       expect(accepted).toEqual({
-        friend_uid: "258975vnfh325235",
-        id: 1,
-        status: "accepted",
-        user_uid: "258975325235"
+        id: 2,
+        user_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+        friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+        status: "accepted"
       });
     });
     it("should return a 404 message if user one does not exist", async () => {
@@ -379,8 +414,8 @@ describe("The user Router", () => {
     });
   });
 
-  describe("GET /:uid/accepted", () => {
-    fit("should return a list of accepted friends", async () => {
+  describe("GET /:uid", () => {
+    it("should return a list of accepted friends", async () => {
       const userList = [
         {
           id: 3,
