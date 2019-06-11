@@ -6,7 +6,9 @@ module.exports = {
   accept,
   reject,
   remove,
-  checkPending
+  checkPending,
+  getAllFriends,
+  getAllPendingFriends
 };
 
 async function checkPending(user_uid, friend_uid) {
@@ -118,3 +120,44 @@ async function remove(user_uid, friend_uid) {
     await trx.rollback();
   }
 }
+
+//get all pending/accepted
+async function getAllFriends(uid) {
+  return await db
+    .select(
+      "users.id",
+      "users.firebase_uid",
+      "users.email",
+      "users.username",
+      "users.first_name",
+      "users.last_name",
+      "users.avatar",
+      "users.crust",
+      "users.topping",
+      "users.slices",
+      "friends.status"
+    )
+    .from("friends")
+    .where("friends.user_uid", "=", uid)
+    .leftJoin("users", "users.firebase_uid", "friends.friend_uid");
+}
+
+// //fix this                          this
+// async function getAllPendingFriends(uid) {
+//   return await db
+//     .select(
+//       "users.id",
+//       "users.firebase_uid",
+//       "users.email",
+//       "users.username",
+//       "users.first_name",
+//       "users.last_name",
+//       "users.avatar",
+//       "users.crust",
+//       "users.topping",
+//       "users.slices"
+//     )
+//     .from("friends")
+//     .where("friends.status", "=", "pending")
+//     .leftJoin("users", "users.firebase_uid", "friends.friend_uid");
+// }
