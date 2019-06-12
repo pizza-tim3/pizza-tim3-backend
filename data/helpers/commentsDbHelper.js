@@ -22,7 +22,18 @@ function getByEvent(event_id) {
 }
 
 function getEventAllComments(event_id) {
-  return db("comments").where({ event_id });
+  return db
+    .select(
+      "users.avatar",
+      "comments.id",
+      "comments.time",
+      "comments.message",
+      "comments.event_id",
+      "comments.user_id"
+    )
+    .from("comments")
+    .innerJoin("users", "users.firebase_uid", "comments.user_id")
+    .where({ event_id });
 }
 
 async function add(comment) {
