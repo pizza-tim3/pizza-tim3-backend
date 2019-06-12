@@ -91,38 +91,73 @@ describe("The user Router", () => {
 
   describe("GET /accept/:user_uid/friend_uid", () => {
     it("should accept pending friend request", async () => {
-      // user 1 has made a friend request to user 2
-      const [id] = await db("friends").insert(
+      const userList = [
         {
-          user_uid: "258975325235",
-          friend_uid: "258975vnfh325235",
-          status: "pending"
+          id: 3,
+          email: "Jerrold_Ratke18@yahoo.com",
+          firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+          username: "Jolie_Corkery52",
+          first_name: "Hulda",
+          last_name: "Ortiz",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/murrayswift/128.jpg",
+          crust: "modi",
+          topping: "et",
+          slices: "84830"
         },
+        {
+          id: 4,
+          email: "Johan1@gmail.com",
+          firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
+          username: "Alexandro.Hartmann53",
+          first_name: "Augustine",
+          last_name: "Farrell",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/amayvs/128.jpg",
+          crust: "voluptas",
+          topping: "explicabo",
+          slices: "35378"
+        }
+      ];
+      await db("users").insert(userList);
+      // user 1 has made a friend request to user 2
+      const ids = await db("friends").insert(
+        [
+          {
+            user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+            friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+            status: "pending"
+          },
+          {
+            user_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+            friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+            status: "pending"
+          }
+        ],
         "id"
       );
-
       // user 2 accepts user 1's friend request
       const res = await req(server).get(
-        "/api/friends/accept/258975vnfh325235/258975325235"
+        "/api/friends/accept/XVf2XhkNSJWNDGEW4Wh6SHpKYUt2/T90z5fuhXcWpE231iBvk0WntdKA2"
       );
 
-      const [accepted] = await await db("friends").where({ id });
+      const [accepted] = await db("friends").where({ id: 2 });
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and accepted
       expect(res.body).toEqual({
-        friend_uid: "258975325235",
-        id: 2,
-        status: "accepted",
-        user_uid: "258975vnfh325235"
+        id: 1,
+        user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+        friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+        status: "accepted"
       });
 
       expect(accepted).toEqual({
-        friend_uid: "258975vnfh325235",
-        id: 1,
-        status: "accepted",
-        user_uid: "258975325235"
+        id: 2,
+        user_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+        friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+        status: "accepted"
       });
     });
     it("should return a 404 message if user one does not exist", async () => {
@@ -184,30 +219,68 @@ describe("The user Router", () => {
   });
 
   describe("GET /reject/:user_uid/friend_uid", () => {
-    it("should reject pending friend request", async () => {
+    fit("should reject pending friend request", async () => {
       // user 1 is friend requesting user 2
-      const [id] = await db("friends").insert(
+
+      const userList = [
         {
-          user_uid: "258975325235",
-          friend_uid: "258975vnfh325235",
-          status: "pending"
+          id: 3,
+          email: "Jerrold_Ratke18@yahoo.com",
+          firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+          username: "Jolie_Corkery52",
+          first_name: "Hulda",
+          last_name: "Ortiz",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/murrayswift/128.jpg",
+          crust: "modi",
+          topping: "et",
+          slices: "84830"
         },
+        {
+          id: 4,
+          email: "Johan1@gmail.com",
+          firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
+          username: "Alexandro.Hartmann53",
+          first_name: "Augustine",
+          last_name: "Farrell",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/amayvs/128.jpg",
+          crust: "voluptas",
+          topping: "explicabo",
+          slices: "35378"
+        }
+      ];
+      await db("users").insert(userList);
+      // user 1 has made a friend request to user 2
+      const ids = await db("friends").insert(
+        [
+          {
+            user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+            friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+            status: "pending"
+          },
+          {
+            user_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+            friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+            status: "pending"
+          }
+        ],
         "id"
       );
 
       // user 2 is rejecting user 1's friend request
       const res = await req(server).get(
-        "/api/friends/reject/258975vnfh325235/258975325235"
+        "/api/friends/reject/XVf2XhkNSJWNDGEW4Wh6SHpKYUt2/T90z5fuhXcWpE231iBvk0WntdKA2"
       );
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and rejected
       expect(res.body).toEqual({
-        friend_uid: "258975vnfh325235",
+        friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
         id: 1,
         status: "rejected",
-        user_uid: "258975325235"
+        user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2"
       });
     });
     it("should return a 404 message if user one does not exist", async () => {
@@ -379,69 +452,117 @@ describe("The user Router", () => {
     });
   });
 
-  describe("GET /:uid/", () => {
-    fit("should return a list of friends", async () => {
+  describe("GET /:uid", () => {
+    it("should return a list of accepted friends", async () => {
+      const userList = [
+        {
+          id: 3,
+          email: "Frederick.Davis79@hotmail.com",
+          firebase_uid: "61283427b08345f48bf263298bb",
+          username: "Carlo20",
+          first_name: "Franco",
+          last_name: "Wehner",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/leonfedotov/128.jpg",
+          crust: "impedit",
+          topping: "aperiam",
+          slices: "99193"
+        },
+        {
+          id: 4,
+          email: "Dorris95@yahoo.com",
+          firebase_uid: "8bdab6803059476baec16a8d980",
+          username: "Rosalia.Ondricka",
+          first_name: "Rodrick",
+          last_name: "Goyette",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/h1brd/128.jpg",
+          crust: "voluptatem",
+          topping: "doloribus",
+          slices: "75389"
+        },
+        {
+          id: 5,
+          email: "Jerrold_Ratke18@yahoo.com",
+          firebase_uid: "6e28d4d53dfb4d5b85aef1b3237",
+          username: "Jolie_Corkery52",
+          first_name: "Hulda",
+          last_name: "Ortiz",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/murrayswift/128.jpg",
+          crust: "modi",
+          topping: "et",
+          slices: "84830"
+        },
+        {
+          id: 6,
+          email: "Johan1@gmail.com",
+          firebase_uid: "b9472482c8b347f9b043aef2efb",
+          username: "Alexandro.Hartmann53",
+          first_name: "Augustine",
+          last_name: "Farrell",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/amayvs/128.jpg",
+          crust: "voluptas",
+          topping: "explicabo",
+          slices: "35378"
+        },
+        {
+          id: 7,
+          email: "Kevin.Pfannerstill9@yahoo.com",
+          firebase_uid: "d8a2b7e34b9d4b17be9c02b0065",
+          username: "Monte_Rolfson",
+          first_name: "Whitney",
+          last_name: "Stoltenberg",
+          avatar:
+            "https://s3.amazonaws.com/uifaces/faces/twitter/okseanjay/128.jpg",
+          crust: "omnis",
+          topping: "consequuntur",
+          slices: "29317"
+        }
+      ];
       try {
-        // add the users to the database
-        await db("users").insert(users);
+        await db("users").insert(userList);
 
-        // user 1 is friends with user 2
-        const [userOne] = await db("friends").insert(
+        await db("friends").insert([
           {
-            user_uid: "258975325235",
-            friend_uid: "258975vnfh325235",
+            user_uid: "61283427b08345f48bf263298bb", //3
+            friend_uid: "8bdab6803059476baec16a8d980", //4
             status: "accepted"
           },
-          "id"
-        );
-        // user 2 is friends with user 1
-        const [userTwo] = await db("friends").insert(
           {
-            user_uid: "258975vnfh325235",
-            friend_uid: "258975325235",
+            user_uid: "8bdab6803059476baec16a8d980", //4
+            friend_uid: "61283427b08345f48bf263298bb", //3
             status: "accepted"
           },
-          "id"
-        );
+          {
+            user_uid: "61283427b08345f48bf263298bb", //3
+            friend_uid: "6e28d4d53dfb4d5b85aef1b3237", //5
+            status: "accepted"
+          },
+          {
+            user_uid: "6e28d4d53dfb4d5b85aef1b3237", //5
+            friend_uid: "61283427b08345f48bf263298bb", //3
+            status: "accepted"
+          },
+          {
+            user_uid: "61283427b08345f48bf263298bb", //3
+            friend_uid: "b9472482c8b347f9b043aef2efb", //6
+            status: "pending"
+          }
+        ]);
 
-        // user 1 is friends with user 3
-        await db("friends").insert(
-          {
-            user_uid: "258975325235",
-            friend_uid: 25897325235,
-            status: "accepted"
-          },
-          "id"
+        const res = await req(server).get(
+          "/api/friends/61283427b08345f48bf263298bb"
         );
-        // user 3 is friends with user 1
-        await db("friends").insert(
-          {
-            user_uid: "25897325235",
-            friend_uid: "258975325235",
-            status: "accepted"
-          },
-          "id"
-        );
-
-        // user 1 is friends with user 4
-        await db("friends").insert(
-          {
-            user_uid: "258975325235",
-            friend_uid: "2525235",
-            status: "accepted"
-          },
-          "id"
-        );
-        // user 4 is friends with user 1
-        await db("friends").insert(
-          { user_uid: 2525235, friend_uid: "258975325235", status: "accepted" },
-          "id"
-        );
-
-        const res = await req(server).get("/api/friends/258975325235");
         expect(res.status).toBe(200);
         expect(res.type).toBe("application/json");
-        expect(res.body).toEqual([users[1], users[2], users[3]]);
+        console.log(res.body);
+        expect(res.body).toEqual([
+          { ...userList[1], status: "accepted" },
+          { ...userList[2], status: "accepted" },
+          { ...userList[3], status: "pending" }
+        ]);
       } catch (error) {
         console.log(error);
       }

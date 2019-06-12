@@ -6,9 +6,7 @@ module.exports = {
   getByUid,
   add,
   update,
-  remove,
-  getAllFriends,
-  getAllPendingFriends
+  remove
 };
 
 function getAll() {
@@ -48,43 +46,4 @@ async function remove(uid) {
   return db("users")
     .where({ firebase_uid: uid })
     .del();
-}
-
-async function getAllFriends(uid) {
-  return await db
-    .select(
-      "users.id",
-      "users.firebase_uid",
-      "users.email",
-      "users.username",
-      "users.first_name",
-      "users.last_name",
-      "users.avatar",
-      "users.crust",
-      "users.topping",
-      "users.slices"
-    )
-    .from("friends")
-    .whereNot("friends.user_uid", "=", uid)
-    .leftJoin("users", "users.firebase_uid", "friends.user_uid");
-}
-
-//fix this                          this
-async function getAllPendingFriends(uid) {
-  return await db
-    .select(
-      "users.id",
-      "users.firebase_uid",
-      "users.email",
-      "users.username",
-      "users.first_name",
-      "users.last_name",
-      "users.avatar",
-      "users.crust",
-      "users.topping",
-      "users.slices"
-    )
-    .from("friends")
-    .where("friends.status", "=", "pending")
-    .leftJoin("users", "users.firebase_uid", "friends.friend_uid");
 }
