@@ -116,11 +116,7 @@ async function addUserToEvent(user, eventId) {
   const invited = await db("invited")
     .insert(user, ["id"])
     .where("event_id", eventId);
-  if (invited.length > 1) {
-    return await db("invited").whereIn(id, invited);
-  } else {
-    return invited;
-  }
+  return await db("invited").whereIn("id", invited);
 }
 
 async function deleteInvitedUser(userId, eventId) {
