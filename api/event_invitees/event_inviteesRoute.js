@@ -4,14 +4,14 @@ const Invited = require("../../data/helpers/invitedUsersDBHelper");
 
 //gets all invited users for an event, regardless of status
 router.get("/:eventId", async (req, res) => {
-    const { eventId } = req.params;
-    console.log("event id is", eventId)
-    try {
-        const invitedUsers = await Invited.getAllInvited(eventId);
-        res.status(200).json(invitedUsers)
-    } catch (e) {
-        res.status(500).json('Message:', e)
-    }
+  const { eventId } = req.params;
+  console.log("event id is", eventId);
+  try {
+    const invitedUsers = await Invited.getAllInvited(eventId);
+    res.status(200).json(invitedUsers);
+  } catch (e) {
+    res.status(500).json("Message:", e);
+  }
 });
 
 //gets all users with a pending invite
@@ -51,8 +51,28 @@ router.get("/:eventId/declined", async (req, res) => {
 
 router.post("/:eventId", async (req, res) => {
   const { eventId } = req.params;
+  const { body } = req;
+  let data; //data could either be single obj or array
+  if (Array.isArray(body)) {
+    data = body.map(user => ({
+      accepted: false,
+      declined: false,
+      pending: true,
+      event_id: eventId,
+      user_id: user.firebase_uid
+    }));
+  } else {
+    data = {
+      accepted: false,
+      declined: false,
+      pending: true,
+      event_id: eventId,
+      user_id: body.firebase_uid
+    };
+  }
+
   try {
-    const invitedUsers = await Invited.addUserToEvent(req.body, eventId);
+    const invitedUsers = await Invited.addUserToEvent(data, eventId);
     res.status(200).json(invitedUsers);
   } catch (error) {
     res.status(500).json(error);

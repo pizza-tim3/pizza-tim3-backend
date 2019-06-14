@@ -113,10 +113,10 @@ async function getDeclinedUsers(eventId) {
 }
 
 async function addUserToEvent(user, eventId) {
-  console.log(user);
-  return await db("invited")
-    .insert(user)
+  const invited = await db("invited")
+    .insert(user, ["id"])
     .where("event_id", eventId);
+  return await db("invited").whereIn("id", invited);
 }
 
 async function deleteInvitedUser(userId, eventId) {
