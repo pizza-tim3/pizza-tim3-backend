@@ -166,7 +166,7 @@ describe("The user Router", () => {
   });
 
   describe("GET /accept/:user_uid/friend_uid", () => {
-    fit("should accept pending friend request", async () => {
+    it("should accept pending friend request", async () => {
       const user1_uid = users[0].firebase_uid;
       const user2_uid = users[1].firebase_uid;
       // user 1 has made a friend request to user 2
@@ -227,6 +227,7 @@ describe("The user Router", () => {
       });
     });
     it("should return a 404 message if user two does not exist", async () => {
+      const user1_uid = users[0].firebase_uid;
       // user two has been deleted
       await db("users")
         .where({ id: 2 })
@@ -238,7 +239,7 @@ describe("The user Router", () => {
 
       //User 1 is friend accepting user 2
       const res = await req(server).get(
-        "/api/friends/accept/258975325235/258975vnfh325235"
+        `/api/friends/accept/${user1_uid}/258975vnfh325235`
       );
 
       expect(res.status).toBe(404);
@@ -248,16 +249,18 @@ describe("The user Router", () => {
         error: `user with id 258975vnfh325235 does not exist`
       });
     });
-    it("should return a 404 message if pending request does not exist", async () => {
+    fit("should return a 404 message if pending request does not exist", async () => {
       //User 1 is friend accepting user 2's friend request
+      const user1_uid = users[0].firebase_uid;
+      const user2_uid = users[1].firebase_uid;
       const res = await req(server).get(
-        "/api/friends/accept/258975325235/258975vnfh325235"
+        `/api/friends/accept/${user1_uid}/${user2_uid}`
       );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
-        error: `pending friend request with ${"258975vnfh325235"} does not exist`
+        error: `pending friend request with ${user2_uid} does not exist`
       });
     });
   });
