@@ -4,20 +4,93 @@ const db = require("../../data/dbConfig");
 
 const users = [
   {
-    id: 1,
-    email: "test@test.com",
-    firebase_uid: "258975325235",
-    username: "Ralphiu",
-    first_name: "Ralph",
-    last_name: "Pill"
+    id: 506,
+    email: "test6@gmail.com",
+    firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
+    username: "Carlotta.Zieme47",
+    first_name: "Quinn",
+    last_name: "Jaskolski",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/vaughanmoffitt/128.jpg",
+    crust: "incidunt",
+    topping: "dicta",
+    slices: "59272"
   },
   {
-    id: 2,
-    email: "test2@test.com",
-    firebase_uid: "258975vnfh325235",
-    username: "Trogdor",
-    first_name: "reed",
-    last_name: "Breet"
+    id: 507,
+    email: "test5@gmail.com",
+    firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
+    username: "Sherman.Mills",
+    first_name: "Al",
+    last_name: "Grady",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg",
+    crust: "ipsa",
+    topping: "autem",
+    slices: "91633"
+  },
+  {
+    id: 508,
+    email: "test4@gmail.com",
+    firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2",
+    username: "Elaina_Adams",
+    first_name: "Lillie",
+    last_name: "Bins",
+    avatar: "https://s3.amazonaws.com/uifaces/faces/twitter/scips/128.jpg",
+    crust: "ducimus",
+    topping: "dolorem",
+    slices: "40686"
+  },
+  {
+    id: 509,
+    email: "test3@gmail.com",
+    firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2",
+    username: "Brooks.Buckridge18",
+    first_name: "Tanya",
+    last_name: "Mann",
+    avatar: "https://s3.amazonaws.com/uifaces/faces/twitter/spacewood_/128.jpg",
+    crust: "dolorem",
+    topping: "voluptas",
+    slices: "54462"
+  },
+  {
+    id: 510,
+    email: "test2@gmail.com",
+    firebase_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2",
+    username: "Amira44",
+    first_name: "Abner",
+    last_name: "Glover",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/michaelkoper/128.jpg",
+    crust: "rerum",
+    topping: "quibusdam",
+    slices: "66554"
+  },
+  {
+    id: 511,
+    email: "test1@gmail.com",
+    firebase_uid: "IyJoCaT4A7cObBoZDEUEKjhwADE2",
+    username: "Phoebe.Stehr",
+    first_name: "Murray",
+    last_name: "Shanahan",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/orkuncaylar/128.jpg",
+    crust: "dolor",
+    topping: "exercitationem",
+    slices: "81032"
+  },
+  {
+    id: 512,
+    email: "test@gmail.com",
+    firebase_uid: "i2i3UqCe3TbaeXbM1ifzQpsGLRi1",
+    username: "Savanna_Kub",
+    first_name: "Leola",
+    last_name: "Parisian",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/overcloacked/128.jpg",
+    crust: "exercitationem",
+    topping: "aut",
+    slices: "85095"
   }
 ];
 
@@ -29,18 +102,20 @@ beforeEach(async () => {
 
 describe("The user Router", () => {
   describe("GET /request/:user_uid/friend_uid", () => {
-    it("should add pending to friend request", async () => {
-      //User 258975325235 is friend requesting user 258975vnfh325235
+    it("should add a pending friend request with friend_uid===friend_uid and user_uid===user_uid", async () => {
+      const user1_uid = users[0].firebase_uid;
+      const user2_uid = users[1].firebase_uid;
+      //User user1_uid is friend requesting user user2_uid
       const res = await req(server).get(
-        "/api/friends/request/258975325235/258975vnfh325235"
+        `/api/friends/request/${user1_uid}/${user2_uid}`
       );
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
-        friend_uid: "258975vnfh325235",
+        friend_uid: user2_uid,
         id: 1,
         status: "pending",
-        user_uid: "258975325235"
+        user_uid: user1_uid
       });
     });
     it("should return a 404 message if user one does not exist", async () => {
@@ -66,6 +141,7 @@ describe("The user Router", () => {
       });
     });
     it("should return a 404 message if user two does not exist", async () => {
+      const user1_uid = users[0].firebase_uid;
       // user two has been deleted
       await db("users")
         .where({ id: 2 })
@@ -77,7 +153,7 @@ describe("The user Router", () => {
 
       //User 1 is friend requesting user 2
       const res = await req(server).get(
-        "/api/friends/request/258975325235/258975vnfh325235"
+        `/api/friends/request/${user1_uid}/258975vnfh325235`
       );
 
       expect(res.status).toBe(404);
@@ -219,7 +295,7 @@ describe("The user Router", () => {
   });
 
   describe("GET /reject/:user_uid/friend_uid", () => {
-    fit("should reject pending friend request", async () => {
+    it("should reject pending friend request", async () => {
       // user 1 is friend requesting user 2
 
       const userList = [
