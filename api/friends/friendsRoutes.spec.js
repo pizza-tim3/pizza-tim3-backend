@@ -356,21 +356,23 @@ describe("The user Router", () => {
   });
 
   describe("DELETE /:user_uid/friend_uid", () => {
-    it("should delete a friend relationship", async () => {
+    fit("should delete a friend relationship", async () => {
       // user 1 is friends with user 2
-      const [userOne] = await db("friends").insert(
+      const user1_uid = users[0].firebase_uid;
+      const user2_uid = users[1].firebase_uid;
+      await db("friends").insert(
         {
-          user_uid: "258975325235",
-          friend_uid: "258975vnfh325235",
+          user_uid: user1_uid,
+          friend_uid: user2_uid,
           status: "accepted"
         },
         "id"
       );
       // user 2 is friends with user 1
-      const [userTwo] = await db("friends").insert(
+      await db("friends").insert(
         {
-          user_uid: "258975vnfh325235",
-          friend_uid: "258975325235",
+          user_uid: user2_uid,
+          friend_uid: user1_uid,
           status: "accepted"
         },
         "id"
@@ -378,26 +380,26 @@ describe("The user Router", () => {
 
       // user 2 is deleting user 1 friend relationship
       const res = await req(server).delete(
-        "/api/friends/258975vnfh325235/258975325235"
+        `/api/friends/${user1_uid}/${user2_uid}`
       );
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and rejected
       expect(res.body).toEqual({
-        message: `friend with id ${"258975325235"} deleted`
+        message: `friend with id ${user2_uid} deleted`
       });
 
       // check if user 1 is friends with user 2
       const [userOneAfterDelete] = await db("friends").where({
-        user_uid: "258975325235",
-        friend_uid: "258975vnfh325235",
+        user_uid: user1_uid,
+        friend_uid: user2_uid,
         status: "accepted"
       });
       // check if user 2 is friends with user 1
       const [userTwoAfterDelete] = await db("friends").where({
-        user_uid: "258975vnfh325235",
-        friend_uid: "258975325235",
+        user_uid: user2_uid,
+        friend_uid: user1_uid,
         status: "accepted"
       });
 
