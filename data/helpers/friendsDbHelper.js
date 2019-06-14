@@ -49,15 +49,17 @@ async function accept(user_uid, friend_uid) {
       .where({ user_uid: friend_uid, friend_uid: user_uid });
 
     //insert corresponding friend table on acceptee's perspective
-    const [senderId] = await db("friends").insert(
+    const [senderId] = await trx("friends").insert(
       { user_uid, friend_uid, status: "accepted" },
       "id"
     );
     await trx.commit();
 
-    return await db("friends").where({
-      id: senderId
-    });
+    return await db("friends")
+      .where({
+        id: senderId
+      })
+      .first();
   } catch (error) {
     await trx.rollback();
   }
