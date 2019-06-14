@@ -249,7 +249,7 @@ describe("The user Router", () => {
         error: `user with id 258975vnfh325235 does not exist`
       });
     });
-    fit("should return a 404 message if pending request does not exist", async () => {
+    it("should return a 404 message if pending request does not exist", async () => {
       //User 1 is friend accepting user 2's friend request
       const user1_uid = users[0].firebase_uid;
       const user2_uid = users[1].firebase_uid;
@@ -266,68 +266,32 @@ describe("The user Router", () => {
   });
 
   describe("GET /reject/:user_uid/friend_uid", () => {
-    it("should reject pending friend request", async () => {
-      // user 1 is friend requesting user 2
-
-      const userList = [
-        {
-          id: 3,
-          email: "Jerrold_Ratke18@yahoo.com",
-          firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
-          username: "Jolie_Corkery52",
-          first_name: "Hulda",
-          last_name: "Ortiz",
-          avatar:
-            "https://s3.amazonaws.com/uifaces/faces/twitter/murrayswift/128.jpg",
-          crust: "modi",
-          topping: "et",
-          slices: "84830"
-        },
-        {
-          id: 4,
-          email: "Johan1@gmail.com",
-          firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
-          username: "Alexandro.Hartmann53",
-          first_name: "Augustine",
-          last_name: "Farrell",
-          avatar:
-            "https://s3.amazonaws.com/uifaces/faces/twitter/amayvs/128.jpg",
-          crust: "voluptas",
-          topping: "explicabo",
-          slices: "35378"
-        }
-      ];
-      await db("users").insert(userList);
-      // user 1 has made a friend request to user 2
+    fit("should reject pending friend request", async () => {
+      const user1_uid = users[0].firebase_uid;
+      const user2_uid = users[1].firebase_uid;
+      // user 2 has made a friend request to user 1
       const ids = await db("friends").insert(
-        [
-          {
-            user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
-            friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
-            status: "pending"
-          },
-          {
-            user_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
-            friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
-            status: "pending"
-          }
-        ],
+        {
+          user_uid: user2_uid, //test6@gmail.com
+          friend_uid: user1_uid, //test5@gmail.com
+          status: "pending"
+        },
         "id"
       );
 
-      // user 2 is rejecting user 1's friend request
+      // user 1 is rejecting user 2's friend request
       const res = await req(server).get(
-        "/api/friends/reject/XVf2XhkNSJWNDGEW4Wh6SHpKYUt2/T90z5fuhXcWpE231iBvk0WntdKA2"
+        `/api/friends/reject/${user1_uid}/${user2_uid}`
       );
 
       expect(res.status).toBe(200);
       expect(res.type).toBe("application/json");
       //expect both to be updated and rejected
       expect(res.body).toEqual({
-        friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
+        friend_uid: user1_uid,
         id: 1,
         status: "rejected",
-        user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2"
+        user_uid: user2_uid
       });
     });
     it("should return a 404 message if user one does not exist", async () => {

@@ -69,13 +69,18 @@ async function reject(user_uid, friend_uid) {
   const trx = await promisify(db.transaction.bind(db));
   try {
     //update the request sender's table to accepted
-    const [id] = await trx("friends")
+    const id = await trx("friends")
       .update({ status: "rejected" }, "id")
       .where({ user_uid: friend_uid, friend_uid: user_uid, status: "pending" });
-
     await trx.commit();
 
-    return await db("friends").where({ id });
+    return await db("friends")
+      .where({
+        user_uid: friend_uid,
+        friend_uid: user_uid,
+        status: "rejected"
+      })
+      .first();
   } catch (error) {
     await trx.rollback();
   }
