@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
       event_date,
       organizer,
       place,
-      event_description,
+      event_description
     } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
         event_description: event_description,
         event_date: event_date,
         organizer: organizer,
-        place: place,
+        place: place
       };
 
       const eid = await Events.add(newEvent);
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "we can't add the new record in event table",
-      error: err,
+      error: err
     });
   }
 });
@@ -121,43 +121,36 @@ router.get("/:id/details", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    const { location } = req.body;
     const event = {
       event_name: req.body.event_name,
       place: req.body.location.id,
       event_date: req.body.event_date,
       organizer: req.body.organizer,
-      event_description: req.body.event_description,
+      event_description: req.body.event_description
     };
     // If Id is Missing
     if (!id) {
       res.status(400).json({ message: "Event id doesn't exsist" });
-    } else if (
-      // undefined in event
-      !event.event_date ||
-      // !event.event_description ||
-      // !event.organizer ||
-      !event.place
-    ) {
+    } else if (Object.values(event).includes(undefined)) {
+      //any of the fields are undefined
       res.status(400).json({ message: "Fields are missing." });
     } else {
-      let location_id = event.place.id;
+      let location_id = event.place;
       let existingLocation = await Locations.getPlaceById(location_id);
-
-      // Check if body fields are missing
 
       // If locations doesn't exist
       if (!existingLocation) {
         // Add a new location
-        let newLocation = await Locations.addPlace(event.location);
-
-        let newInsertedLocation = await Locations.getPlaceById(location_id);
-        event.place = newInsertedLocation.id;
+        let newLocation = await Locations.addPlace(location);
+        //add places id to event
+        event.place = newLocation.id;
+        //update event
         const result = await Events.update(id, event);
-        // console.log(result);
+        //return result
         res.status(200).json({ result });
       } else {
         const result = await Events.update(id, event);
-        // console.log(result);
         res.status(200).json({ result });
       }
     }
