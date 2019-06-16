@@ -125,6 +125,7 @@ router.delete("/:user_uid/:friend_uid", async (req, res) => {
     } else {
       //delete a friend
       const deleted = await Friends.remove(user_uid, friend_uid);
+      console.log(deleted);
       if (deleted === 2) {
         // if the friend is deleted
         res

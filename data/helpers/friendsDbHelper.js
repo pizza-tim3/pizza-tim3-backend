@@ -82,6 +82,7 @@ async function reject(user_uid, friend_uid) {
       })
       .first();
   } catch (error) {
+    console.log(error.stack);
     await trx.rollback();
   }
 }

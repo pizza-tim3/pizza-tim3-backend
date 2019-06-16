@@ -356,7 +356,7 @@ describe("The user Router", () => {
   });
 
   describe("DELETE /:user_uid/friend_uid", () => {
-    fit("should delete a friend relationship", async () => {
+    it("should delete a friend relationship", async () => {
       // user 1 is friends with user 2
       const user1_uid = users[0].firebase_uid;
       const user2_uid = users[1].firebase_uid;
@@ -429,6 +429,7 @@ describe("The user Router", () => {
       });
     });
     it("should return a 404 message if user two does not exist", async () => {
+      const user1_uid = users[0].firebase_uid;
       // user two has been deleted
       await db("users")
         .where({ id: 2 })
@@ -440,7 +441,7 @@ describe("The user Router", () => {
 
       //User 1 is friend requesting user 2
       const res = await req(server).delete(
-        "/api/friends/258975325235/258975vnfh325235"
+        `/api/friends/${user1_uid}/258975vnfh325235`
       );
 
       expect(res.status).toBe(404);
@@ -450,21 +451,20 @@ describe("The user Router", () => {
         error: `user with id 258975vnfh325235 does not exist`
       });
     });
-    it("should return a 404 message if friendship does not exist", async () => {
-      const [userOne] = await db("friends").insert(
-        { user_uid: 1, friend_uid: 2, status: "accepted" },
-        "id"
-      );
+    fit("should return a 404 message if friendship does not exist", async () => {
+      const user1_uid = users[0].firebase_uid;
+      const user2_uid = users[1].firebase_uid;
       //User 1 is friend deleting 2's friend
       const res = await req(server).delete(
-        "/api/friends/258975325235/258975vnfh325235"
+        `/api/friends/${user1_uid}/${user2_uid}`
       );
 
       expect(res.status).toBe(404);
       expect(res.type).toBe("application/json");
       expect(res.body).toEqual({
-        error: `friendship with ${"258975vnfh325235"} does not exist`
+        error: `friendship with ${user2_uid} does not exist`
       });
+      //technically I should write check if friend exists thing but yeh
     });
   });
 
