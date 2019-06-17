@@ -8,7 +8,7 @@ exports.up = function(knex, Promise) {
     events.string("organizer");
     //   .references("firebase_uid")
     //   .inTable("users");
-    invited.bool("inviteOnly");
+    events.bool("inviteOnly");
 
     events
       .integer("place")
