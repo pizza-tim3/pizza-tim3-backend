@@ -121,18 +121,41 @@ router.get("/:id/details", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const event = req.body;
-
-    if (id && event) {
-      const result = await Events.update(id, event);
-      res.status(200).json({ result });
-    }
+    const { location } = req.body;
+    const event = {
+      event_name: req.body.event_name,
+      place: req.body.location.id,
+      event_date: req.body.event_date,
+      organizer: req.body.organizer,
+      event_description: req.body.event_description
+    };
+    // If Id is Missing
     if (!id) {
       res.status(400).json({ message: "Event id doesn't exsist" });
+    } else if (Object.values(event).includes(undefined)) {
+      //any of the fields are undefined
+      res.status(400).json({ message: "Fields are missing." });
     } else {
-      res.status(400).json({ message: "Event body has issues" });
+      let location_id = event.place;
+      let existingLocation = await Locations.getPlaceById(location_id);
+
+      // If locations doesn't exist
+      if (!existingLocation) {
+        // Add a new location
+        let newLocation = await Locations.addPlace(location);
+        //add places id to event
+        event.place = newLocation.id;
+        //update event
+        const result = await Events.update(id, event);
+        //return result
+        res.status(200).json({ result });
+      } else {
+        const result = await Events.update(id, event);
+        res.status(200).json({ result });
+      }
     }
   } catch (err) {
+    console.log(err.stack);
     res.status(500).json({ message: "We can't update the event", error: err });
   }
 });

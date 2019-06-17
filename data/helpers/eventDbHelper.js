@@ -10,7 +10,7 @@ module.exports = {
   updateToAcceptedStatus,
   updateToDeclinedStatus,
   getEventsforUser,
-  getPastEventsforUser
+  getPastEventsforUser,
 };
 function getAll() {
   return db("events");
@@ -34,6 +34,8 @@ async function add(event) {
 // }
 
 async function update(id, changes) {
+  console.log(id);
+  console.log(changes);
   return db("events")
     .where({ id })
     .update(changes);
@@ -66,22 +68,22 @@ async function updateToAcceptedStatus(userId, eventId) {
   return await db("invited")
     .where({
       event_id: eventId,
-      user_id: userId
+      user_id: userId,
     })
     .update({
       accepted: true,
-      pending: false
+      pending: false,
     });
 }
 async function updateToDeclinedStatus(userId, eventId) {
   return await db("invited")
     .where({
       event_id: eventId,
-      user_id: userId
+      user_id: userId,
     })
     .update({
       declined: true,
-      pending: false
+      pending: false,
     });
 }
 
@@ -99,24 +101,30 @@ async function getEventsforUser(id) {
       "pending"
     )
     .from("invited")
-    .where({"user_id":id})//.where(currentEpoch,"<", "events.event_date")
-    .innerJoin("events","invited.event_id","=","events.id")
-    .innerJoin("locations","locations.id", "=","events.place")
-  }
-  
-  async function getPastEventsforUser(id){
-    const currentEpoch = new Date().getTime();
- 
-    console.log("Get past ", id, currentEpoch);
-   return  db.select("event_id","user_id","event_name","event_date","google_place_id", "pending")
-     .from("invited")
-     .where({"user_id":id  })//.where(currentEpoch,">", "event_date")
-     .innerJoin("events","invited.event_id","=","events.id")
-     .innerJoin("locations","locations.id", "=","events.place")
-  }
+    .where({ user_id: id }) //.where(currentEpoch,"<", "events.event_date")
+    .innerJoin("events", "invited.event_id", "=", "events.id")
+    .innerJoin("locations", "locations.id", "=", "events.place");
+}
 
-  async function getCommentsForEvents(id){
+async function getPastEventsforUser(id) {
+  const currentEpoch = new Date().getTime();
 
-    return db.select("event_id",)
-  }
+  console.log("Get past ", id, currentEpoch);
+  return db
+    .select(
+      "event_id",
+      "user_id",
+      "event_name",
+      "event_date",
+      "google_place_id",
+      "pending"
+    )
+    .from("invited")
+    .where({ user_id: id }) //.where(currentEpoch,">", "event_date")
+    .innerJoin("events", "invited.event_id", "=", "events.id")
+    .innerJoin("locations", "locations.id", "=", "events.place");
+}
 
+async function getCommentsForEvents(id) {
+  return db.select("event_id");
+}
