@@ -141,7 +141,7 @@ async function remove(user_uid, friend_uid) {
   }
 }
 
-//get all pending/accepted
+//get all accepted
 async function getAllFriends(uid) {
   return await db
     .select(
@@ -175,10 +175,11 @@ async function getAllPendingFriends(uid) {
       "users.avatar",
       "users.crust",
       "users.topping",
-      "users.slices"
+      "users.slices",
+      "friends.status"
     )
     .from("friends")
     .where("friends.status", "=", "pending")
-    .andWhere("users.firebase_uid", "=", uid)
-    .leftJoin("users", "users.firebase_uid", "friends.friend_uid");
+    .andWhere("friends.friend_uid", "=", uid)
+    .leftJoin("users", "users.firebase_uid", "friends.user_uid");
 }

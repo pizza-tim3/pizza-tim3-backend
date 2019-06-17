@@ -152,8 +152,10 @@ router.get("/:uid", async (req, res) => {
     if (!user) {
       res.status(404).json({ message: `User with ${uid} does not exist` });
     } else {
-      const users = await Friends.getAllFriends(uid);
-      res.status(200).json(users);
+      const acceptedFriends = await Friends.getAllFriends(uid);
+      const pendingFriends = await Friends.getAllPendingFriends(uid);
+      const allFriends = [...acceptedFriends, ...pendingFriends];
+      res.status(200).json(allFriends);
     }
   } catch (error) {}
 });

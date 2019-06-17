@@ -451,7 +451,7 @@ describe("The user Router", () => {
         error: `user with id 258975vnfh325235 does not exist`
       });
     });
-    fit("should return a 404 message if friendship does not exist", async () => {
+    it("should return a 404 message if friendship does not exist", async () => {
       const user1_uid = users[0].firebase_uid;
       const user2_uid = users[1].firebase_uid;
       //User 1 is friend deleting 2's friend
@@ -469,116 +469,44 @@ describe("The user Router", () => {
   });
 
   describe("GET /:uid", () => {
-    it("should return a list of accepted friends", async () => {
-      const userList = [
+    fit("should return a list of accepted friends,and pending friends", async () => {
+      const friends = [
         {
-          id: 3,
-          email: "Frederick.Davis79@hotmail.com",
-          firebase_uid: "61283427b08345f48bf263298bb",
-          username: "Carlo20",
-          first_name: "Franco",
-          last_name: "Wehner",
-          avatar:
-            "https://s3.amazonaws.com/uifaces/faces/twitter/leonfedotov/128.jpg",
-          crust: "impedit",
-          topping: "aperiam",
-          slices: "99193"
+          user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+          friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+          status: "accepted"
         },
         {
-          id: 4,
-          email: "Dorris95@yahoo.com",
-          firebase_uid: "8bdab6803059476baec16a8d980",
-          username: "Rosalia.Ondricka",
-          first_name: "Rodrick",
-          last_name: "Goyette",
-          avatar:
-            "https://s3.amazonaws.com/uifaces/faces/twitter/h1brd/128.jpg",
-          crust: "voluptatem",
-          topping: "doloribus",
-          slices: "75389"
+          user_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+          status: "accepted"
         },
         {
-          id: 5,
-          email: "Jerrold_Ratke18@yahoo.com",
-          firebase_uid: "6e28d4d53dfb4d5b85aef1b3237",
-          username: "Jolie_Corkery52",
-          first_name: "Hulda",
-          last_name: "Ortiz",
-          avatar:
-            "https://s3.amazonaws.com/uifaces/faces/twitter/murrayswift/128.jpg",
-          crust: "modi",
-          topping: "et",
-          slices: "84830"
+          user_uid: "IyJoCaT4A7cObBoZDEUEKjhwADE2", //test6@gmail.com
+          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test1@gmail.com
+          status: "pending"
         },
         {
-          id: 6,
-          email: "Johan1@gmail.com",
-          firebase_uid: "b9472482c8b347f9b043aef2efb",
-          username: "Alexandro.Hartmann53",
-          first_name: "Augustine",
-          last_name: "Farrell",
-          avatar:
-            "https://s3.amazonaws.com/uifaces/faces/twitter/amayvs/128.jpg",
-          crust: "voluptas",
-          topping: "explicabo",
-          slices: "35378"
-        },
-        {
-          id: 7,
-          email: "Kevin.Pfannerstill9@yahoo.com",
-          firebase_uid: "d8a2b7e34b9d4b17be9c02b0065",
-          username: "Monte_Rolfson",
-          first_name: "Whitney",
-          last_name: "Stoltenberg",
-          avatar:
-            "https://s3.amazonaws.com/uifaces/faces/twitter/okseanjay/128.jpg",
-          crust: "omnis",
-          topping: "consequuntur",
-          slices: "29317"
+          user_uid: "i2i3UqCe3TbaeXbM1ifzQpsGLRi1", //test6@gmail.com
+          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test@gmail.com
+          status: "pending"
         }
       ];
+
+      const expected = [
+        { ...users[1], status: "accepted" },
+        { ...users[5], status: "pending" },
+        { ...users[6], status: "pending" }
+      ];
+      await db("friends").insert(friends);
+
       try {
-        await db("users").insert(userList);
-
-        await db("friends").insert([
-          {
-            user_uid: "61283427b08345f48bf263298bb", //3
-            friend_uid: "8bdab6803059476baec16a8d980", //4
-            status: "accepted"
-          },
-          {
-            user_uid: "8bdab6803059476baec16a8d980", //4
-            friend_uid: "61283427b08345f48bf263298bb", //3
-            status: "accepted"
-          },
-          {
-            user_uid: "61283427b08345f48bf263298bb", //3
-            friend_uid: "6e28d4d53dfb4d5b85aef1b3237", //5
-            status: "accepted"
-          },
-          {
-            user_uid: "6e28d4d53dfb4d5b85aef1b3237", //5
-            friend_uid: "61283427b08345f48bf263298bb", //3
-            status: "accepted"
-          },
-          {
-            user_uid: "61283427b08345f48bf263298bb", //3
-            friend_uid: "b9472482c8b347f9b043aef2efb", //6
-            status: "pending"
-          }
-        ]);
-
         const res = await req(server).get(
-          "/api/friends/61283427b08345f48bf263298bb"
+          "/api/friends/XVf2XhkNSJWNDGEW4Wh6SHpKYUt2"
         );
         expect(res.status).toBe(200);
         expect(res.type).toBe("application/json");
-        console.log(res.body);
-        expect(res.body).toEqual([
-          { ...userList[1], status: "accepted" },
-          { ...userList[2], status: "accepted" },
-          { ...userList[3], status: "pending" }
-        ]);
+        expect(res.body).toEqual(expected);
       } catch (error) {
         console.log(error);
       }
