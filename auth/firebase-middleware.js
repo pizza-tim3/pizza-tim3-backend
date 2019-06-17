@@ -81,4 +81,4 @@ const checkAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken, verifyUser, checkAdmin };
+module.exports = { verifyToken,setDecodedToken,setCustomClaims, verifyUser, checkAdmin };
