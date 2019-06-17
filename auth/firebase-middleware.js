@@ -7,19 +7,9 @@ const verifyToken = async (req, res, next) => {
   //const token = await app.auth().currentUser.getIdToken();
   const idToken = req.headers.authorization;
 
-  //TODO: SEPERATE THESE CONCERNS INTO THEIR OWN FUNCTION
   try {
     //if idToken exists
     if (idToken) {
-      //decode the token
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      //get the user id
-      const uid = decodedToken.uid;
-      //put the user id on the req object
-      req.uid = uid;
-      //get custom claims if any
-      const { customClaims } = await admin.auth().getUser(uid);
-      req.customClaims = customClaims;
       //go to next middleware/routing logic
       next();
     } else {
@@ -29,6 +19,39 @@ const verifyToken = async (req, res, next) => {
     res.status(500).json({ error: error });
   }
 };
+
+//verify and decode are almost redundant but I've seperated
+//concerns at the behest of another
+const setDecodedToken = (req, res, next) =>{
+  try {
+    //get token off header
+    const idToken = req.headers.authorization;
+    //decode the token
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    //get the user id
+    const uid = decodedToken.uid;
+    //put the user id on the req object
+    req.uid = uid;
+    next();
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+  
+}
+
+//This function *must* come after setDecodedToken,
+//otherwise req.uid will be undefined
+const setCustomClaims= (req, res, next) =>{
+  try {
+    //get custom claims if any
+    const { customClaims } = await admin.auth().getUser(req.uid);
+    req.customClaims = customClaims;
+    next();
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+
+}
 
 //This function makes sure that access to the
 //user specific route is the same as the one making the request.
