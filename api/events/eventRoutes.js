@@ -124,7 +124,7 @@ router.put("/:id", async (req, res) => {
     const { location } = req.body;
     const event = {
       event_name: req.body.event_name,
-      place: req.body.location.id,
+      place: req.body.location && req.body.location.id,
       event_date: req.body.event_date,
       organizer: req.body.organizer,
       event_description: req.body.event_description
