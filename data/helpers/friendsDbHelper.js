@@ -21,6 +21,14 @@ async function checkPending(user_uid, friend_uid) {
   return request;
 }
 
+//user_uid sends a friend request to friend_uid
+/**
+  {
+    user_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
+    friend_uid: "T90z5fuhXcWpE231iBvk0WntdKA2", //test5@gmail.com
+    status: "pending"
+  }
+ */
 async function request(user_uid, friend_uid) {
   // if request already exists don't request
   //insert on requestee
@@ -28,60 +36,54 @@ async function request(user_uid, friend_uid) {
     { user_uid, friend_uid, status: "pending" },
     "id"
   );
-  //insert on the person requestee is requesting friends with
-  const [requestedId] = await db("friends").insert(
-    { user_uid: friend_uid, friend_uid: user_uid, status: "pending" },
-    "id"
-  );
   const [pendingRequest] = await getById(requesteeId);
   return pendingRequest;
 }
 
 async function accept(user_uid, friend_uid) {
-  //update both with accepted
+  const trx = await promisify(db.transaction.bind(db));
+  try {
+    //update the request sender's table to accepted
+    await trx("friends")
+      .update({ status: "accepted" }, "id") //returns count of updated on sqlite3
+      .where({ user_uid: friend_uid, friend_uid: user_uid });
 
-  //update acceptee
-  const accepteeId = await db("friends")
-    .update({ status: "accepted" }, "id") //returns count of updated on sqlite3
-    .where({ user_uid, friend_uid });
-  //updated acceptee recipient
-  const recipientId = await db("friends")
-    .update({ status: "accepted" }, "id")
-    .where({ user_uid: friend_uid, friend_uid: user_uid });
+    //insert corresponding friend table on acceptee's perspective
+    const [senderId] = await trx("friends").insert(
+      { user_uid, friend_uid, status: "accepted" },
+      "id"
+    );
+    await trx.commit();
 
-  //return accepted
-  const [acceptedRequest] = await db("friends").where({
-    user_uid,
-    friend_uid,
-    status: "accepted"
-  });
-  console.log(acceptedRequest);
-  return acceptedRequest;
+    return await db("friends")
+      .where({
+        id: senderId
+      })
+      .first();
+  } catch (error) {
+    await trx.rollback();
+  }
 }
 
 async function reject(user_uid, friend_uid) {
+  const trx = await promisify(db.transaction.bind(db));
   try {
-    //get pending
-    //update to reject
-    await db("friends")
-      .update({ status: "rejected" }, "id")
-      .where({ user_uid, friend_uid, status: "pending" });
-
-    // user 2 reject user 1's friend request
-    const id = await db("friends")
+    //update the request sender's table to accepted
+    const id = await trx("friends")
       .update({ status: "rejected" }, "id")
       .where({ user_uid: friend_uid, friend_uid: user_uid, status: "pending" });
-    //return rejected
+    await trx.commit();
 
-    //return accepted
-    const [rejectedRequest] = await db("friends").where({
-      user_uid,
-      friend_uid,
-      status: "rejected"
-    });
-    return rejectedRequest;
+    return await db("friends")
+      .where({
+        user_uid: friend_uid,
+        friend_uid: user_uid,
+        status: "rejected"
+      })
+      .first();
   } catch (error) {
-    console.log(error);
+    console.log(error.stack);
+    await trx.rollback();
   }
 }
 
@@ -118,8 +120,8 @@ async function remove(user_uid, friend_uid) {
     const userTableDeleted = await trx("friends")
       .del()
       .where({
-        user_uid: user_uid,
-        friend_uid: friend_uid,
+        user_uid,
+        friend_uid,
         status: "accepted"
       });
 
@@ -139,7 +141,7 @@ async function remove(user_uid, friend_uid) {
   }
 }
 
-//get all pending/accepted
+//get all accepted
 async function getAllFriends(uid) {
   return await db
     .select(
@@ -173,9 +175,11 @@ async function getAllPendingFriends(uid) {
       "users.avatar",
       "users.crust",
       "users.topping",
-      "users.slices"
+      "users.slices",
+      "friends.status"
     )
     .from("friends")
     .where("friends.status", "=", "pending")
-    .leftJoin("users", "users.firebase_uid", "friends.friend_uid");
+    .andWhere("friends.friend_uid", "=", uid)
+    .leftJoin("users", "users.firebase_uid", "friends.user_uid");
 }

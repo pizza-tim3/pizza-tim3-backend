@@ -37,13 +37,10 @@ router.get("/request/:user_uid/:friend_uid", async (req, res) => {
 //accept friend
 router.get("/accept/:user_uid/:friend_uid", async (req, res) => {
   const { user_uid, friend_uid } = req.params;
-  console.log(user_uid, friend_uid);
   //if request isn't valid
   try {
     const userOne = await Users.getByUid(user_uid);
     const userTwo = await Users.getByUid(friend_uid);
-    console.log(userOne, userTwo);
-    const pendingRequest = await Friends.checkPending(user_uid, friend_uid);
 
     //if user one does not exist return bad request
     if (!userOne) {
@@ -55,15 +52,17 @@ router.get("/accept/:user_uid/:friend_uid", async (req, res) => {
       res
         .status(404)
         .json({ error: `user with id ${friend_uid} does not exist` });
-    } else if (pendingRequest === undefined) {
-      //if a pending friend requests from user two dne
-      res.status(404).json({
-        error: `pending friend request with ${friend_uid} does not exist`
-      });
     } else {
-      //
-      const added = await Friends.accept(user_uid, friend_uid);
-      res.status(200).json(added);
+      const pendingRequest = await Friends.checkPending(user_uid, friend_uid);
+      if (pendingRequest === undefined) {
+        //if a pending friend requests from user two dne
+        res.status(404).json({
+          error: `pending friend request with ${friend_uid} does not exist`
+        });
+      } else {
+        const added = await Friends.accept(user_uid, friend_uid);
+        res.status(200).json(added);
+      }
     }
   } catch (err) {
     console.log(err);
@@ -74,12 +73,10 @@ router.get("/accept/:user_uid/:friend_uid", async (req, res) => {
 //reject friend
 router.get("/reject/:user_uid/:friend_uid", async (req, res) => {
   const { user_uid, friend_uid } = req.params;
-
   //if pending request does not exist
   try {
     const userOne = await Users.getByUid(user_uid);
     const userTwo = await Users.getByUid(friend_uid);
-    const pendingRequest = await Friends.checkPending(user_uid, friend_uid);
 
     //if user one does not exist return bad request
     if (!userOne) {
@@ -91,14 +88,17 @@ router.get("/reject/:user_uid/:friend_uid", async (req, res) => {
       res
         .status(404)
         .json({ error: `user with id ${friend_uid} does not exist` });
-    } else if (!pendingRequest) {
-      //if a pending friend requests from user two dne
-      res.status(404).json({
-        error: `pending friend request with ${friend_uid} does not exist`
-      });
     } else {
-      const rejected = await Friends.reject(user_uid, friend_uid);
-      res.status(200).json(rejected);
+      const pendingRequest = await Friends.checkPending(user_uid, friend_uid);
+      if (!pendingRequest) {
+        //if a pending friend requests from user two dne
+        res.status(404).json({
+          error: `pending friend request with ${friend_uid} does not exist`
+        });
+      } else {
+        const rejected = await Friends.reject(user_uid, friend_uid);
+        res.status(200).json(rejected);
+      }
     }
   } catch (err) {
     console.log(err);
@@ -125,6 +125,7 @@ router.delete("/:user_uid/:friend_uid", async (req, res) => {
     } else {
       //delete a friend
       const deleted = await Friends.remove(user_uid, friend_uid);
+      console.log(deleted);
       if (deleted === 2) {
         // if the friend is deleted
         res
@@ -151,8 +152,10 @@ router.get("/:uid", async (req, res) => {
     if (!user) {
       res.status(404).json({ message: `User with ${uid} does not exist` });
     } else {
-      const users = await Friends.getAllFriends(uid);
-      res.status(200).json(users);
+      const acceptedFriends = await Friends.getAllFriends(uid);
+      const pendingFriends = await Friends.getAllPendingFriends(uid);
+      const allFriends = [...acceptedFriends, ...pendingFriends];
+      res.status(200).json(allFriends);
     }
   } catch (error) {}
 });
