@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
       event_date,
       organizer,
       place,
-      event_description
+      event_description,
     } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
         event_description: event_description,
         event_date: event_date,
         organizer: organizer,
-        place: place
+        place: place,
       };
 
       const eid = await Events.add(newEvent);
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "we can't add the new record in event table",
-      error: err
+      error: err,
     });
   }
 });
@@ -127,7 +127,8 @@ router.put("/:id", async (req, res) => {
       place: req.body.location && req.body.location.id,
       event_date: req.body.event_date,
       organizer: req.body.organizer,
-      event_description: req.body.event_description
+      event_description: req.body.event_description,
+      inviteOnly: req.body.inviteOnly,
     };
     // If Id is Missing
     if (!id) {
