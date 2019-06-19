@@ -5,18 +5,11 @@ const Users = require("../../data/helpers/userDbHelper");
 const {
   verifyToken,
   setDecodedToken,
-  setCustomClaims,
-  verifyUser
+  setCustomClaims
 } = require("../../auth/firebase-middleware");
 // All Users route
 
-router.use(
-  "/:user_uid",
-  verifyToken,
-  setDecodedToken,
-  setCustomClaims,
-  verifyUser
-);
+router.use("/", verifyToken, setDecodedToken, setCustomClaims);
 
 // promote a user to administrator
 router.get("/promote/:user_uid/", async (req, res) => {

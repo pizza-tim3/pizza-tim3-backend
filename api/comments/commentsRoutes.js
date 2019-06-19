@@ -2,6 +2,22 @@ const express = require("express");
 const router = express.Router();
 const Comments = require("../../data/helpers/commentsDbHelper");
 
+const {
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims
+  // verifyUser
+} = require("../../auth/firebase-middleware");
+// All Users route
+
+router.use(
+  "/:user_uid",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims
+  // verifyUser
+);
+
 router.get("/", async (req, res) => {
   try {
     const comments = await Comments.getAll();
