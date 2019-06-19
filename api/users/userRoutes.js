@@ -65,18 +65,19 @@ router.put("/:user_uid", async (req, res) => {
   const { email, firebase_uid, username, first_name, last_name } = user;
   if (!email || !firebase_uid || !username || !first_name || !last_name) {
     res.status(400).json({ error: "Bad Request, please include all fields" });
-  }
-  try {
-    const updatedUser = await Users.update(user_uid, user);
-    if (!updatedUser) {
-      res
-        .status(404)
-        .json({ error: `user with id ${user_uid} does not exist` });
+  } else {
+    try {
+      const updatedUser = await Users.update(user_uid, user);
+      if (!updatedUser) {
+        res
+          .status(404)
+          .json({ error: `user with id ${user_uid} does not exist` });
+      }
+      res.status(200).json(updatedUser);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
     }
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
   }
 });
 

@@ -3,6 +3,22 @@ const router = express.Router();
 const Friends = require("../../data/helpers/friendsDbHelper");
 const Users = require("../../data/helpers/userDbHelper");
 
+const {
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  verifyUser
+} = require("../../auth/firebase-middleware");
+// All Users route
+
+router.use(
+  "/:user_uid",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  verifyUser
+);
+
 //fix me add authorize/authentication for users
 //so users can only access their own stuff
 
@@ -144,24 +160,24 @@ router.delete("/:user_uid/:friend_uid", async (req, res) => {
 });
 
 //get all friends
-router.get("/:uid", async (req, res) => {
-  const { uid } = req.params;
+router.get("/:user_uid", async (req, res) => {
+  const { user_uid } = req.params;
   try {
-    const user = await Users.getByUid(uid);
+    const user = await Users.getByUid(user_uid);
     if (!user) {
-      res.status(404).json({ message: `User with ${uid} does not exist` });
+      res.status(404).json({ message: `User with ${user_uid} does not exist` });
     } else {
-      const users = await Friends.getAllFriends(uid);
+      const users = await Friends.getAllFriends(user_uid);
       res.status(200).json(users);
     }
   } catch (error) {}
 });
 
 //get all pending friends
-router.get("/:uid/pending", async (req, res) => {
-  const { uid } = req.params;
+router.get("/:user_uid/pending", async (req, res) => {
+  const { user_uid } = req.params;
   try {
-    const users = await Friends.getAllPendingFriends(uid);
+    const users = await Friends.getAllPendingFriends(user_uid);
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json(error);

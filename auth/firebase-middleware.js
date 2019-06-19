@@ -22,7 +22,7 @@ const verifyToken = async (req, res, next) => {
 
 //verify and decode are almost redundant but I've seperated
 //concerns at the behest of another
-const setDecodedToken = (req, res, next) =>{
+const setDecodedToken = async (req, res, next) => {
   try {
     //get token off header
     const idToken = req.headers.authorization;
@@ -36,12 +36,11 @@ const setDecodedToken = (req, res, next) =>{
   } catch (error) {
     res.status(500).json({ error: error });
   }
-  
-}
+};
 
 //This function *must* come after setDecodedToken,
 //otherwise req.uid will be undefined
-const setCustomClaims= (req, res, next) =>{
+const setCustomClaims = async (req, res, next) => {
   try {
     //get custom claims if any
     const { customClaims } = await admin.auth().getUser(req.uid);
@@ -50,8 +49,7 @@ const setCustomClaims= (req, res, next) =>{
   } catch (error) {
     res.status(500).json({ error: error });
   }
-
-}
+};
 
 //This function makes sure that access to the
 //user specific route is the same as the one making the request.
@@ -82,4 +80,10 @@ const checkAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken,setDecodedToken,setCustomClaims, verifyUser, checkAdmin };
+module.exports = {
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  verifyUser,
+  checkAdmin
+};
