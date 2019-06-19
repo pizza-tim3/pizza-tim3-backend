@@ -5,7 +5,8 @@ const {
   verifyToken,
   setDecodedToken,
   setCustomClaims,
-  verifyUser
+  verifyUser,
+  checkAdmin
 } = require("../../auth/firebase-middleware");
 // All Users route
 
@@ -14,17 +15,24 @@ router.use(
   verifyToken,
   setDecodedToken,
   setCustomClaims,
-  verifyUser
+  checkAdmin
 );
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await Users.getAll();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json(error);
+router.get(
+  "/",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  checkAdmin,
+  async (req, res) => {
+    try {
+      const users = await Users.getAll();
+      res.status(200).json(users);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 router.get("/:user_uid", async (req, res) => {
   const { user_uid } = req.params;
