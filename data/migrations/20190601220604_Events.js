@@ -13,7 +13,9 @@ exports.up = function(knex, Promise) {
     events
       .integer("place")
       .references("id")
-      .inTable("locations");
+      .inTable("locations")
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE')
   });
 };
 
