@@ -4,6 +4,7 @@ module.exports = {
   getAll,
   getById,
   getByUid,
+  getByName,
   add,
   update,
   remove
@@ -47,3 +48,18 @@ async function remove(uid) {
     .where({ firebase_uid: uid })
     .del();
 }
+
+async function getByName(name){
+    console.log(name)
+   return db("users")
+   .where('first_name',"like","%" + name + "%").orWhere('last_name',"like","%" + name + "%").then( function( resp ){
+    console.log( resp );
+    return resp;
+}).catch(function(err) {
+   console.log(err);
+})
+   
+
+}
+
+

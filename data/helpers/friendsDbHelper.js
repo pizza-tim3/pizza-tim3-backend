@@ -8,7 +8,8 @@ module.exports = {
   remove,
   checkPending,
   getAllFriends,
-  getAllPendingFriends
+  getAllPendingFriends,
+  checkFriendRequets
 };
 
 async function checkPending(user_uid, friend_uid) {
@@ -18,6 +19,23 @@ async function checkPending(user_uid, friend_uid) {
     friend_uid: user_uid,
     status: "pending"
   });
+  return request;
+}
+
+//This selects user which either has  sent a request to me,
+// or has been sent request by me.
+async function checkFriendRequets(user_uid, friend_uid) {
+  //check if user one has a pending friend requests from user two
+  console.log("Check friend ", user_uid, friend_uid);
+  const request = await db("friends").where({
+    user_uid: friend_uid,
+    friend_uid: user_uid
+  }).orWhere({
+    user_uid: user_uid,
+    friend_uid: friend_uid
+  }
+    
+  );
   return request;
 }
 
@@ -32,6 +50,8 @@ async function checkPending(user_uid, friend_uid) {
 async function request(user_uid, friend_uid) {
   // if request already exists don't request
   //insert on requestee
+
+
   const [requesteeId] = await db("friends").insert(
     { user_uid, friend_uid, status: "pending" },
     "id"
