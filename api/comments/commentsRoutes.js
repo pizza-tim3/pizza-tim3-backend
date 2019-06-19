@@ -5,20 +5,14 @@ const Comments = require("../../data/helpers/commentsDbHelper");
 const {
   verifyToken,
   setDecodedToken,
-  setCustomClaims
-  // verifyUser
+  setCustomClaims,
+  checkAdmin
 } = require("../../auth/firebase-middleware");
 // All Users route
 
-router.use(
-  "/:user_uid",
-  verifyToken,
-  setDecodedToken,
-  setCustomClaims
-  // verifyUser
-);
+router.use("/", verifyToken, setDecodedToken, setCustomClaims);
 
-router.get("/", async (req, res) => {
+router.get("/", checkAdmin, async (req, res) => {
   try {
     const comments = await Comments.getAll();
     if (comments.length < 1) {
