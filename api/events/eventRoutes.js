@@ -5,39 +5,52 @@ const Events = require("../../data/helpers/eventDbHelper");
 const Locations = require("../../data/helpers/locationHelper");
 const Comments = require("../../data/helpers/commentsDbHelper");
 
-router.post("/", async (req, res) => {
-  try {
-    const {
-      event_name,
-      event_date,
-      organizer,
-      place,
-      event_description
-    } = req.body;
+const {
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims
+} = require("../../auth/firebase-middleware");
+// All Users route
 
-    if (event_name && event_description && event_date && organizer && place) {
-      const newEvent = {
-        event_name: event_name,
-        event_description: event_description,
-        event_date: event_date,
-        organizer: organizer,
-        place: place
-      };
+router.post(
+  "/",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    try {
+      const {
+        event_name,
+        event_date,
+        organizer,
+        place,
+        event_description
+      } = req.body;
 
-      const eid = await Events.add(newEvent);
-      if (!eid || eid <= 0) {
-        res.status(400).json({ message: "Events can't get added" });
-      } else {
-        res.status(200).json({ message: "Events added" });
+      if (event_name && event_description && event_date && organizer && place) {
+        const newEvent = {
+          event_name: event_name,
+          event_description: event_description,
+          event_date: event_date,
+          organizer: organizer,
+          place: place
+        };
+
+        const eid = await Events.add(newEvent);
+        if (!eid || eid <= 0) {
+          res.status(400).json({ message: "Events can't get added" });
+        } else {
+          res.status(200).json({ message: "Events added" });
+        }
       }
+    } catch (err) {
+      res.status(500).json({
+        message: "we can't add the new record in event table",
+        error: err
+      });
     }
-  } catch (err) {
-    res.status(500).json({
-      message: "we can't add the new record in event table",
-      error: err
-    });
   }
-});
+);
 
 router.get("/", (req, res) => {
   try {
@@ -118,39 +131,55 @@ router.get("/:id/details", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
-    const event = req.body;
+router.put(
+  "/:id",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    try {
+      const id = req.params.id;
+      const event = req.body;
 
-    if (id && event) {
-      const result = await Events.update(id, event);
-      res.status(200).json({ result });
+      if (id && event) {
+        const result = await Events.update(id, event);
+        res.status(200).json({ result });
+      }
+      if (!id) {
+        res.status(400).json({ message: "Event id doesn't exsist" });
+      } else {
+        res.status(400).json({ message: "Event body has issues" });
+      }
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: "We can't update the event", error: err });
     }
-    if (!id) {
-      res.status(400).json({ message: "Event id doesn't exsist" });
-    } else {
-      res.status(400).json({ message: "Event body has issues" });
-    }
-  } catch (err) {
-    res.status(500).json({ message: "We can't update the event", error: err });
   }
-});
+);
 
-router.delete("/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
+router.delete(
+  "/:id",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    try {
+      const id = req.params.id;
 
-    if (id) {
-      const result = await Events.remove(id);
-      res.status(200).json({ result, message: "event successfully removed" });
-    } else {
-      res.status(400).json({ message: "This event id doesn't exist" });
+      if (id) {
+        const result = await Events.remove(id);
+        res.status(200).json({ result, message: "event successfully removed" });
+      } else {
+        res.status(400).json({ message: "This event id doesn't exist" });
+      }
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: "We can't delete this event", error: err });
     }
-  } catch (err) {
-    res.status(500).json({ message: "We can't delete this event", error: err });
   }
-});
+);
 
 router.get("/pending/:id", async (req, res) => {
   console.log("Get status:");
@@ -232,28 +261,34 @@ router.get("/past/:id", async (req, res) => {
   }
 });
 
-router.put("/status/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
+router.put(
+  "/status/:id",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    try {
+      const id = req.params.id;
 
-    const event_id = req.body.event_id;
-    const is_accepted = req.body.is_accepted;
+      const event_id = req.body.event_id;
+      const is_accepted = req.body.is_accepted;
 
-    console.log(event_id, is_accepted, id);
+      console.log(event_id, is_accepted, id);
 
-    if (is_accepted === true) {
-      const result = await Events.updateToAcceptedStatus(id, event_id);
-      res.status(200).json({ result });
-    } else {
-      const result = await Events.updateToDeclinedStatus(id, event_id);
-      res.status(200).json({ result });
+      if (is_accepted === true) {
+        const result = await Events.updateToAcceptedStatus(id, event_id);
+        res.status(200).json({ result });
+      } else {
+        const result = await Events.updateToDeclinedStatus(id, event_id);
+        res.status(200).json({ result });
+      }
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "we can't  status update such events", error: error });
     }
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "we can't  status update such events", error: error });
   }
-});
+);
 
 router.post("/:id/comments", async (req, res) => {
   const newComment = req.body;
