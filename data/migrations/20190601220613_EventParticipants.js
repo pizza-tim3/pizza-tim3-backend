@@ -6,8 +6,7 @@ exports.up = function(knex, Promise) {
       .references("id")
       .inTable("events")
       .onDelete("CASCADE")
-      .onUpdate("CASCADE")
-
+      .onUpdate("CASCADE");
     invited.string("user_id"); //declaring the other foreign key
     //   .references("firebase_uid")
     //   .inTable("users");

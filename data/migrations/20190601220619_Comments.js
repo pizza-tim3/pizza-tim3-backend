@@ -7,7 +7,9 @@ exports.up = function(knex, Promise) {
     comments
       .integer("event_id")
       .references("id")
-      .inTable("events");
+      .inTable("events")
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
     comments.string("user_id"); //declaring the other foreign key
     //   .references("firebase_uid")
     //   .inTable("users");
