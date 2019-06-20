@@ -2,6 +2,12 @@ const express = require("express");
 const router = express.Router();
 const Invited = require("../../data/helpers/invitedUsersDBHelper");
 
+const {
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims
+} = require("../../auth/firebase-middleware");
+
 //gets all invited users for an event, regardless of status
 router.get("/:eventId", async (req, res) => {
   const { eventId } = req.params;
@@ -49,64 +55,94 @@ router.get("/:eventId/declined", async (req, res) => {
   }
 });
 
-router.post("/:eventId", async (req, res) => {
-  const { eventId } = req.params;
-  const { body } = req;
-  let data; //data could either be single obj or array
-  if (Array.isArray(body)) {
-    data = body.map(user => ({
-      accepted: false,
-      declined: false,
-      pending: true,
-      event_id: eventId,
-      user_id: user.firebase_uid
-    }));
-  } else {
-    data = {
-      accepted: false,
-      declined: false,
-      pending: true,
-      event_id: eventId,
-      user_id: body.firebase_uid
-    };
-  }
+router.post(
+  "/:eventId",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const { eventId } = req.params;
+    const { body } = req;
+    let data; //data could either be single obj or array
+    if (Array.isArray(body)) {
+      data = body.map(user => ({
+        accepted: false,
+        declined: false,
+        pending: true,
+        event_id: eventId,
+        user_id: user.firebase_uid
+      }));
+    } else {
+      data = {
+        accepted: false,
+        declined: false,
+        pending: true,
+        event_id: eventId,
+        user_id: body.firebase_uid
+      };
+    }
 
-  try {
-    const invitedUsers = await Invited.addUserToEvent(data, eventId);
-    res.status(200).json(invitedUsers);
-  } catch (error) {
-    res.status(500).json(error);
+    try {
+      const invitedUsers = await Invited.addUserToEvent(data, eventId);
+      res.status(200).json(invitedUsers);
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
-});
+);
 
-router.delete("/:eventId", async (req, res) => {
-  const { eventId } = req.params;
-  try {
-    const invitedUsers = await Invited.deleteInvitedUser(req.body, eventId);
-    res.status(200).json(invitedUsers);
-  } catch (e) {
-    res.status(500).json(e);
+router.delete(
+  "/:eventId",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const { eventId } = req.params;
+    try {
+      const invitedUsers = await Invited.deleteInvitedUser(req.body, eventId);
+      res.status(200).json(invitedUsers);
+    } catch (e) {
+      res.status(500).json(e);
+    }
   }
-});
+);
 
-router.put("/:eventId/:userId/accept", async (req, res) => {
-  const { eventId, userId } = req.params;
-  try {
-    const invitedUsers = await Invited.updateToAcceptedStatus(userId, eventId);
-    res.status(200).json(invitedUsers);
-  } catch (e) {
-    res.status(500).json(e);
+router.put(
+  "/:eventId/:userId/accept",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const { eventId, userId } = req.params;
+    try {
+      const invitedUsers = await Invited.updateToAcceptedStatus(
+        userId,
+        eventId
+      );
+      res.status(200).json(invitedUsers);
+    } catch (e) {
+      res.status(500).json(e);
+    }
   }
-});
+);
 
-router.put("/:eventId/:userId/decline", async (req, res) => {
-  const { eventId, userId } = req.params;
-  try {
-    const invitedUsers = await Invited.updateToDeclinedStatus(userId, eventId);
-    res.status(200).json(invitedUsers);
-  } catch (e) {
-    res.status(500).json(e);
+router.put(
+  "/:eventId/:userId/decline",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const { eventId, userId } = req.params;
+    try {
+      const invitedUsers = await Invited.updateToDeclinedStatus(
+        userId,
+        eventId
+      );
+      res.status(200).json(invitedUsers);
+    } catch (e) {
+      res.status(500).json(e);
+    }
   }
-});
+);
 
 module.exports = router;

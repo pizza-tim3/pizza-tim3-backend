@@ -7,7 +7,6 @@ const {
   setDecodedToken,
   setCustomClaims
 } = require("../../auth/firebase-middleware");
-// All Users route
 
 router.get("/", async (req, res) => {
   try {
