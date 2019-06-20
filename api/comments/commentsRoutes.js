@@ -5,14 +5,11 @@ const Comments = require("../../data/helpers/commentsDbHelper");
 const {
   verifyToken,
   setDecodedToken,
-  setCustomClaims,
-  checkAdmin
+  setCustomClaims
 } = require("../../auth/firebase-middleware");
 // All Users route
 
-router.use("/", verifyToken, setDecodedToken, setCustomClaims);
-
-router.get("/", checkAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const comments = await Comments.getAll();
     if (comments.length < 1) {
@@ -70,39 +67,57 @@ router.get("/event/messages/:id", async (req, res) => {
     res.status(500).json({ error: err });
   }
 });
-router.post("/event", async (req, res) => {
-  const newComment = req.body;
+router.post(
+  "/event",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const newComment = req.body;
 
-  try {
-    const rows = await Comments.add(newComment);
-    res.status(201).json(rows);
-  } catch (err) {
-    res.status(500).json(err);
+    try {
+      const rows = await Comments.add(newComment);
+      res.status(201).json(rows);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
-});
+);
 
-router.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const updatedComment = req.body;
+router.put(
+  "/:id",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const { id } = req.params;
+    const updatedComment = req.body;
 
-  try {
-    const rows = await Comments.update(id, updatedComment);
-    res.status(201).json(rows);
-  } catch (err) {
-    res.status(500).json(err);
+    try {
+      const rows = await Comments.update(id, updatedComment);
+      res.status(201).json(rows);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
-});
+);
 
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
+router.delete(
+  "/:id",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const { id } = req.params;
 
-  try {
-    const rows = await Comments.remove(id);
-    res.status(201).json(rows);
-  } catch (err) {
-    res.status(500).json(err);
+    try {
+      const rows = await Comments.remove(id);
+      res.status(201).json(rows);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
-});
+);
 
 router.get("/event/messages/user/:id", async (req, res) => {
   const id = req.params.id;
