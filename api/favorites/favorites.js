@@ -17,14 +17,16 @@ router.get("/", verifyToken, verifyUser, checkAdmin, async (req, res) => {
   }
 });
 
-router.get("/:uid", async (req, res) => {
-  const { uid } = req.params;
+router.get("/:user_uid", verifyToken, verifyUser, async (req, res) => {
+  const { user_uid } = req.params;
   try {
-    const user = await Users.getByUid(uid);
+    const user = await Users.getByUid(user_uid);
     if (!user) {
-      res.status(404).json({ error: `user with id ${uid} does not exist` });
+      res
+        .status(404)
+        .json({ error: `user with id ${user_uid} does not exist` });
     } else {
-      const favorites = await Favorites.getByUid(uid);
+      const favorites = await Favorites.getByUid(user_uid);
       res.status(200).json(favorites);
     }
   } catch (error) {
