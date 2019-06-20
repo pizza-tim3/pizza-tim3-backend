@@ -9,7 +9,6 @@ const {
   setCustomClaims,
   verifyUser
 } = require("../../auth/firebase-middleware");
-// All Users route
 
 router.use(
   "/:user_uid",
