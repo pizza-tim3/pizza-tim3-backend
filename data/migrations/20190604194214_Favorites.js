@@ -5,7 +5,9 @@ exports.up = function(knex, Promise) {
     favorites
       .integer("location_id")
       .references("id")
-      .inTable("locations");
+      .inTable("locations")
+      .onDelete("CASCADE")
+      .onUpdate("CASCADE");
   });
 };
 
