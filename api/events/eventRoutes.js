@@ -290,14 +290,20 @@ router.put(
   }
 );
 
-router.post("/:id/comments", async (req, res) => {
-  const newComment = req.body;
-  try {
-    const rows = await Comments.add(newComment);
-    res.status(201).json(rows);
-  } catch (err) {
-    res.status(500).json(err);
+router.post(
+  "/:id/comments",
+  verifyToken,
+  setDecodedToken,
+  setCustomClaims,
+  async (req, res) => {
+    const newComment = req.body;
+    try {
+      const rows = await Comments.add(newComment);
+      res.status(201).json(rows);
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
-});
+);
 
 module.exports = router;
