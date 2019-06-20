@@ -60,6 +60,7 @@ const verifyUser = async (req, res, next) => {
   const uid = req.uid;
   //uid of user request
   const reqUserUid = req.params.user_uid;
+  console.log(uid, req.params);
   //compare if decoded uid !== the incoming uid on the request
   if (uid !== reqUserUid) {
     res.status(403).json({ message: "unauthorized" });

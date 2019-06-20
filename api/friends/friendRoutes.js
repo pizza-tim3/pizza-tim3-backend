@@ -6,11 +6,10 @@ const Users = require("../../data/helpers/userDbHelper");
 const {
   verifyToken,
   setDecodedToken,
-  setCustomClaims,
-  verifyUser
+  setCustomClaims
 } = require("../../auth/firebase-middleware");
 
-router.use("/", verifyToken, setDecodedToken, setCustomClaims, verifyUser);
+router.use("/", verifyToken, setDecodedToken, setCustomClaims);
 
 //fix me add authorize/authentication for users
 //so users can only access their own stuff
