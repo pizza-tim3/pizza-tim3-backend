@@ -5,7 +5,6 @@ const {
   verifyToken,
   setDecodedToken,
   setCustomClaims,
-  verifyUser,
   checkAdmin
 } = require("../../auth/firebase-middleware");
 // All Users route
