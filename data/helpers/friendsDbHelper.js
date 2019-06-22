@@ -26,16 +26,17 @@ async function checkPending(user_uid, friend_uid) {
 // or has been sent request by me.
 async function checkFriendRequets(user_uid, friend_uid) {
   //check if user one has a pending friend requests from user two
-  console.log("Check friend ", user_uid, friend_uid);
-  const request = await db("friends").where({
-    user_uid: friend_uid,
+  console.log("Check if already friend or pending friend :  ", user_uid, friend_uid);
+  const request = await db("friends").select("user_uid").where({
+    user_uid: friend_uid, 
     friend_uid: user_uid
   }).orWhere({
     user_uid: user_uid,
     friend_uid: friend_uid
   }
     
-  );
+  )
+  
   return request;
 }
 

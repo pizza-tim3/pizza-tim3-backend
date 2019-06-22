@@ -87,29 +87,16 @@ router.get("/find/name",async (req,res) =>{
   console.log("HERE IS THE USERID", user_id)
 
     try{
-        const result = await Users.getByName(name);
-        if(!result){
-          res.status(404).json({error:"User with this name doesn't exsist"})
-        }else{
-          //result is list of probable new friends
-          //Filter the friends which are not there in friend table
-          console.log("Checking ", result)
-          const filteredFriends = result.filter(user => {
-            const requestSent =  Friends.checkFriendRequets(user_id, user.firebase_uid).then(res => {
-              console.log("Response of sent request",res)
-              if (res) {
-                return false;
-              } else {
-                return true;
-              }
-            });
-            console.log("Checking ",user, "Result = ", requestSent)
-            
-          })
-
-          res.status(200).json({filteredFriends})
-        }
+        const result = await Users. getNewFriends(name,user_id)
+          // if(result.length!=0){
+          //    res.status(200).json({result})
+          // }else{
+          //   res.status(400).json({message:"Friend already exsist"})
+          // }
+          res.status(200).json({result})
+        
     } catch (error) {
+      console.log("Error > ",error)
       res.status(500).json(error);
     }
 })
