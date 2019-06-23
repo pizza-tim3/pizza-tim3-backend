@@ -39,13 +39,13 @@ exports.seed = function(knex, Promise) {
           status: "pending"
         },
         {
-          user_uid: "IyJoCaT4A7cObBoZDEUEKjhwADE2", //test6@gmail.com
-          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test1@gmail.com
+          user_uid: "IyJoCaT4A7cObBoZDEUEKjhwADE2", //test1@gmail.com
+          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
           status: "pending"
         },
         {
-          user_uid: "i2i3UqCe3TbaeXbM1ifzQpsGLRi1", //test6@gmail.com
-          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test@gmail.com
+          user_uid: "i2i3UqCe3TbaeXbM1ifzQpsGLRi1", //test@gmail.com
+          friend_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2", //test6@gmail.com
           status: "pending"
         }
       ]);
