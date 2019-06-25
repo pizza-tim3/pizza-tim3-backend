@@ -27,15 +27,15 @@ async function checkPending(user_uid, friend_uid) {
 async function checkFriendRequets(user_uid, friend_uid) {
   //check if user one has a pending friend requests from user two
   console.log("Check friend ", user_uid, friend_uid);
-  const request = await db("friends")
-    .where({
-      user_uid: friend_uid,
-      friend_uid: user_uid
-    })
-    .orWhere({
-      user_uid: user_uid,
-      friend_uid: friend_uid
-    });
+  const request = await db("friends").where({
+    user_uid: friend_uid,
+    friend_uid: user_uid
+  }).orWhere({
+    user_uid: user_uid,
+    friend_uid: friend_uid
+  }
+    
+  );
   return request;
 }
 
@@ -50,6 +50,7 @@ async function checkFriendRequets(user_uid, friend_uid) {
 async function request(user_uid, friend_uid) {
   // if request already exists don't request
   //insert on requestee
+
 
   const [requesteeId] = await db("friends").insert(
     { user_uid, friend_uid, status: "pending" },
@@ -163,53 +164,42 @@ async function remove(user_uid, friend_uid) {
 //get all accepted
 async function getAllFriends(uid) {
   return await db
-    .select("*", "friends.status")
+    .select(
+      "users.id",
+      "users.firebase_uid",
+      "users.email",
+      "users.username",
+      "users.first_name",
+      "users.last_name",
+      "users.avatar",
+      "users.crust",
+      "users.topping",
+      "users.slices",
+      "friends.status"
+    )
     .from("friends")
     .where("friends.user_uid", "=", uid)
-    .andWhere("friends.status", "=", "accepted")
     .leftJoin("users", "users.firebase_uid", "friends.friend_uid");
 }
 
-//This is dumb and a mess but i'm not rewriting the friends
-//architecture a 3rd time
+//fix this                          this
 async function getAllPendingFriends(uid) {
-  //get from perspective of uid
-  //get friends
-  const pendingFriends = await db
-    .select("*")
-    .from("friends")
-    .where(q =>
-      q
-        .where("friends.status", "=", "pending")
-        .andWhere(qu =>
-          qu
-            .where("friends.friend_uid", "=", uid)
-            .orWhere("friends.user_uid", "=", uid)
-        )
+  return await db
+    .select(
+      "users.id",
+      "users.firebase_uid",
+      "users.email",
+      "users.username",
+      "users.first_name",
+      "users.last_name",
+      "users.avatar",
+      "users.crust",
+      "users.topping",
+      "users.slices",
+      "friends.status"
     )
+    .from("friends")
+    .where("friends.status", "=", "pending")
+    .andWhere("friends.friend_uid", "=", uid)
     .leftJoin("users", "users.firebase_uid", "friends.user_uid");
-
-  //map and filter through pending friends to get all of the ids of the users
-  //THIS uid has requested
-  const uids = pendingFriends.map(friend => {
-    if (friend.user_uid === uid) {
-      return friend.friend_uid;
-    }
-  });
-  console.log(uid, uids);
-
-  //filter out the self referencing queries
-  const filtered = pendingFriends.filter(friend => friend.user_uid !== uid);
-  // console.log(filtered);
-
-  //get all of the users THIS uid requested
-  const recievers = await db
-    .select("*")
-    .from("users")
-    .whereIn("users.firebase_uid", uids)
-    .andWhere("friends.user_uid", "=", uid)
-    .leftJoin("friends", "users.firebase_uid", "friends.friend_uid");
-
-  //replace the
-  return [...filtered, ...recievers];
 }
