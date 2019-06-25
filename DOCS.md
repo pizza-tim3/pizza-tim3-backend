@@ -285,3 +285,64 @@ returns
   message: "admin privileges revoked";
 }
 ```
+
+## getting the fire base authentication key to make requests with
+
+### TL;DR
+
+copy this code into your console while logged in, take the key and
+use it as the value for your `authorization` header in Postman.
+
+### What to do if it doesn't work?
+
+try to replace the string in this line of code with the value that you see on _your_ console as shown in image[0]
+
+```javaScript
+// Make a request to get a record by key from the object store
+  var objectStoreRequest = objectStore.get(
+    "firebase:authUser:AIzaSyCitaEbYQsGXYRnuUk0PthEzuwuTmV37PQ:[DEFAULT]" //<--SEE IMAGE  REPLACE
+  );
+```
+
+image[0]
+![Database value](image[0].png)
+
+```javascript
+var DB_NAME = "firebaseLocalStorageDb";
+var STORE_NAME = "firebaseLocalStorage";
+var DBOpenRequest = window.indexedDB.open(DB_NAME);
+var db;
+
+DBOpenRequest.onsuccess = function(event) {
+  // store the result of opening the database in the db variable.
+  // This is used a lot below
+  db = DBOpenRequest.result;
+  // Run the getData() function to get the data from the database
+  getData();
+};
+
+function getData() {
+  // open a read/write db transaction, ready for retrieving the data
+  var transaction = db.transaction([STORE_NAME], "readwrite");
+
+  // report on the success of the transaction completing, when everything is done
+  transaction.oncomplete = function(event) {
+    console.log("complete");
+  };
+
+  transaction.onerror = function(event) {};
+
+  // create an object store on the transaction
+  var objectStore = transaction.objectStore(STORE_NAME);
+
+  // Make a request to get a record by key from the object store
+  var objectStoreRequest = objectStore.get(
+    "firebase:authUser:AIzaSyCitaEbYQsGXYRnuUk0PthEzuwuTmV37PQ:[DEFAULT]" //<--SEE IMAGE
+  );
+
+  objectStoreRequest.onsuccess = function(event) {
+    var myRecord = objectStoreRequest.result;
+    console.log(myRecord.value.stsTokenManager.accessToken);
+  };
+}
+```
