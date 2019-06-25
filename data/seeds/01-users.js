@@ -13,7 +13,7 @@ const createFakeUser = id => ({
   crust: faker.lorem.word(),
   topping: faker.lorem.word(),
   slices: faker.random.number(),
-  firebase_uid: id
+  firebase_uid: id,
 });
 
 const generateFakeFireBaseUID = () => {
@@ -31,8 +31,8 @@ const generateFakeFireBaseUID = () => {
 exports.seed = async function(knex, Promise) {
   // Create a new array of 500 faker generated users
   let users = [];
-  for (let y = 0; y < 10; y++) {
-    for (let i = 0; i <= 50; i++) {
+  for (let y = 0; y < 5; y++) {
+    for (let i = 0; i <= 100; i++) {
       count = i;
       let newFuid = generateFakeFireBaseUID();
 
@@ -57,7 +57,7 @@ exports.seed = async function(knex, Promise) {
       crust: faker.lorem.word(),
       topping: faker.lorem.word(),
       slices: faker.random.number(),
-      firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2"
+      firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
     },
     {
       email: "test5@gmail.com",
@@ -71,7 +71,7 @@ exports.seed = async function(knex, Promise) {
       crust: faker.lorem.word(),
       topping: faker.lorem.word(),
       slices: faker.random.number(),
-      firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2"
+      firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
     },
     {
       email: "test4@gmail.com",
@@ -85,7 +85,7 @@ exports.seed = async function(knex, Promise) {
       crust: faker.lorem.word(),
       topping: faker.lorem.word(),
       slices: faker.random.number(),
-      firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2"
+      firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2",
     },
     {
       email: "test3@gmail.com",
@@ -99,7 +99,7 @@ exports.seed = async function(knex, Promise) {
       crust: faker.lorem.word(),
       topping: faker.lorem.word(),
       slices: faker.random.number(),
-      firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2"
+      firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2",
     },
     {
       email: "test2@gmail.com",
@@ -113,7 +113,7 @@ exports.seed = async function(knex, Promise) {
       crust: faker.lorem.word(),
       topping: faker.lorem.word(),
       slices: faker.random.number(),
-      firebase_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2"
+      firebase_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2",
     },
     {
       email: "test1@gmail.com",
@@ -127,7 +127,7 @@ exports.seed = async function(knex, Promise) {
       crust: faker.lorem.word(),
       topping: faker.lorem.word(),
       slices: faker.random.number(),
-      firebase_uid: "IyJoCaT4A7cObBoZDEUEKjhwADE2"
+      firebase_uid: "IyJoCaT4A7cObBoZDEUEKjhwADE2",
     },
     {
       email: "test@gmail.com",
@@ -141,8 +141,8 @@ exports.seed = async function(knex, Promise) {
       crust: faker.lorem.word(),
       topping: faker.lorem.word(),
       slices: faker.random.number(),
-      firebase_uid: "i2i3UqCe3TbaeXbM1ifzQpsGLRi1"
-    }
+      firebase_uid: "i2i3UqCe3TbaeXbM1ifzQpsGLRi1",
+    },
   ];
 
   await knex("users").insert(hardcodeUsers);
