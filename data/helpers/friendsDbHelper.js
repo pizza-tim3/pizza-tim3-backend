@@ -191,18 +191,18 @@ async function getAllPendingFriends(uid) {
 
   //map and filter through pending friends to get all of the ids of the users
   //THIS uid has requested
-  const uids = pendingFriends.map(friend => {
-    if (friend.user_uid === uid) {
-      return friend.friend_uid;
-    }
-  });
-  console.log(uid, uids);
+  const uids = pendingFriends.reduce(
+    (acc, friend) =>
+      friend.friend_uid !== uid ? [...acc, friend.friend_uid] : [...acc],
+    []
+  );
+  console.log("uids", uid, uids);
 
-  //filter out the self referencing queries
+  //filter out entries where the user themselves are the requester
   const filtered = pendingFriends.filter(friend => friend.user_uid !== uid);
-  // console.log(filtered);
+  console.log(filtered);
 
-  //get all of the users THIS uid requested
+  // get all of the users THIS uid requested
   const recievers = await db
     .select("*")
     .from("users")
@@ -210,6 +210,6 @@ async function getAllPendingFriends(uid) {
     .andWhere("friends.user_uid", "=", uid)
     .leftJoin("friends", "users.firebase_uid", "friends.friend_uid");
 
-  //replace the
+  //return an array of users the uid has friend requested
   return [...filtered, ...recievers];
 }

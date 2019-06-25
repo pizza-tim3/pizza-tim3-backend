@@ -153,8 +153,11 @@ router.get("/:uid", async (req, res) => {
       res.status(404).json({ message: `User with ${uid} does not exist` });
     } else {
       const acceptedFriends = await Friends.getAllFriends(uid);
+      console.log("bs");
       const pendingFriends = await Friends.getAllPendingFriends(uid);
+      console.log("piss");
       const allFriends = [...acceptedFriends, ...pendingFriends];
+      console.log("fuck");
       res.status(200).json(allFriends);
     }
   } catch (error) {}
