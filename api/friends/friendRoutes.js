@@ -15,10 +15,10 @@ router.use("/", verifyToken, setDecodedToken, setCustomClaims);
 //request friend
 router.get("/request/:user_uid/:friend_uid", async (req, res) => {
   const { user_uid, friend_uid } = req.params;
-  const verfied = isRequestFromUser(req.uid, user_uid);
+  const verified = isRequestFromUser(req.uid, user_uid);
 
   //if the user making this request is not the user in the url
-  if (!verfied) {
+  if (!verified) {
     res.status(403).json({ message: "unauthorized" });
   } else {
     try {
@@ -49,9 +49,9 @@ router.get("/request/:user_uid/:friend_uid", async (req, res) => {
 //accept friend
 router.get("/accept/:user_uid/:friend_uid", async (req, res) => {
   const { user_uid, friend_uid } = req.params;
-  const verfied = isRequestFromUser(req.uid, user_uid);
+  const verified = isRequestFromUser(req.uid, user_uid);
 
-  if (!verfied) {
+  if (!verified) {
     res.status(403).json({ message: "unauthorized" });
   } else {
     //if request isn't valid
@@ -91,9 +91,9 @@ router.get("/accept/:user_uid/:friend_uid", async (req, res) => {
 //reject friend
 router.get("/reject/:user_uid/:friend_uid", async (req, res) => {
   const { user_uid, friend_uid } = req.params;
-  const verfied = isRequestFromUser(req.uid, user_uid);
-  console.log(verfied);
-  if (!verfied) {
+  const verified = isRequestFromUser(req.uid, user_uid);
+  console.log(verified);
+  if (!verified) {
     res.status(403).json({ message: "unauthorized" });
   } else {
     //if pending request does not exist
@@ -130,9 +130,9 @@ router.get("/reject/:user_uid/:friend_uid", async (req, res) => {
 
 router.delete("/:user_uid/:friend_uid", async (req, res) => {
   const { user_uid, friend_uid } = req.params;
-  const verfied = isRequestFromUser(req.uid, user_uid);
+  const verified = isRequestFromUser(req.uid, user_uid);
 
-  if (!verfied) {
+  if (!verified) {
     res.status(403).json({ message: "unauthorized" });
   } else {
     try {
