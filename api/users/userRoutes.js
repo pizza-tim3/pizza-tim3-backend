@@ -79,9 +79,10 @@ router.delete("/:uid", async (req, res) => {
   }
 });
 
-router.get("/find/name",async (req,res) =>{
+router.post("/find/name",async (req,res) =>{
   const name= req.body.first_name;
   const user_id = req.body.user_id;
+  console.log("REQUEST BODY",req.body)
  
   console.log("Lookup user with name ", name, user_id);
   console.log("HERE IS THE USERID", user_id)
