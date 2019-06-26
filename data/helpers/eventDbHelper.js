@@ -10,7 +10,7 @@ module.exports = {
   updateToAcceptedStatus,
   updateToDeclinedStatus,
   getEventsforUser,
-  getPastEventsforUser,
+  getPastEventsforUser
 };
 function getAll() {
   return db("events");
@@ -36,9 +36,12 @@ async function add(event) {
 async function update(id, changes) {
   console.log(id);
   console.log(changes);
-  return db("events")
+  await db("events")
     .where({ id })
     .update(changes);
+  return await db("events")
+    .where({ id })
+    .first();
 }
 
 async function remove(id) {
@@ -68,22 +71,22 @@ async function updateToAcceptedStatus(userId, eventId) {
   return await db("invited")
     .where({
       event_id: eventId,
-      user_id: userId,
+      user_id: userId
     })
     .update({
       accepted: true,
-      pending: false,
+      pending: false
     });
 }
 async function updateToDeclinedStatus(userId, eventId) {
   return await db("invited")
     .where({
       event_id: eventId,
-      user_id: userId,
+      user_id: userId
     })
     .update({
       declined: true,
-      pending: false,
+      pending: false
     });
 }
 

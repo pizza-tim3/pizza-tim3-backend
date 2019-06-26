@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
       event_date,
       organizer,
       place,
-      event_description,
+      event_description
     } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
         event_description: event_description,
         event_date: event_date,
         organizer: organizer,
-        place: place,
+        place: place
       };
 
       const eid = await Events.add(newEvent);
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "we can't add the new record in event table",
-      error: err,
+      error: err
     });
   }
 });
@@ -128,7 +128,7 @@ router.put("/:id", async (req, res) => {
       event_date: req.body.event_date,
       organizer: req.body.organizer,
       event_description: req.body.event_description,
-      inviteOnly: req.body.inviteOnly,
+      inviteOnly: req.body.inviteOnly
     };
     console.log(req.body);
     // If Id is Missing
@@ -145,12 +145,15 @@ router.put("/:id", async (req, res) => {
       let ifGooglePlaceExist = await Locations.getGooglePlaceBy(
         google_place_id
       );
+      console.log("yo", ifGooglePlaceExist);
 
       // If locations doesn't exist
       if (!ifGooglePlaceExist) {
         // Add a new location
-        console.log(location);
-        let newLocation = await Locations.addPlace(location);
+        console.log("loc", location.google_place_id);
+        let newLocation = await Locations.addPlace({
+          google_place_id: location.google_place_id
+        });
         //add places id to event
         event.place = newLocation.id;
         //update event
