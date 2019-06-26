@@ -28,8 +28,8 @@ exports.seed = function(knex, Promise) {
         {
           event_id: "1", //4
           user_id: "RaJMLmDUTWTP870aXFUQ6mLVb1M2",
-          pending: "false",
-          accepted: "true",
+          pending: "true",
+          accepted: "false",
           declined: "false"
         },
         {
@@ -49,8 +49,8 @@ exports.seed = function(knex, Promise) {
         {
           event_id: "2", //3
           user_id: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2",
-          pending: "false",
-          accepted: "true",
+          pending: "true",
+          accepted: "false",
           declined: "false"
         },
         {
