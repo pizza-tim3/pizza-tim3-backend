@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
       event_date,
       organizer,
       place,
-      event_description,
+      event_description
     } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
         event_description: event_description,
         event_date: event_date,
         organizer: organizer,
-        place: place,
+        place: place
       };
 
       const eid = await Events.add(newEvent);
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "we can't add the new record in event table",
-      error: err,
+      error: err
     });
   }
 });
@@ -128,16 +128,14 @@ router.put("/:id", async (req, res) => {
       event_date: req.body.event_date,
       organizer: req.body.organizer,
       event_description: req.body.event_description,
-      inviteOnly: req.body.inviteOnly,
+      inviteOnly: req.body.inviteOnly
     };
-    console.log(req.body);
     // If Id is Missing
     if (!id) {
       res.status(400).json({ message: "Event id doesn't exsist" });
     } else if (Object.values(event).includes(undefined)) {
       //any of the fields are undefined
       res.status(400).json({ message: "Fields are missing." });
-      console.log(event);
     } else {
       let google_place_id = location.google_place_id;
       // Check if location exists
@@ -149,18 +147,27 @@ router.put("/:id", async (req, res) => {
       // If locations doesn't exist
       if (!ifGooglePlaceExist) {
         // Add a new location
-        console.log(location);
-        let newLocation = await Locations.addPlace(location);
+        let newLocation = await Locations.addPlace({
+          google_place_id: location.google_place_id
+        });
         //add places id to event
         event.place = newLocation.id;
         //update event
-        const result = await Events.update(id, event);
-        //return result
+        let result = await Events.update(id, event);
+        let loc = await Locations.getPlaceById(result.place);
+
+        //replace place property with a location
+        delete result.place;
+        result.location = loc;
         res.status(200).json({ result });
-        // cons
       } else {
         event.place = ifGooglePlaceExist.id;
-        const result = await Events.update(id, event);
+        let result = await Events.update(id, event);
+        let loc = await Locations.getPlaceById(result.place);
+
+        //replace place property with a location
+        delete result.place;
+        result.location = loc;
 
         res.status(200).json({ result });
       }
