@@ -13,7 +13,6 @@ function getAllPlaces() {
 }
 
 function getPlaceById(id) {
-  console.log("tete", id);
   return db("locations")
     .where({ id })
     .first();
@@ -26,12 +25,7 @@ function getGooglePlaceBy(google_place_id) {
     .first();
 }
 
-// function addPlace(location) {
-//   return db("locations").insert(location, "google_place_id");
-// }
-
 async function addPlace(location) {
-  console.log(location);
   return db("locations")
     .insert(location, "id")
     .then(ids => {

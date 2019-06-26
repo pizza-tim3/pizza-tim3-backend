@@ -155,14 +155,17 @@ router.put("/:id", async (req, res) => {
         //update event
         let result = await Events.update(id, event);
         let loc = await Locations.getPlaceById(result.place);
-        delete result.place;
 
+        //replace place property with a location
+        delete result.place;
         result.location = loc;
         res.status(200).json({ result });
       } else {
         event.place = ifGooglePlaceExist.id;
         let result = await Events.update(id, event);
         let loc = await Locations.getPlaceById(result.place);
+
+        //replace place property with a location
         delete result.place;
         result.location = loc;
 
