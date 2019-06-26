@@ -122,7 +122,7 @@ router.put("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const { location } = req.body;
-    const event = {
+    let event = {
       event_name: req.body.event_name,
       place: req.body.location && req.body.location.id,
       event_date: req.body.event_date,
@@ -139,12 +139,15 @@ router.put("/:id", async (req, res) => {
       res.status(400).json({ message: "Fields are missing." });
       console.log(event);
     } else {
-      let location_id = event.place;
+      let google_place_id = location.google_place_id;
       // Check if location exists
-      let existingLocation = await Locations.getPlaceById(location_id);
+      // let existingLocation = await Locations.getPlaceById(location_id);
+      let ifGooglePlaceExist = await Locations.getGooglePlaceBy(
+        google_place_id
+      );
 
       // If locations doesn't exist
-      if (!existingLocation) {
+      if (!ifGooglePlaceExist) {
         // Add a new location
         console.log(location);
         let newLocation = await Locations.addPlace(location);
@@ -156,10 +159,7 @@ router.put("/:id", async (req, res) => {
         res.status(200).json({ result });
         // cons
       } else {
-        // let updateLocationPlace = await
-        event.location = {
-          google_place_id: event.location.google_place_id,
-        };
+        event.place = ifGooglePlaceExist.id;
         const result = await Events.update(id, event);
 
         res.status(200).json({ result });
