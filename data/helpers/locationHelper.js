@@ -5,7 +5,7 @@ module.exports = {
   getPlaceById,
   addPlace,
   removePlace,
-  getGooglePlaceBy,
+  getGooglePlaceBy
 };
 
 function getAllPlaces() {
@@ -13,7 +13,7 @@ function getAllPlaces() {
 }
 
 function getPlaceById(id) {
-  console.log(id);
+  console.log("tete", id);
   return db("locations")
     .where({ id })
     .first();

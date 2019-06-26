@@ -39,6 +39,7 @@ async function update(id, changes) {
   await db("events")
     .where({ id })
     .update(changes);
+
   return await db("events")
     .where({ id })
     .first();

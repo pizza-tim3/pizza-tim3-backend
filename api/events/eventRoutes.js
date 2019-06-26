@@ -130,14 +130,12 @@ router.put("/:id", async (req, res) => {
       event_description: req.body.event_description,
       inviteOnly: req.body.inviteOnly
     };
-    console.log(req.body);
     // If Id is Missing
     if (!id) {
       res.status(400).json({ message: "Event id doesn't exsist" });
     } else if (Object.values(event).includes(undefined)) {
       //any of the fields are undefined
       res.status(400).json({ message: "Fields are missing." });
-      console.log(event);
     } else {
       let google_place_id = location.google_place_id;
       // Check if location exists
@@ -145,25 +143,28 @@ router.put("/:id", async (req, res) => {
       let ifGooglePlaceExist = await Locations.getGooglePlaceBy(
         google_place_id
       );
-      console.log("yo", ifGooglePlaceExist);
 
       // If locations doesn't exist
       if (!ifGooglePlaceExist) {
         // Add a new location
-        console.log("loc", location.google_place_id);
         let newLocation = await Locations.addPlace({
           google_place_id: location.google_place_id
         });
         //add places id to event
         event.place = newLocation.id;
         //update event
-        const result = await Events.update(id, event);
-        //return result
+        let result = await Events.update(id, event);
+        let loc = await Locations.getPlaceById(result.place);
+        delete result.place;
+
+        result.location = loc;
         res.status(200).json({ result });
-        // cons
       } else {
         event.place = ifGooglePlaceExist.id;
-        const result = await Events.update(id, event);
+        let result = await Events.update(id, event);
+        let loc = await Locations.getPlaceById(result.place);
+        delete result.place;
+        result.location = loc;
 
         res.status(200).json({ result });
       }
