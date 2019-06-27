@@ -5,6 +5,7 @@ module.exports = {
   getPlaceById,
   addPlace,
   removePlace,
+  getGooglePlaceBy
 };
 
 function getAllPlaces() {
@@ -12,18 +13,19 @@ function getAllPlaces() {
 }
 
 function getPlaceById(id) {
-  console.log(id);
   return db("locations")
     .where({ id })
     .first();
 }
 
-// function addPlace(location) {
-//   return db("locations").insert(location, "google_place_id");
-// }
+function getGooglePlaceBy(google_place_id) {
+  console.log(google_place_id);
+  return db("locations")
+    .where({ google_place_id })
+    .first();
+}
 
 async function addPlace(location) {
-  console.log(location);
   return db("locations")
     .insert(location, "id")
     .then(ids => {
