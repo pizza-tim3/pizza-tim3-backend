@@ -78,7 +78,6 @@ router.get("/:id/details", async (req, res) => {
     // Get Events, Locations, Invited Users and Comments associated with an event and create one event response object.
     let event = await Events.getBy(id);
     if (event) {
-      const eventLocation = await Locations.getPlaceById(event.place);
       const invitedUsers = await InvitedUsers.getAllInvited(id);
       const acceptedUsers = await InvitedUsers.getAcceptedUsers(id);
       const pendingUsers = await InvitedUsers.getPendingUsers(id);
@@ -90,7 +89,7 @@ router.get("/:id/details", async (req, res) => {
       event.declinedUsers = declinedUsers;
       event.invitedUsers = invitedUsers;
       event.comments = comments;
-      event.location = eventLocation;
+      event.location = event.place;
 
       res.status(200).json({ event });
     } else {
