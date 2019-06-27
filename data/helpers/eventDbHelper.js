@@ -65,7 +65,7 @@ async function getPendingEventsforUser(id) {
     .from("invited")
     .where({ user_id: id, pending: "true" })
     .innerJoin("events", "invited.event_id", "=", "events.id")
-    .innerJoin("locations", "locations.id", "=", "events.place");
+    .innerJoin("locations", "locations.google_place_id", "=", "events.place");
 }
 async function updateToAcceptedStatus(userId, eventId) {
   console.log("Accepted ", userId, eventId);
@@ -107,7 +107,13 @@ async function getEventsforUser(id) {
     .from("invited")
     .where({ user_id: id }) //.where(currentEpoch,"<", "events.event_date")
     .innerJoin("events", "invited.event_id", "=", "events.id")
-    .innerJoin("locations", "locations.id", "=", "events.place");
+    .innerJoin("locations", "locations.google_place_id", "=", "events.place")
+    .then( function( resp ){
+      console.log("Response" , resp );
+      return resp;
+    }).catch(function(err) {
+      console.log("Error : ",err);
+    });
 }
 
 async function getPastEventsforUser(id) {
