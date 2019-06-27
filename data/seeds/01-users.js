@@ -32,7 +32,7 @@ exports.seed = async function(knex, Promise) {
   // Create a new array of 500 faker generated users
   let users = [];
   for (let y = 0; y < 5; y++) {
-    for (let i = 0; i <= 100; i++) {
+    for (let i = 0; i <= 50; i++) {
       count = i;
       let newFuid = generateFakeFireBaseUID();
 
