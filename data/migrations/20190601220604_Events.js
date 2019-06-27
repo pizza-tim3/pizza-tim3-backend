@@ -11,8 +11,8 @@ exports.up = function(knex, Promise) {
     events.bool("inviteOnly");
 
     events
-      .integer("place")
-      .references("id")
+      .varchar("place")
+      .references("google_place_id")
       .inTable("locations")
       .onDelete('CASCADE')
       .onUpdate('CASCADE')
