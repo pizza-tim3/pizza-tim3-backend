@@ -15,7 +15,6 @@ router.get(
   verifyToken,
   setDecodedToken,
   setCustomClaims,
-  checkAdmin,
   async (req, res) => {
     try {
       const users = await Users.getAll();
