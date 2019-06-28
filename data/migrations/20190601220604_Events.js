@@ -12,10 +12,6 @@ exports.up = function(knex, Promise) {
 
     events
       .varchar("place")
-      .references("google_place_id")
-      .inTable("locations")
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE')
   });
 };
 

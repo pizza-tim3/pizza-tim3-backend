@@ -119,61 +119,16 @@ router.get("/:id/details", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
+    const event = req.body;
     const id = req.params.id;
-    const { location } = req.body;
-    let event = {
-      event_name: req.body.event_name,
-      place: req.body.location && req.body.location.id,
-      event_date: req.body.event_date,
-      organizer: req.body.organizer,
-      event_description: req.body.event_description,
-      inviteOnly: req.body.inviteOnly
-    };
-    // If Id is Missing
-    if (!id) {
-      res.status(400).json({ message: "Event id doesn't exsist" });
-    } else if (Object.values(event).includes(undefined)) {
-      //any of the fields are undefined
-      res.status(400).json({ message: "Fields are missing." });
+    if(id) {
+      const result = await Events.update(id, event);
+      res.status(200).json({ result, message: "Updated Successfully!"})
     } else {
-      let google_place_id = location.google_place_id;
-      // Check if location exists
-      // let existingLocation = await Locations.getPlaceById(location_id);
-      let ifGooglePlaceExist = await Locations.getGooglePlaceBy(
-        google_place_id
-      );
-
-      // If locations doesn't exist
-      if (!ifGooglePlaceExist) {
-        // Add a new location
-        let newLocation = await Locations.addPlace({
-          google_place_id: location.google_place_id
-        });
-        //add places id to event
-        event.place = newLocation.id;
-        //update event
-        let result = await Events.update(id, event);
-        let loc = await Locations.getPlaceById(result.place);
-
-        //replace place property with a location
-        delete result.place;
-        result.location = loc;
-        res.status(200).json({ result });
-      } else {
-        event.place = ifGooglePlaceExist.id;
-        let result = await Events.update(id, event);
-        let loc = await Locations.getPlaceById(result.place);
-
-        //replace place property with a location
-        delete result.place;
-        result.location = loc;
-
-        res.status(200).json({ result });
-      }
+      res.status(404).json({ message: "That event does not exist" });
     }
-  } catch (err) {
-    console.log(err.stack);
-    res.status(500).json({ message: "We can't update the event", error: err });
+  } catch (e) {
+    res.status(500).json({ error: e, message: "Cannot update event" })
   }
 });
 
@@ -264,21 +219,31 @@ router.put("/status/:id", async (req, res) => {
 
     if (is_accepted === true) {
       const result = await Events.updateToAcceptedStatus(id, event_id);
-      res.status(200).json({ result });
+        if(result === 0){
+          res.status(400).json({ message: "unable to update the user's status" })
+        } else {
+          res.status(200).json({ result });
+        }
     } else {
       const result = await Events.updateToDeclinedStatus(id, event_id);
+        if(result === 0){
+          res.status(400).json({ message: "unable to update the user's status" })
+        } else {
+          res.status(200).json({ result });
+        }
       res.status(200).json({ result });
     }
   } catch (error) {
     res
       .status(500)
-      .json({ message: "we can't  status update such events", error: error });
+      .json({ message: "Cannot update the event", error: error });
   }
 });
 
 router.post("/:id/comments", async (req, res) => {
   const newComment = req.body;
   try {
+    console.log(req.body)
     const rows = await Comments.add(newComment);
     res.status(201).json(rows);
   } catch (err) {
