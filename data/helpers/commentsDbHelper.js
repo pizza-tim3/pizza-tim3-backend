@@ -37,7 +37,7 @@ function getEventAllComments(event_id) {
 }
 
 async function add(comment) {
-  return db("comments").insert(comment, "id");
+  return db("comments").insert(comment);
 }
 
 async function update(id, changes) {
