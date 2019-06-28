@@ -23,10 +23,8 @@ function getBy(id) {
 }
 async function add(event) {
   console.log("Adding event", event);
-  const id = await db('events').insert(event)
-  return id
-  // const [id] = await db("events").insert(event, ["id"]); //return arrays of ids
-  // return id;
+  const [id] = await db("events").insert(event, ["id"]); //return arrays of ids
+  return id;
 }
 
 // function getBy(id) {
