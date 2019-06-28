@@ -25,10 +25,15 @@ router.post("/", async (req, res) => {
       };
 
       const eid = await Events.add(newEvent);
+      console.log("EID",eid);
       if (!eid || eid <= 0) {
-        res.status(400).json({ message: "Events can't get added" });
+        res.status(400).json({ message: "Cannot add event" });
       } else {
-        res.status(200).json({ message: "Events added" });
+        if(eid.length === 1) {
+          res.status(200).json({ message: "Events added", id: eid[0] });
+        } else {
+          res.status(200).json({ message: "Events added", id: eid });
+        }
       }
     }
   } catch (err) {
@@ -160,7 +165,7 @@ router.get("/pending/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "we can't find such events", error: error });
+      .json({ message: "Can't find that event", error: error });
   }
 });
 
@@ -204,7 +209,7 @@ router.get("/past/:id", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "we can't find such events", error: error });
+      .json({ message: "Cannot find that event", error: error });
   }
 });
 
