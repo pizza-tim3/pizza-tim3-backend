@@ -179,24 +179,21 @@ router.get("/:uid", async (req, res) => {
       res.status(404).json({ message: `User with ${uid} does not exist` });
     } else {
       const acceptedFriends = await Friends.getAllFriends(uid);
-      res.status(200).json(acceptedFriends);
-    }
-  } catch (error) {}
-});
-
-//get all pending friends
-router.get("/:uid/with-pending", async (req, res) => {
-  const { uid } = req.params;
-  try {
-    const user = await Users.getByUid(uid);
-    if (!user) {
-      res.status(404).json({ message: `User with ${uid} does not exist` });
-    } else {
-      const acceptedFriends = await Friends.getAllFriends(uid);
       const pendingFriends = await Friends.getAllPendingFriends(uid);
       const allFriends = [...acceptedFriends, ...pendingFriends];
       res.status(200).json(allFriends);
     }
   } catch (error) {}
+});
+
+//get all pending friends
+router.get("/:uid/pending", async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const users = await Friends.getAllPendingFriends(uid);
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 module.exports = router;
