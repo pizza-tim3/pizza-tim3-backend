@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
       event_date,
       organizer,
       place,
-      event_description
+      event_description,
     } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
@@ -21,15 +21,15 @@ router.post("/", async (req, res) => {
         event_description: event_description,
         event_date: event_date,
         organizer: organizer,
-        place: place
+        place: place,
       };
 
       const eid = await Events.add(newEvent);
-      console.log("EID",eid);
+      console.log("EID", eid);
       if (!eid || eid <= 0) {
         res.status(400).json({ message: "Cannot add event" });
       } else {
-        if(eid.length === 1) {
+        if (eid.length === 1) {
           res.status(200).json({ message: "Events added", id: eid[0] });
         } else {
           res.status(200).json({ message: "Events added", id: eid });
@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "we can't add the new record in event table",
-      error: err
+      error: err,
     });
   }
 });
@@ -126,14 +126,14 @@ router.put("/:id", async (req, res) => {
   try {
     const event = req.body;
     const id = req.params.id;
-    if(id) {
+    if (id) {
       const result = await Events.update(id, event);
-      res.status(200).json({ result, message: "Updated Successfully!"})
+      res.status(200).json({ result, message: "Updated Successfully!" });
     } else {
       res.status(404).json({ message: "That event does not exist" });
     }
   } catch (e) {
-    res.status(500).json({ error: e, message: "Cannot update event" })
+    res.status(500).json({ error: e, message: "Cannot update event" });
   }
 });
 
@@ -163,9 +163,7 @@ router.get("/pending/:id", async (req, res) => {
       res.status(400).json({ message: "This event id doesn't exist" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Can't find that event", error: error });
+    res.status(500).json({ message: "Can't find that event", error: error });
   }
 });
 
@@ -176,7 +174,7 @@ router.get("/upcoming/:id", async (req, res) => {
     if (id) {
       const result = await Events.getEventsforUser(id);
       const currentEpoch = new Date().getTime();
-      console.log("Upcoming events: ",result);
+      console.log("Upcoming events: ", result);
       const upEvents = result.filter(event => {
         return event.event_date > currentEpoch;
       });
@@ -189,15 +187,13 @@ router.get("/upcoming/:id", async (req, res) => {
   }
 });
 
-
 router.get("/past/:id", async (req, res) => {
-  
   try {
     const id = req.params.id;
     console.log("Get past events", id);
     if (id) {
       const result = await Events.getEventsforUser(id);
-      console.log("Past events",result);
+      console.log("Past events", result);
       const currentEpoch = new Date().getTime();
       const pastEvents = result.filter(event => {
         return event.event_date < currentEpoch;
@@ -207,9 +203,7 @@ router.get("/past/:id", async (req, res) => {
       res.status(400).json({ message: "This event id doesn't exist" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Cannot find that event", error: error });
+    res.status(500).json({ message: "Cannot find that event", error: error });
   }
 });
 
@@ -224,34 +218,33 @@ router.put("/status/:id", async (req, res) => {
 
     if (is_accepted === true) {
       const result = await Events.updateToAcceptedStatus(id, event_id);
-        if(result === 0){
-          res.status(400).json({ message: "unable to update the user's status" })
-        } else {
-          res.status(200).json({ result });
-        }
+      if (result === 0) {
+        res.status(400).json({ message: "unable to update the user's status" });
+      } else {
+        res.status(200).json({ result });
+      }
     } else {
       const result = await Events.updateToDeclinedStatus(id, event_id);
-        if(result === 0){
-          res.status(400).json({ message: "unable to update the user's status" })
-        } else {
-          res.status(200).json({ result });
-        }
+      if (result === 0) {
+        res.status(400).json({ message: "unable to update the user's status" });
+      } else {
+        res.status(200).json({ result });
+      }
       res.status(200).json({ result });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Cannot update the event", error: error });
+    res.status(500).json({ message: "Cannot update the event", error: error });
   }
 });
 
 router.post("/:id/comments", async (req, res) => {
   const newComment = req.body;
   try {
-    console.log(req.body)
+    console.log(req.body);
     const rows = await Comments.add(newComment);
     res.status(201).json(rows);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
