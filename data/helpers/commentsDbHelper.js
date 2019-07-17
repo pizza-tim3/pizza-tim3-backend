@@ -8,7 +8,7 @@ module.exports = {
   remove,
   getEventAllComments,
   getEventCommentsCount,
-  getEventAllUserComments
+  getEventAllUserComments,
 };
 
 function getAll() {
@@ -37,7 +37,11 @@ function getEventAllComments(event_id) {
 }
 
 async function add(comment) {
-  return db("comments").insert(comment);
+  return db("comments")
+    .insert(comment, "id")
+    .then(ids => {
+      return getById(ids[0]);
+    });
 }
 
 async function update(id, changes) {
