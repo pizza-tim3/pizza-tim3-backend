@@ -10,6 +10,8 @@ router.get("/:eventId", async (req, res) => {
     const invitedUsers = await Invited.getAllInvited(eventId);
     res.status(200).json(invitedUsers);
   } catch (e) {
+    console.log(e);
+
     res.status(500).json("Message:", e);
   }
 });
@@ -59,7 +61,7 @@ router.post("/:eventId", async (req, res) => {
       declined: false,
       pending: true,
       event_id: eventId,
-      user_id: user.firebase_uid
+      user_id: user.firebase_uid,
     }));
   } else {
     data = {
@@ -67,7 +69,7 @@ router.post("/:eventId", async (req, res) => {
       declined: false,
       pending: true,
       event_id: eventId,
-      user_id: body.firebase_uid
+      user_id: body.firebase_uid,
     };
   }
 
@@ -75,6 +77,8 @@ router.post("/:eventId", async (req, res) => {
     const invitedUsers = await Invited.addUserToEvent(data, eventId);
     res.status(200).json(invitedUsers);
   } catch (error) {
+    console.log(error);
+
     res.status(500).json(error);
   }
 });
