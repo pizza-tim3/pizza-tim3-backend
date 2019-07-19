@@ -9,6 +9,7 @@ module.exports = {
   getEventAllComments,
   getEventCommentsCount,
   getEventAllUserComments,
+  getCommentById,
 };
 
 function getAll() {
@@ -20,7 +21,11 @@ function getByEvent(event_id) {
     .where({ event_id })
     .first();
 }
-
+function getCommentById(comment_id) {
+  return db("comments")
+    .where({ id: comment_id })
+    .first();
+}
 function getEventAllComments(event_id) {
   return db
     .select(
@@ -40,7 +45,7 @@ async function add(comment) {
   return db("comments")
     .insert(comment, "id")
     .then(ids => {
-      return getById(ids[0]);
+      return getCommentById(ids[0]);
     });
 }
 
