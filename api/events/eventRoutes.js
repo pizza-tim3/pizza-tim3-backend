@@ -37,6 +37,7 @@ router.post("/", async (req, res) => {
       }
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       message: "we can't add the new record in event table",
       error: err,
