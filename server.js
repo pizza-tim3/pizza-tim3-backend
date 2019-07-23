@@ -6,19 +6,7 @@ const logger = require("morgan");
 const helmet = require("helmet");
 
 // Add Cross-origin resource sharing, protect server app with helmet, add logging middleware to our server )
-var whitelist = ['http://localhost:3000', 'https://www.pizzatime.life/']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-
-
-server.use(express.json(), cors(corsOptions), helmet(), logger("dev"));
+server.use(express.json(), cors(), helmet(), logger("dev"));
 
 //import firebase initialization and invoke it
 const initializeFirebBase = require("./auth/firebaseInit");
