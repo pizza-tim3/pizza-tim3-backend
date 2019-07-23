@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend for Pizza Tim3 project",
   "main": "index.js",
-  "proxy": "https://pizza-tim3-be.herokuapp.com",
   "scripts": {
     "start": "node index.js",
     "test": "cross-env ENVIRONMENT=testing jest --watch --verbose=true",
