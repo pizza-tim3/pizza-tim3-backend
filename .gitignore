@@ -5,3 +5,4 @@ user-crud-ns
 data/test*
 data/test.db3
 
+sendgrid.env

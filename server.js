@@ -22,6 +22,7 @@ const invitedRoutes = require("./api/event_invitees/event_inviteesRoute");
 const favoritesRoutes = require("./api/favorites/favorites");
 const restrictedRoutes = require("./api/restricted/restrictedRoutes");
 const adminRoutes = require("./api/admin/adminRoutes");
+const emailRoutes = require("./api/emails/freshInv");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -38,5 +39,6 @@ server.use("/api/invited", invitedRoutes);
 server.use("/api/favorites", favoritesRoutes);
 server.use("/api/restricted", restrictedRoutes);
 server.use("/api/admin", adminRoutes);
+server.use("/api/sendEmail", emailRoutes);
 
 module.exports = server;
