@@ -19,7 +19,8 @@ module.exports = {
 };
 
 async function getAllInvited(eventId) {
-  return await db
+  return await db("invited")
+  // .where("event_id", eventId)
     .select(
       "event_id",
       "users.id",
@@ -31,12 +32,16 @@ async function getAllInvited(eventId) {
       "users.avatar",
       "users.crust",
       "users.topping",
-      "users.slices"
+      "users.slices",
+      "invited.pending",
+      "invited.accepted",
+      "invited.declined"
     )
     .from("invited")
     .where("event_id", eventId)
-    .innerJoin("users", "users.firebase_uid", "=", "user_id");
-  // .leftJoin("users", "users.firebase_uid", "user_id");
+    // .innerJoin("invited", "event.id", "=", "event_id")
+    // .innerJoin("users", "users.firebase_uid", "=", "user_id");
+  .leftJoin("users", "users.firebase_uid", "user_id");
 }
 
 async function getAcceptedUsers(eventId) {
@@ -57,6 +62,9 @@ async function getAcceptedUsers(eventId) {
     .where({
       event_id: eventId,
       accepted: "true"
+    }).orWhere({
+      event_id: eventId,
+      accepted: true
     })
     .leftJoin("users", "users.firebase_uid", "user_id");
   return users;
@@ -82,6 +90,9 @@ async function getPendingUsers(eventId) {
     .where({
       event_id: eventId,
       pending: "true"
+    }).orWhere({
+      event_id: eventId,
+      pending: true
     })
     .leftJoin("users", "users.firebase_uid", "user_id");
   //select all user info, then from invited table where event_id = the id passed in and pending is true
@@ -106,6 +117,9 @@ async function getDeclinedUsers(eventId) {
     .where({
       event_id: eventId,
       declined: "true"
+    }).orWhere({
+      event_id: eventId,
+      declined: true
     })
     .leftJoin("users", "users.firebase_uid", "user_id");
   //select all user info, then from invited table where event_id = the id passed in and declined is true
