@@ -6,7 +6,9 @@ const logger = require("morgan");
 const helmet = require("helmet");
 
 // Add Cross-origin resource sharing, protect server app with helmet, add logging middleware to our server )
-server.use(express.json(), cors(), helmet(), logger("dev"));
+
+// test
+server.use(express.json(), helmet(), logger("dev"));
 
 //import firebase initialization and invoke it
 const initializeFirebBase = require("./auth/firebaseInit");
