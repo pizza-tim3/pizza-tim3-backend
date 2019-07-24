@@ -14,6 +14,7 @@ router.post("/", async (req, res) => {
       organizer,
       place,
       event_description,
+      inviteOnly
     } = req.body;
 
     if (event_name && event_description && event_date && organizer && place) {
@@ -23,6 +24,7 @@ router.post("/", async (req, res) => {
         event_date: event_date,
         organizer: organizer,
         place: place,
+        inviteOnly: inviteOnly
       };
 
       const eid = await Events.add(newEvent);
