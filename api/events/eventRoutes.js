@@ -6,6 +6,7 @@ const Locations = require("../../data/helpers/locationHelper");
 const Comments = require("../../data/helpers/commentsDbHelper");
 
 router.post("/", async (req, res) => {
+  console.log(req.body)
   try {
     const {
       event_name,
@@ -41,6 +42,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({
       message: "we can't add the new record in event table",
       error: err,
+      objectReceived: req.body
     });
   }
 });
