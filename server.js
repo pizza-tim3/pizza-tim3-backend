@@ -1,12 +1,17 @@
 const dotenv = require("dotenv").config();
 const express = require("express");
+const request = require('request');
 const server = express();
 const logger = require("morgan");
 const helmet = require("helmet");
 
 // Add Cross-origin resource sharing, protect server app with helmet, add logging middleware to our server )
 // test
-server.use(express.json(), helmet(), logger("dev"));
+server.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  express.json(), helmet(), logger("dev")
+  next();
+});
 
 //import firebase initialization and invoke it
 const initializeFirebBase = require("./auth/firebaseInit");
