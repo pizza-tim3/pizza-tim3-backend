@@ -12,9 +12,11 @@ const verifyToken = async (req, res, next) => {
   try {
     if (idToken) {
       const decodedToken = await firebase.auth().verifyIdToken(idToken);
-
+      console.log('token', decodedToken)
       if(decodedToken) {
         req.body.uid = decodedToken.uid
+        console.log('request', req.body)
+        console.log('response', res.socket)
       }
 
       return next();
@@ -56,7 +58,7 @@ server.get("/", (req, res) => {
 });
 
 // Users Resource Route
-server.use('/', verifyToken);
+// server.use('/api', verifyToken);
 server.use("/api/users/", userRoutes);
 server.use("/api/placesId/", locationRoutes);
 server.use("/api/events", eventRoutes);
