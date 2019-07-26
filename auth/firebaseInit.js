@@ -1,6 +1,6 @@
 const admin = require("firebase-admin");
 
-module.exports = function initializeFireBase() {
+
   admin.initializeApp({
     credential: admin.credential.cert({
       type: process.env.FIREBASE_TYPE,
@@ -17,4 +17,5 @@ module.exports = function initializeFireBase() {
     }),
     databaseURL: "https://pizza-240016.firebaseio.com"
   });
-};
+
+module.exports = admin;

@@ -2,19 +2,13 @@ const express = require("express");
 const router = express.Router();
 const Users = require("../../data/helpers/userDbHelper");
 const Favorites = require("../../data/helpers/favoritesDbHelper");
-const {
-  verifyToken,
-  verifyUser,
-  checkAdmin
-} = require("../../auth/firebase-middleware");
+
 // All Favorites route
 
 //fix me add authorize/authentication for users
 //so users can only access their own stuff
 //I've commented out the middleware that should go in each route
-router.get(
-  "/",
-  /* verifyToken,checkAdmin*/ async (req, res) => {
+router.get("/", async (req, res) => {
     try {
       const favorites = await Favorites.getAll();
       res.status(200).json(favorites);
@@ -24,9 +18,7 @@ router.get(
   }
 );
 
-router.get(
-  "/:uid",
-  /* verifyToken,verifyUser*/ async (req, res) => {
+router.get("/:uid", async (req, res) => {
     const { uid } = req.params;
     try {
       const user = await Users.getByUid(uid);
@@ -43,9 +35,7 @@ router.get(
 );
 
 //TODO MAKE IT SO YOU CAN"T ADD FAVORITE TWICE
-router.post(
-  "/",
-  /* verifyToken,*/ async (req, res) => {
+router.post( async (req, res) => {
     const favorite = req.body;
     const { firebase_uid, google_place_id } = favorite;
     if (!firebase_uid || !google_place_id) {
