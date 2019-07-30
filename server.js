@@ -12,11 +12,11 @@ const verifyToken = async (req, res, next) => {
   try {
     if (idToken) {
       const decodedToken = await firebase.auth().verifyIdToken(idToken);
-      console.log('token', decodedToken)
+      // console.log('token', decodedToken)
       if(decodedToken) {
         req.body.uid = decodedToken.uid
-        console.log('request', req.body)
-        console.log('response', res.socket)
+        // console.log('request', req.body)
+        // console.log('response', res.socket)
       }
 
       return next();
@@ -31,15 +31,7 @@ const verifyToken = async (req, res, next) => {
 
 // Add Cross-origin resource sharing, protect server app with helmet, add logging middleware to our server )
 
-server.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
-  next();
-},
-  express.json(), helmet(), logger("dev")
-);
+server.use(express.json(), helmet());
 
 const eventRoutes = require("./api/events/eventRoutes");
 const userRoutes = require("./api/users/userRoutes");
@@ -58,7 +50,7 @@ server.get("/", (req, res) => {
 });
 
 // Users Resource Route
-// server.use('/api', verifyToken);
+server.use('/api', verifyToken);
 server.use("/api/users/", userRoutes);
 server.use("/api/placesId/", locationRoutes);
 server.use("/api/events", eventRoutes);
