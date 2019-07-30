@@ -3,7 +3,6 @@ const express = require("express");
 const request = require('request');
 const server = express();
 const logger = require("morgan");
-const helmet = require("helmet");
 const firebase = require("./auth/firebaseInit");
 
 //authorization middleware, read, decode, verify
@@ -31,7 +30,7 @@ const verifyToken = async (req, res, next) => {
 
 // Add Cross-origin resource sharing, protect server app with helmet, add logging middleware to our server )
 
-server.use(express.json(), helmet());
+server.use(express.json());
 
 const eventRoutes = require("./api/events/eventRoutes");
 const userRoutes = require("./api/users/userRoutes");
