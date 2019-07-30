@@ -134,6 +134,7 @@ router.put("/:id", async (req, res) => {
       res.status(404).json({ message: "That event does not exist" });
     }
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: e, message: "Cannot update event" });
   }
 });
