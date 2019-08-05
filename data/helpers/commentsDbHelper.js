@@ -8,7 +8,8 @@ module.exports = {
   remove,
   getEventAllComments,
   getEventCommentsCount,
-  getEventAllUserComments
+  getEventAllUserComments,
+  getCommentById,
 };
 
 function getAll() {
@@ -20,7 +21,11 @@ function getByEvent(event_id) {
     .where({ event_id })
     .first();
 }
-
+function getCommentById(comment_id) {
+  return db("comments")
+    .where({ id: comment_id })
+    .first();
+}
 function getEventAllComments(event_id) {
   return db
     .select(
@@ -37,7 +42,11 @@ function getEventAllComments(event_id) {
 }
 
 async function add(comment) {
-  return db("comments").insert(comment);
+  return db("comments")
+    .insert(comment, "id")
+    .then(ids => {
+      return getCommentById(ids[0]);
+    });
 }
 
 async function update(id, changes) {

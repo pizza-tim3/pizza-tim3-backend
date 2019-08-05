@@ -1,29 +1,19 @@
-const admin = require("firebase-admin");
+const firebase = require("firebase-firebase");
 
 //authorization middleware, read, decode, verify
 const verifyToken = async (req, res, next) => {
-  //get the idToken from the authorization header
-  //idToken comes from the client app by setting the authorization header to
-  //const token = await app.auth().currentUser.getIdToken();
   const idToken = req.headers.authorization;
-
-  //TODO: SEPERATE THESE CONCERNS INTO THEIR OWN FUNCTION
   try {
-    //if idToken exists
     if (idToken) {
-      //decode the token
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      //get the user id
-      const uid = decodedToken.uid;
-      //put the user id on the req object
-      req.uid = uid;
-      //get custom claims if any
-      const { customClaims } = await admin.auth().getUser(uid);
-      req.customClaims = customClaims;
-      //go to next middleware/routing logic
-      next();
+      const decodedToken = await firebase.auth().verifyIdToken(idToken);
+
+      if(decodedToken) {
+        req.body.uid = decodedToken.uid
+      }
+
+      return next();
     } else {
-      res.status(403).json({ message: "unauthorized" });
+      res.status(401).json({ message: "You are not unauthorized" });
     }
   } catch (error) {
     res.status(500).json({ error: error });
@@ -35,27 +25,17 @@ const verifyToken = async (req, res, next) => {
 
 //This function *must* come after verifyToken,
 //otherwise req.uid will be undefined
-const verifyUser = async (req, res, next) => {
-  const uid = req.uid;
-  const reqUid = req.params.uid;
-  //compare if decoded uid !== the incoming uid on the request
-  if (uid !== reqUid) {
-    res.status(403).json({ message: "unauthorized" });
-  } else {
-    next();
-  }
-};
+// const verifyUser = async (req, res, next) => {
+//   const uid = req.uid;
+//   const reqUid = req.params.uid;
+//   //compare if decoded uid !== the incoming uid on the request
+//   if (uid !== reqUid) {
+//     res.status(403).json({ message: "unauthorized" });
+//   } else {
+//     next();
+//   }
+// };
 
-//This function *must* come after verifyToken!
-//Otherwise req.customClaims will be undefined
-//Checks to make sure that the user has the custom claim of admin set to true
-const checkAdmin = async (req, res, next) => {
-  //compare if decoded uid !== the incoming uid on the request
-  if (!req.customClaims.admin) {
-    res.status(403).json({ message: "unauthorized" });
-  } else {
-    next();
-  }
-};
 
-module.exports = { verifyToken, verifyUser, checkAdmin };
+
+module.exports = { verifyToken };
