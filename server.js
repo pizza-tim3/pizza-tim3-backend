@@ -5,7 +5,7 @@ const server = express();
 const logger = require("morgan");
 const helmet = require("helmet");
 const firebase = require("./auth/firebaseInit");
-const cors = require("cors");
+const cors = require('cors')
 
 //authorization middleware, read, decode, verify
 const verifyToken = async (req, res, next) => {
