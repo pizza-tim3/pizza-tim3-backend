@@ -44,6 +44,7 @@ const favoritesRoutes = require("./api/favorites/favorites");
 // const restrictedRoutes = require("./api/restricted/restrictedRoutes");
 // const adminRoutes = require("./api/admin/adminRoutes");
 const emailRoutes = require("./api/emails/freshInv");
+const userRegister = require("./api/users/userRegister");
 
 // Home Route
 server.get("/", (req, res) => {
@@ -52,6 +53,7 @@ server.get("/", (req, res) => {
 
 // Users Resource Route
 server.use('/api', verifyToken);
+server.use("/register", userRegister)
 server.use("/api/users/", userRoutes);
 server.use("/api/placesId/", locationRoutes);
 server.use("/api/events", eventRoutes);
