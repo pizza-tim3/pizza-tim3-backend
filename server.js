@@ -51,7 +51,7 @@ server.get("/", (req, res) => {
 });
 
 // Users Resource Route
-server.use('/api', verifyToken);
+// server.use('/api', verifyToken);
 server.use("/api/users/", userRoutes);
 server.use("/api/placesId/", locationRoutes);
 server.use("/api/events", eventRoutes);
