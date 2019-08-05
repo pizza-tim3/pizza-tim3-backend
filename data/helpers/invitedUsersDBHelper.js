@@ -29,9 +29,6 @@ async function getAllInvited(eventId) {
       "users.first_name",
       "users.last_name",
       "users.avatar",
-      "users.crust",
-      "users.topping",
-      "users.slices"
     )
     .from("invited")
     .where("event_id", eventId)
@@ -49,9 +46,6 @@ async function getAcceptedUsers(eventId) {
       "users.first_name",
       "users.last_name",
       "users.avatar",
-      "users.crust",
-      "users.topping",
-      "users.slices"
     )
     .from("invited")
     .where({
@@ -74,9 +68,6 @@ async function getPendingUsers(eventId) {
       "users.first_name",
       "users.last_name",
       "users.avatar",
-      "users.crust",
-      "users.topping",
-      "users.slices"
     )
     .from("invited")
     .where({
@@ -98,9 +89,6 @@ async function getDeclinedUsers(eventId) {
       "users.first_name",
       "users.last_name",
       "users.avatar",
-      "users.crust",
-      "users.topping",
-      "users.slices"
     )
     .from("invited")
     .where({

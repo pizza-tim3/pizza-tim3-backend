@@ -10,10 +10,7 @@ const createFakeUser = id => ({
   state: faker.address.state(),
   username: faker.internet.userName(),
   avatar: faker.image.avatar(),
-  crust: faker.lorem.word(),
-  topping: faker.lorem.word(),
-  slices: faker.random.number(),
-  firebase_uid: id,
+  firebase_uid: id
 });
 
 const generateFakeFireBaseUID = () => {
@@ -54,9 +51,6 @@ exports.seed = async function(knex, Promise) {
       state: faker.address.state(),
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      crust: faker.lorem.word(),
-      topping: faker.lorem.word(),
-      slices: faker.random.number(),
       firebase_uid: "XVf2XhkNSJWNDGEW4Wh6SHpKYUt2",
     },
     {
@@ -68,9 +62,6 @@ exports.seed = async function(knex, Promise) {
       state: faker.address.state(),
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      crust: faker.lorem.word(),
-      topping: faker.lorem.word(),
-      slices: faker.random.number(),
       firebase_uid: "T90z5fuhXcWpE231iBvk0WntdKA2",
     },
     {
@@ -82,9 +73,6 @@ exports.seed = async function(knex, Promise) {
       state: faker.address.state(),
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      crust: faker.lorem.word(),
-      topping: faker.lorem.word(),
-      slices: faker.random.number(),
       firebase_uid: "KmXqNOKhQSWm3RXt20YjD3WkVif2",
     },
     {
@@ -96,9 +84,6 @@ exports.seed = async function(knex, Promise) {
       state: faker.address.state(),
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      crust: faker.lorem.word(),
-      topping: faker.lorem.word(),
-      slices: faker.random.number(),
       firebase_uid: "XkSZcV7B2tZrMG0kUTWVdiQ4yDo2",
     },
     {
@@ -110,9 +95,6 @@ exports.seed = async function(knex, Promise) {
       state: faker.address.state(),
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      crust: faker.lorem.word(),
-      topping: faker.lorem.word(),
-      slices: faker.random.number(),
       firebase_uid: "RaJMLmDUTWTP870aXFUQ6mLVb1M2",
     },
     {
@@ -124,9 +106,6 @@ exports.seed = async function(knex, Promise) {
       state: faker.address.state(),
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      crust: faker.lorem.word(),
-      topping: faker.lorem.word(),
-      slices: faker.random.number(),
       firebase_uid: "IyJoCaT4A7cObBoZDEUEKjhwADE2",
     },
     {
@@ -138,9 +117,6 @@ exports.seed = async function(knex, Promise) {
       state: faker.address.state(),
       username: faker.internet.userName(),
       avatar: faker.image.avatar(),
-      crust: faker.lorem.word(),
-      topping: faker.lorem.word(),
-      slices: faker.random.number(),
       firebase_uid: "i2i3UqCe3TbaeXbM1ifzQpsGLRi1",
     },
   ];
