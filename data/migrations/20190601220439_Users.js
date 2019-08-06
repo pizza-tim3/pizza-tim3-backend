@@ -10,9 +10,9 @@ exports.up = function(knex, Promise) {
     users.text("first_name", 255).notNullable();
     users.text("last_name", 255).notNullable();
     users.text("avatar", 2048);
-    users.varchar("friend_id", 255)
-      .references("uid")
-      .inTable("friends")
+    users.text("crust", 128);
+    users.text("topping", 128);
+    users.text("slices", 128);
   });
 };
 

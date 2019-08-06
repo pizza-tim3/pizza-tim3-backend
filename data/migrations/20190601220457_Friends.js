@@ -1,7 +1,8 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable("friends", function(friends) {
     friends.increments();
-    friends.varchar("uid")
+    //foreign key
+    friends.text("user_uid");
     friends.text("friend_uid");
     friends.enum("status", ["pending", "rejected", "accepted"]);
   });

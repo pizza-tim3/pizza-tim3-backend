@@ -3,101 +3,197 @@ const router = express.Router();
 const Friends = require("../../data/helpers/friendsDbHelper");
 const Users = require("../../data/helpers/userDbHelper");
 
-// get all friend requests that are pending
-router.get('/pending/:uid', async(req, res) => {
-    const { uid } = req.params;
-    try{
-      const results = await Friends.getAll();
-      if(results.length > 1) {
-        let newResults = await results.filter(i => {
-          return i.friend_uid === uid
+//fix me add authorize/authentication for users
+//so users can only access their own stuff
+
+//request friend
+router.get("/request/:user_uid/:friend_uid", async (req, res) => {
+  const { user_uid, friend_uid } = req.params;
+  //if user dne
+  try {
+    const userOne = await Users.getByUid(user_uid);
+    const userTwo = await Users.getByUid(friend_uid);
+
+    //if user one does not exist return bad request
+    if (!userOne) {
+      res
+        .status(404)
+        .json({ error: `user with id ${user_uid} does not exist` });
+      //if user two does not exist return bad request
+    } else if (!userTwo) {
+      res
+        .status(404)
+        .json({ error: `user with id ${friend_uid} does not exist` });
+    } else {
+      const added = await Friends.request(user_uid, friend_uid);
+      res.status(200).json(added);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+router.post("/request/:user_uid/:friend_uid", async (req, res) => {
+  const { user_uid, friend_uid } = req.params;
+  //if user dne
+  try {
+    const userOne = await Users.getByUid(user_uid);
+    const userTwo = await Users.getByUid(friend_uid);
+
+    //if user one does not exist return bad request
+    if (!userOne) {
+      res
+        .status(404)
+        .json({ error: `user with id ${user_uid} does not exist` });
+      //if user two does not exist return bad request
+    } else if (!userTwo) {
+      res
+        .status(404)
+        .json({ error: `user with id ${friend_uid} does not exist` });
+    } else {
+      const added = await Friends.request(user_uid, friend_uid);
+      res.status(200).json(added);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+//accept friend
+router.get("/accept/:user_uid/:friend_uid", async (req, res) => {
+  const { user_uid, friend_uid } = req.params;
+  //if request isn't valid
+  try {
+    const userOne = await Users.getByUid(user_uid);
+    const userTwo = await Users.getByUid(friend_uid);
+
+    //if user one does not exist return bad request
+    if (!userOne) {
+      res
+        .status(404)
+        .json({ error: `user with id ${user_uid} does not exist` });
+      //if user two does not exist return bad request
+    } else if (!userTwo) {
+      res
+        .status(404)
+        .json({ error: `user with id ${friend_uid} does not exist` });
+    } else {
+      const pendingRequest = await Friends.checkPending(user_uid, friend_uid);
+      if (pendingRequest === undefined) {
+        //if a pending friend requests from user two dne
+        res.status(404).json({
+          error: `pending friend request with ${friend_uid} does not exist`
         });
-        newResults = await newResults.filter(i => {
-          return i.status === 'pending'
-        })
-        res.status(200).json({Success: 'retrieved successfully', newResults})
       } else {
-        res.status(404).json({ Error: 'uid given does not exist' })
+        const added = await Friends.accept(user_uid, friend_uid);
+        res.status(200).json(added);
       }
-    } catch(e) {
-      res.status(500).json({ Error: 'error with server' })
     }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
+//reject friend
+router.get("/reject/:user_uid/:friend_uid", async (req, res) => {
+  const { user_uid, friend_uid } = req.params;
+  //if pending request does not exist
+  try {
+    const userOne = await Users.getByUid(user_uid);
+    const userTwo = await Users.getByUid(friend_uid);
 
-// get all friend requests that are accepted
-router.get('/accepted/:uid', async(req, res) => {
+    //if user one does not exist return bad request
+    if (!userOne) {
+      res
+        .status(404)
+        .json({ error: `user with id ${user_uid} does not exist` });
+      //if user two does not exist return bad request
+    } else if (!userTwo) {
+      res
+        .status(404)
+        .json({ error: `user with id ${friend_uid} does not exist` });
+    } else {
+      const pendingRequest = await Friends.checkPending(user_uid, friend_uid);
+      if (!pendingRequest) {
+        //if a pending friend requests from user two dne
+        res.status(404).json({
+          error: `pending friend request with ${friend_uid} does not exist`
+        });
+      } else {
+        const rejected = await Friends.reject(user_uid, friend_uid);
+        res.status(200).json(rejected);
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+router.delete("/:user_uid/:friend_uid", async (req, res) => {
+  const { user_uid, friend_uid } = req.params;
+
+  try {
+    const userOne = await Users.getByUid(user_uid);
+    const userTwo = await Users.getByUid(friend_uid);
+    //if user dne
+    if (!userOne) {
+      res
+        .status(404)
+        .json({ error: `user with id ${user_uid} does not exist` });
+      //if user two does not exist return bad request
+    } else if (!userTwo) {
+      res
+        .status(404)
+        .json({ error: `user with id ${friend_uid} does not exist` });
+    } else {
+      //delete a friend
+      const deleted = await Friends.remove(user_uid, friend_uid);
+      console.log(deleted);
+      if (deleted === 2) {
+        // if the friend is deleted
+        res
+          .status(200)
+          .json({ message: `friend with id ${friend_uid} deleted` });
+      } else {
+        // friendship not successfully deleted
+        res
+          .status(404)
+          .json({ error: `friendship with ${friend_uid} does not exist` });
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+//get all friends
+router.get("/:uid", async (req, res) => {
   const { uid } = req.params;
-  try{
-    const results = await Friends.getAll();
-    if(results.length > 1) {
-      let newResults = await results.filter(i => {
-        return i.friend_uid === uid
-      });
-      newResults = await newResults.filter(i => {
-        return i.status === 'accepted'
-      })
-      res.status(200).json({Success: 'retrieved successfully', newResults})
+  try {
+    const user = await Users.getByUid(uid);
+    if (!user) {
+      res.status(404).json({ message: `User with ${uid} does not exist` });
     } else {
-      res.status(404).json({ Error: 'uid given does not exist' })
+      const acceptedFriends = await Friends.getAllFriends(uid);
+      const pendingFriends = await Friends.getAllPendingFriends(uid);
+      const allFriends = [...acceptedFriends, ...pendingFriends];
+      res.status(200).json(allFriends);
     }
-  } catch(e) {
-    res.status(500).json({ Error: 'error with server' })
-  }
+  } catch (error) {}
 });
 
-// create a friend request
-  router.post('/', async(req, res) => {
-    const uid = req.body.uid;
-    const fuid = req.body.fuid;
-    try {
-      const id = await Friends.request(uid, fuid);
-
-      if(id.length > 0) {
-        res.status(200).json({Success: 'Added successfully', ids: id})
-      } else {
-        res.status(201).json({ error: 'unable to create'})
-      }
-    } catch(e) {
-      res.status(500).json({error: 'error in creation'});
-    }
-  })
-
-
-// accept a friend request
-router.put('/accept', async(req, res) => {
-  const uid = req.body.uid;
-  const fuid = req.body.fuid;
-
-  try{
-    const id = await Friends.accept(uid, fuid);
-
-    if(id) {
-      res.status(200).json({Success: 'Updated successfully', ids: id})
-    } else {
-      res.status(201).json({ error: 'unable to update' });
-    }
-  } catch(e) {
-    res.status(500).json({ error: e, message: 'Issue on server side'})
+//get all pending friends
+router.get("/:uid/pending", async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const users = await Friends.getAllPendingFriends(uid);
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json(error);
   }
-})
-
-// reject a friend request
-router.delete('/reject', async(req, res) => {
-  const uid = req.body.uid;
-  const fuid = req.body.fuid;
-  console.log(uid, fuid)
-  try{
-    const id = await Friends.reject(uid, fuid);
-
-    if(id) {
-      res.status(200).json({Success: 'Deleted successfully', status: id})
-    } else {
-      res.status(201).json({ error: 'unable to remove' });
-    }
-  } catch(e) {
-    res.status(500).json({ error: e, message: 'Issue on server side'})
-  }
-})
-
+});
 module.exports = router;
