@@ -12,6 +12,9 @@ const users = [
     last_name: "Jaskolski",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/vaughanmoffitt/128.jpg",
+    crust: "incidunt",
+    topping: "dicta",
+    slices: "59272"
   },
   {
     id: 507,
@@ -22,6 +25,9 @@ const users = [
     last_name: "Grady",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg",
+    crust: "ipsa",
+    topping: "autem",
+    slices: "91633"
   },
   {
     id: 508,
@@ -31,6 +37,9 @@ const users = [
     first_name: "Lillie",
     last_name: "Bins",
     avatar: "https://s3.amazonaws.com/uifaces/faces/twitter/scips/128.jpg",
+    crust: "ducimus",
+    topping: "dolorem",
+    slices: "40686"
   },
   {
     id: 509,
@@ -40,6 +49,9 @@ const users = [
     first_name: "Tanya",
     last_name: "Mann",
     avatar: "https://s3.amazonaws.com/uifaces/faces/twitter/spacewood_/128.jpg",
+    crust: "dolorem",
+    topping: "voluptas",
+    slices: "54462"
   },
   {
     id: 510,
@@ -50,6 +62,9 @@ const users = [
     last_name: "Glover",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/michaelkoper/128.jpg",
+    crust: "rerum",
+    topping: "quibusdam",
+    slices: "66554"
   },
   {
     id: 511,
@@ -60,7 +75,9 @@ const users = [
     last_name: "Shanahan",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/orkuncaylar/128.jpg",
-
+    crust: "dolor",
+    topping: "exercitationem",
+    slices: "81032"
   },
   {
     id: 512,
@@ -71,7 +88,9 @@ const users = [
     last_name: "Parisian",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/overcloacked/128.jpg",
-
+    crust: "exercitationem",
+    topping: "aut",
+    slices: "85095"
   }
 ];
 
